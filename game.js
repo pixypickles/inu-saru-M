@@ -2,7 +2,7 @@
 
 
 // ===== v1.5 meta game / field map =====
-const VERSION='v3.19-IROHAZAKA-HYBRID';
+const VERSION='v3.20-IROHAZAKA-SPREAD';
 const RACE_LAPS=1;
 
 const CHARACTER_DATA={
@@ -627,7 +627,7 @@ function sampleIrohaHybridPath(ctrl,course){
 function localCourseHalfWidth(segIndex){
   if(courseTheme!=='irohazaka')return courseHalfWidth;
   const a=activeCourse._densePathStart??0,b=activeCourse._densePathEnd??-1;
-  return segIndex>=a&&segIndex<=b?80:95;
+  return segIndex>=a&&segIndex<=b?85:100;
 }
 function selectCourse(place,round=0){
  let set=COURSE_SETS[place]||COURSE_SETS.arena1,order=COURSE_ORDER[place]||set.map((_,i)=>i),idx=order[round%order.length]%set.length;
@@ -636,7 +636,18 @@ function selectCourse(place,round=0){
  const cs=activeCourse.courseScale||1,sourceH=activeCourse.originBottomLeft?(world.h/cs):world.h;
  const cv=([x,y])=>({x:x*cs,y:(activeCourse.originBottomLeft?(sourceH-y):y)*cs});
  courseBranches=(activeCourse.branches||[]).map(br=>br.map(cv));
- const control=activeCourse.path.map(cv);
+ let control=activeCourse.path.map(cv);
+ // Irohazaka: spread the traced route slightly so adjacent switchbacks stay visibly separate.
+ // Keep the 40000 world; only the supplied ordered centerline is scaled uniformly around its bbox center.
+ // The opening straight (P001-P015) is then shortened toward P015 to spend less map space before the hairpins.
+ if(courseTheme==='irohazaka'&&control.length>=15){
+   let minX=Math.min(...control.map(p=>p.x)),maxX=Math.max(...control.map(p=>p.x));
+   let minY=Math.min(...control.map(p=>p.y)),maxY=Math.max(...control.map(p=>p.y));
+   const cx=(minX+maxX)/2,cy=(minY+maxY)/2,spread=1.08;
+   control=control.map(p=>({x:cx+(p.x-cx)*spread,y:cy+(p.y-cy)*spread}));
+   const anchor=control[14],compress=.82;
+   for(let i=0;i<14;i++)control[i]={x:anchor.x+(control[i].x-anchor.x)*compress,y:anchor.y+(control[i].y-anchor.y)*compress};
+ }
  courseControlPath=control;
  path=activeCourse.spline==='centripetal'
    ?sampleCentripetalPath(control,activeCourse.splineSteps||7,activeCourse.splineAlpha??.5,activeCourse.splineTension??.38)
@@ -1355,7 +1366,7 @@ function drawWorld(){
      for(let i=0;i<path.length-1;i++){
        const dense=i>=ds&&i<=de;
        ctx.strokeStyle=road?pal.inner:pal.grass;
-       ctx.lineWidth=road?(dense?160:190):(dense?180:220);
+       ctx.lineWidth=road?(dense?170:200):(dense?190:230);
        ctx.beginPath();ctx.moveTo(path[i].x,path[i].y);ctx.lineTo(path[i+1].x,path[i+1].y);ctx.stroke();
      }
    };
