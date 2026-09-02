@@ -2,7 +2,7 @@
 
 
 // ===== v1.5 meta game / field map =====
-const VERSION='v3.00-TOUGE';
+const VERSION='v3.02-TOUGE';
 const RACE_LAPS=1;
 
 const CHARACTER_DATA={
@@ -22,7 +22,7 @@ const CHARACTER_DATA={
  Takumi:{jp:'タクミさん',color:'#f4f3ec',wing:'special'},
  Bunta:{jp:'ブンタさん',color:'#2456b8',wing:'blue'},
  Inu:{jp:'イヌさん',color:'#c58b52',wing:'special',species:'dog'},
- Saru:{jp:'サルさん',color:'#9a6948',wing:'special',species:'monkey'}
+ Saru:{jp:'マコさん',color:'#3188e6',wing:'special',species:'monkey'}
 };
 const TOURNAMENT_ROSTER=['Gabriel','Raphael','Uriel','Lucifer','Lilith'];
 function randomTournamentOpponent(exclude=[]){
@@ -31,7 +31,7 @@ function randomTournamentOpponent(exclude=[]){
 }
 function buildTournament(place){
  if(place==='akina')return [saveData.selectedCharacter==='Takumi'?'Michael':'Takumi'];
- if(place==='usui')return ['Inu'];
+ if(place==='usui')return ['Saru'];
  return ['Inu'];
 }
 function tournamentKey(place,courseIndex){return place+'_'+TOURNAMENT_LABELS[courseIndex];}
@@ -130,7 +130,7 @@ function showPlace(place){
  document.querySelector('#placeTitle').textContent=data[0];document.querySelector('#placeDesc').textContent=data[1];const actions=document.querySelector('#placeActions');actions.innerHTML='';
  if(place==='practice'){const g=document.createElement('button');g.className='menuBtn';g.textContent='📖 操作説明を見る';g.onclick=()=>showTutorial('practice');actions.appendChild(g);for(const n of ['Inu','Saru']){const q=document.createElement('button');q.className='menuBtn';q.textContent=(CHARACTER_DATA[n]?.jp||n)+'と練習';q.onclick=()=>{tournament=null;currentPlace='practice';startRaceRound(n,true)};actions.appendChild(q);}}
  else if(place==='akina'){const o=saveData.selectedCharacter==='Takumi'?'Michael':'Takumi';const q=document.createElement('button');q.className='menuBtn';q.textContent=(CHARACTER_DATA[o]?.jp||o)+'と峠バトル';q.onclick=()=>startRace(false);actions.appendChild(q);}
- else if(place==='usui'){for(const n of ['Inu','Saru']){const q=document.createElement('button');q.className='menuBtn';q.textContent=(CHARACTER_DATA[n]?.jp||n)+'とウスイバトル';q.onclick=()=>{tournament={place:'usui',round:0,courseIndex:0,opponents:[n]};startRaceRound(n,false)};actions.appendChild(q);}}
+ else if(place==='usui'){const n='Saru';const q=document.createElement('button');q.className='menuBtn';q.textContent=(CHARACTER_DATA[n]?.jp||n)+'とウスイバトル';q.onclick=()=>{tournament={place:'usui',round:0,courseIndex:0,opponents:[n]};startRaceRound(n,false)};actions.appendChild(q);}
 }
 
 function makeShootingCourse(place){
@@ -538,7 +538,7 @@ function rebuildCourseObjects(){
      }
      if(Math.hypot(ax-path[0].x,ay-path[0].y)>360){
        if(courseTheme!=='akina'||!lastAkinaTree||Math.hypot(ax-lastAkinaTree.x,ay-lastAkinaTree.y)>520){
-         anchors.push({x:ax,y:ay,corner:i,kind:(courseTheme==='akina'?(typeof anchorKind!=='undefined'?anchorKind:'tree'):'tree')});if(courseTheme==='akina')lastAkinaTree={x:ax,y:ay};
+         anchors.push({x:ax,y:ay,corner:i,kind:(courseTheme==='akina'?(typeof anchorKind!=='undefined'?anchorKind:'tree'):'tree'),sharpCorner:(courseTheme==='usui'&&angle>.82)});if(courseTheme==='akina')lastAkinaTree={x:ax,y:ay};
        }
      }
    }
@@ -602,7 +602,7 @@ rebuildCourseObjects();
 let controlledIndex=0, camera={x:0,y:0}, joy={id:null,x:0,y:0},keys={},tongueHeld=false,last=performance.now(),finished=false,raceStartDelay=0;
 const racers=[makeRacer('Michael','#49a94f',0,720,680),makeRacer('Gabriel','#3188e6',1,720,740)];
 let globalTimeStop=0,globalTimeLag=0;
-function makeRacer(name,color,index,x,y){return {name,color,index,x,y,vx:0,vy:0,face:0,speed:0,r:25,flight:0,glideClock:0,glideGrace:0,glideExtendStock:false,glideExtendUsed:false,onGround:true,tongue:null,cp:1,lap:1,finished:false,hitSlow:0,boost:0,bump:0,skillCdA:0,skillCdB:0,ai:index===1,wing:0,jumpAge:0,flapAge:0,landAge:0,airBarrier:0,airBoostUses:3,power:1,rockImmuneSlow:false,character:name,confuse:0,charge:0,charging:false,burningWing:0,highJump:0,highJumpTotal:0,highJumpDir:0,normalHighJump:0,burnWingUses:3,burnClimbUses:3,startLineLong:null,lapPrevX:null,lapPrevY:null,wallGrace:0,wallEscape:0,courseWalk:0,timeStopUsed:false,takumiCornering:false,takumiPassiveCd:0,aiPathIndex:0,aiWallHits:0,aiWallHitTimer:0,aiBend:0,aiAssist:0,wingSnap:0,drifting:false,driftCharge:0,driftMoveFace:0,driftSide:0,driftFxClock:0,driftGhosts:[],gutterPullX:0,gutterPullY:0};}
+function makeRacer(name,color,index,x,y){return {name,color,index,x,y,vx:0,vy:0,face:0,speed:0,r:25,flight:0,glideClock:0,glideGrace:0,glideExtendStock:false,glideExtendUsed:false,onGround:true,tongue:null,cp:1,lap:1,finished:false,hitSlow:0,boost:0,bump:0,skillCdA:0,skillCdB:0,ai:index===1,wing:0,jumpAge:0,flapAge:0,landAge:0,airBarrier:0,airBoostUses:3,power:1,rockImmuneSlow:false,character:name,confuse:0,charge:0,charging:false,burningWing:0,highJump:0,highJumpTotal:0,highJumpDir:0,normalHighJump:0,burnWingUses:3,burnClimbUses:3,startLineLong:null,lapPrevX:null,lapPrevY:null,wallGrace:0,wallEscape:0,courseWalk:0,timeStopUsed:false,takumiCornering:false,takumiPassiveCd:0,aiPathIndex:0,aiWallHits:0,aiWallHitTimer:0,aiBend:0,aiAssist:0,wingSnap:0,drifting:false,driftCharge:0,driftMoveFace:0,driftSide:0,driftFxClock:0,driftGhosts:[],gutterPullX:0,gutterPullY:0,treeGrab:null,treeGrabCd:0};}
 const maxSpeed=585,groundSpeed=255,flapSpeed=405,glideAccel=690,turnGround=2.85,turnFast=1.05;
 function reset(opponentName='Plain'){
  globalTimeStop=0;globalTimeLag=0;
@@ -721,10 +721,17 @@ function desiredInput(r){if(!r.ai){let kx=(keys.ArrowRight||keys.d?1:0)-(keys.Ar
 function updateRacer(r,dt){
   if(globalTimeStop>0&&r!==racers[controlledIndex])return;
   r.tongueBoostFx=Math.max(0,(r.tongueBoostFx||0)-dt);
+  r.treeGrabCd=Math.max(0,(r.treeGrabCd||0)-dt);
   r.tongueBoostTimer=Math.max(0,(r.tongueBoostTimer||0)-dt);
   if(r.tongueBoostTimer>0)r.speed=Math.min(maxSpeed+130,r.speed+360*dt);
 r.takumiPassiveCd=Math.max(0,(r.takumiPassiveCd||0)-dt);r.wingSnap=Math.max(0,(r.wingSnap||0)-dt);r.aiWallHitTimer=Math.max(0,(r.aiWallHitTimer||0)-dt);if(r.aiWallHitTimer<=0)r.aiWallHits=0;r.airBarrier=Math.max(0,(r.airBarrier||0)-dt);r.wallGrace=Math.max(0,(r.wallGrace||0)-dt);r.wallEscape=Math.max(0,(r.wallEscape||0)-dt);r.highJump=Math.max(0,(r.highJump||0)-dt);r.normalHighJump=Math.max(0,(r.normalHighJump||0)-dt);r.confuse=Math.max(0,(r.confuse||0)-dt);r.burningWing=Math.max(0,(r.burningWing||0)-dt);if(r.charging)r.charge=Math.min(1.8,(r.charge||0)+dt);if(r.finished)return;r.skillCdA=Math.max(0,r.skillCdA-dt);r.skillCdB=Math.max(0,r.skillCdB-dt);r.hitSlow=Math.max(0,r.hitSlow-dt);r.boost=Math.max(0,r.boost-dt);r.bump=Math.max(0,r.bump-dt);r.wing=Math.max(0,r.wing-dt);r.jumpAge+=dt;r.flapAge+=dt;r.landAge=Math.max(0,r.landAge-dt);
  const inp=desiredInput(r),want=Math.atan2(inp.y,inp.x),diff=norm(want-r.face),ratio=Math.min(1,r.speed/maxSpeed),aiTurn=r.ai?((r.name==='Bunta'?2.25:(r.name==='Takumi'||r.name==='Inu'||r.name==='Saru')?1.72:1.28)+Math.min(r.name==='Bunta'?1.05:(r.name==='Takumi'||r.name==='Inu'||r.name==='Saru')?.82:.55,(r.aiBend||0)*(r.name==='Bunta'?.72:(r.name==='Takumi'||r.name==='Inu'||r.name==='Saru')?.58:.42))):1,driftTurn=(canDrift(r)&&r.drifting)?2.15:1,turn=(turnGround*(1-ratio)+turnFast*ratio)*dt*(r.name==='Raphael'?1.22:1)*(r.highJump>0?.28:1)*aiTurn*driftTurn;
+ // Saru special: on Usui, grab a tree on the inside of a sharp corner and swing around it.
+ if(r.ai&&r.name==='Saru'&&courseTheme==='usui'&&!r.treeGrab&&r.treeGrabCd<=0&&(r.aiBend||0)>.42){
+   let best=null,bd=1e9;
+   for(const a of anchors){if(a.kind!=='tree')continue;let d=Math.hypot(a.x-r.x,a.y-r.y);if(d<390&&d<bd){best=a;bd=d;}}
+   if(best){let cross=Math.sin(norm(Math.atan2(best.y-r.y,best.x-r.x)-r.face));r.treeGrab={target:best,t:.72,side:cross>0?-1:1};r.treeGrabCd=2.2;}
+ }
  if(Math.abs(diff)<turn)r.face=want;else r.face+=Math.sign(diff)*turn;
  if(canDrift(r)&&r.drifting){
    let slip=Math.abs(norm(r.face-r.driftMoveFace));
@@ -761,7 +768,7 @@ r.takumiPassiveCd=Math.max(0,(r.takumiPassiveCd||0)-dt);r.wingSnap=Math.max(0,(r
      if(!r.ai)msg('ストック消費！ 滑空時間を延長');
    }
    if(r.glideClock<5.65){
-     const aiCruise=r.ai?(r.name==='Plain'?600:(r.name==='Bunta'||r.name==='Takumi'||r.name==='Inu'||r.name==='Saru'||r.name==='Kawazu'?maxSpeed:615)):maxSpeed;
+     const aiCruise=r.ai?(r.name==='Inu'?maxSpeed+95:r.name==='Plain'?600:(r.name==='Bunta'||r.name==='Takumi'||r.name==='Saru'||r.name==='Kawazu'?maxSpeed:615)):maxSpeed;
      r.speed=approach(r.speed,r.name==='Kawazu'?maxSpeed+65:r.name==='Takumi'?maxSpeed+55:aiCruise,glideAccel*dt);
    }else{
      r.glideGrace+=dt;
@@ -803,6 +810,11 @@ r.takumiPassiveCd=Math.max(0,(r.takumiPassiveCd||0)-dt);r.wingSnap=Math.max(0,(r
      if(bend>.95)r.speed=Math.min(r.speed,545);
      else if(bend>.62)r.speed=Math.min(r.speed,605);
      else if(bend>.38)r.speed=Math.min(r.speed,665);
+   }else if(r.name==='Inu'){
+     // Inu has the highest raw top speed, but still brakes for the tight Usui hairpins.
+     if(bend>.95)r.speed=Math.min(r.speed,425);
+     else if(bend>.62)r.speed=Math.min(r.speed,505);
+     else if(bend>.38)r.speed=Math.min(r.speed,590);
    }else{
      const plain=r.name==='Plain';
      if(bend>.95)r.speed=Math.min(r.speed,plain?365:385);
@@ -816,6 +828,16 @@ r.takumiPassiveCd=Math.max(0,(r.takumiPassiveCd||0)-dt);r.wingSnap=Math.max(0,(r
    let bend=Math.abs(norm(Math.atan2(n2.y-n1.y,n2.x-n1.x)-Math.atan2(n1.y-r.y,n1.x-r.x)));
    if(bend>.48)r.takumiCornering=true;
    else if(r.takumiCornering&&bend<.22&&r.takumiPassiveCd<=0){r.takumiCornering=false;r.takumiPassiveCd=.95;r.speed=Math.min(maxSpeed+(r.name==='Bunta'?135:210),Math.max(r.speed+(r.name==='Bunta'?185:185),r.name==='Bunta'?650:645));r.boost=r.name==='Bunta'?.82:.78;if(!r.ai)msg('コーナー脱出加速！');}
+ }
+ // Monkey tree-grab: no tongue. The hands hook the trunk and the body follows the tangent briefly.
+ if(r.treeGrab){
+   let a=r.treeGrab.target,dx=a.x-r.x,dy=a.y-r.y,d=Math.hypot(dx,dy)||1;
+   let radial=Math.atan2(dy,dx),tan=radial+(r.treeGrab.side>0?Math.PI/2:-Math.PI/2);
+   r.face=lerpAngle(r.face,tan,Math.min(1,dt*10));
+   r.speed=Math.max(r.speed,500);r.wallGrace=Math.max(r.wallGrace,.22);
+   // A gentle inward pull makes the swing readable without teleporting or merging roads.
+   let pull=Math.min(70,d*.18)*dt;r.x+=dx/d*pull;r.y+=dy/d*pull;
+   r.treeGrab.t-=dt;if(r.treeGrab.t<=0||d>470){r.treeGrab=null;r.treeGrabCd=Math.max(r.treeGrabCd,1.5);r.boost=Math.max(r.boost,.32);}
  }
  // Tongue anchor overrides ordinary turn. Player/rival overlap never affects anchor tongue.
  r.gutterPullX=0;r.gutterPullY=0;
@@ -1384,10 +1406,31 @@ function drawDriftFlightFx(r){
  ctx.restore();
 }
 function drawAnimalRacer(r,dir){
- const dog=r.name==='Inu';angelWing(-17,-4,-1,.9,-.03);angelWing(17,-4,1,.9,.03);ctx.fillStyle=r.color;ctx.beginPath();ctx.ellipse(0,5,20,29,0,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.arc(0,-22,25,0,Math.PI*2);ctx.fill();
+ const dog=r.name==='Inu',side=dir==='left'||dir==='right',left=dir==='left';
+ ctx.save();
+ if(side&&left)ctx.scale(-1,1);
+ // Wings are always attached at the shoulder blades. In back view they dominate the silhouette.
+ if(dir==='up'){
+   ctx.globalAlpha=.95;angelWing(-17,-5,-1,1.02,-.04);angelWing(17,-5,1,1.02,.04);ctx.globalAlpha=1;
+   ctx.fillStyle=r.color;ctx.beginPath();ctx.ellipse(-10,28,9,14,.2,0,Math.PI*2);ctx.ellipse(10,28,9,14,-.2,0,Math.PI*2);ctx.fill();
+   ctx.beginPath();ctx.roundRect(-19,-3,38,42,16);ctx.fill();ctx.beginPath();ctx.arc(0,-23,25,0,Math.PI*2);ctx.fill();
+   if(dog){ctx.beginPath();ctx.moveTo(-17,-39);ctx.lineTo(-28,-58);ctx.lineTo(-5,-44);ctx.closePath();ctx.fill();ctx.beginPath();ctx.moveTo(17,-39);ctx.lineTo(28,-58);ctx.lineTo(5,-44);ctx.closePath();ctx.fill();ctx.beginPath();ctx.arc(0,35,8,0,Math.PI*2);ctx.fill();}
+   else{ctx.beginPath();ctx.arc(-24,-23,9,0,Math.PI*2);ctx.arc(24,-23,9,0,Math.PI*2);ctx.fill();ctx.strokeStyle=r.color;ctx.lineWidth=7;ctx.beginPath();ctx.arc(20,25,20,-1.25,1.55);ctx.stroke();}
+   ctx.restore();return;
+ }
+ if(side){
+   ctx.globalAlpha=.72;angelWing(-11,-4,-1,.76,-.05);ctx.globalAlpha=1;
+   ctx.fillStyle=r.color;ctx.beginPath();ctx.ellipse(-7,27,10,15,.22,0,Math.PI*2);ctx.ellipse(9,28,9,14,-.16,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.roundRect(-17,-2,35,40,15);ctx.fill();ctx.beginPath();ctx.ellipse(5,-22,25,23,0,0,Math.PI*2);ctx.fill();
+   if(dog){ctx.beginPath();ctx.moveTo(2,-41);ctx.lineTo(6,-61);ctx.lineTo(18,-43);ctx.closePath();ctx.fill();ctx.beginPath();ctx.ellipse(25,-18,15,12,0,0,Math.PI*2);ctx.fill();ctx.fillStyle='#f0d2aa';ctx.beginPath();ctx.ellipse(26,-15,10,8,0,0,Math.PI*2);ctx.fill();ctx.fillStyle='#222';ctx.beginPath();ctx.arc(35,-18,3.5,0,Math.PI*2);ctx.fill();}
+   else{ctx.fillStyle='#e5b78d';ctx.beginPath();ctx.ellipse(18,-18,15,16,0,0,Math.PI*2);ctx.fill();ctx.fillStyle=r.color;ctx.beginPath();ctx.arc(-19,-22,9,0,Math.PI*2);ctx.fill();ctx.strokeStyle=r.color;ctx.lineWidth=7;ctx.beginPath();ctx.arc(21,23,19,-1.45,1.45);ctx.stroke();}
+   angelWing(-11,-6,-1,.92,-.03);
+   ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(16,-30,7,0,Math.PI*2);ctx.fill();ctx.fillStyle='#1d1d1d';ctx.beginPath();ctx.arc(19,-30,3,0,Math.PI*2);ctx.fill();ctx.restore();return;
+ }
+ // Front/down view
+ angelWing(-17,-4,-1,.9,-.03);angelWing(17,-4,1,.9,.03);ctx.fillStyle=r.color;ctx.beginPath();ctx.ellipse(0,5,20,29,0,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.arc(0,-22,25,0,Math.PI*2);ctx.fill();
  if(dog){ctx.beginPath();ctx.moveTo(-18,-38);ctx.lineTo(-28,-58);ctx.lineTo(-5,-43);ctx.closePath();ctx.fill();ctx.beginPath();ctx.moveTo(18,-38);ctx.lineTo(28,-58);ctx.lineTo(5,-43);ctx.closePath();ctx.fill();ctx.fillStyle='#f0d2aa';ctx.beginPath();ctx.ellipse(0,-14,15,11,0,0,Math.PI*2);ctx.fill();ctx.fillStyle='#222';ctx.beginPath();ctx.arc(0,-18,4,0,Math.PI*2);ctx.fill();}
  else{ctx.fillStyle='#e5b78d';ctx.beginPath();ctx.ellipse(0,-18,18,17,0,0,Math.PI*2);ctx.fill();ctx.fillStyle=r.color;ctx.beginPath();ctx.arc(-24,-21,9,0,Math.PI*2);ctx.arc(24,-21,9,0,Math.PI*2);ctx.fill();ctx.strokeStyle=r.color;ctx.lineWidth=7;ctx.beginPath();ctx.arc(24,22,18,-1.4,1.4);ctx.stroke();}
- ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(-8,-26,6,0,Math.PI*2);ctx.arc(8,-26,6,0,Math.PI*2);ctx.fill();ctx.fillStyle='#1d1d1d';ctx.beginPath();ctx.arc(-7,-26,2.7,0,Math.PI*2);ctx.arc(7,-26,2.7,0,Math.PI*2);ctx.fill();
+ ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(-8,-26,6,0,Math.PI*2);ctx.arc(8,-26,6,0,Math.PI*2);ctx.fill();ctx.fillStyle='#1d1d1d';ctx.beginPath();ctx.arc(-7,-26,2.7,0,Math.PI*2);ctx.arc(7,-26,2.7,0,Math.PI*2);ctx.fill();ctx.restore();
 }
 function drawRacer(r){
  drawDriftFlightFx(r);
@@ -1416,6 +1459,11 @@ function drawRacer(r){
     ctx.restore();
   }
 
+ if(r.name==='Saru'&&r.treeGrab){
+   const t=r.treeGrab.target;ctx.save();ctx.strokeStyle=r.color;ctx.lineWidth=10;ctx.lineCap='round';
+   ctx.beginPath();ctx.moveTo(r.x-7,r.y-3);ctx.lineTo(t.x,t.y);ctx.stroke();
+   ctx.strokeStyle='#e5b78d';ctx.lineWidth=6;ctx.beginPath();ctx.moveTo(r.x+7,r.y-1);ctx.lineTo(t.x,t.y);ctx.stroke();ctx.restore();
+ }
  if(r.tongue){
    let t=r.tongue.target,m=tongueMouthPoint(r);
    ctx.strokeStyle='#e86a91';ctx.lineWidth=9;ctx.lineCap='round';
