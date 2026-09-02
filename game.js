@@ -2,7 +2,7 @@
 
 
 // ===== v1.5 meta game / field map =====
-const VERSION='v3.25-AKINA-FIRST-TREE-UP';
+const VERSION='v3.26-AKINA-FIRST-TREE-UP';
 const RACE_LAPS=1;
 
 const CHARACTER_DATA={
@@ -1477,11 +1477,11 @@ function drawAnchorPole(x,y){
  ctx.fillStyle='#f7e27b';ctx.beginPath();ctx.arc(0,-53,8,0,Math.PI*2);ctx.fill();
  ctx.restore();
 }
-let currentWingSpecial=false,currentWingRed=false,currentWingBurning=false,currentWingTakumi=false,currentWingTakumiBlue=false,currentWingCobalt=false,currentWingDark=false,currentWingFold=0;
+let currentWingSpecial=false,currentWingRed=false,currentWingBurning=false,currentWingTakumi=false,currentWingTakumiBlue=false,currentWingCobalt=false,currentWingDark=false,currentWingTint=null,currentWingFold=0;
 function angelWing(x,y,side,scale=1,tilt=0){
  // One connected angel-wing silhouette. Broad at the shoulder, tapered into layered feather tips.
  ctx.save();ctx.translate(x,y);ctx.scale(side*scale*(1-.30*currentWingFold),scale*(1-.08*currentWingFold));ctx.rotate(tilt+side*.20*currentWingFold);
- ctx.fillStyle=currentWingBurning?'#d51f2f':(currentWingDark?'#242832':(currentWingCobalt?'#2f78df':(currentWingRed?'#d74c57':(currentWingTakumi?(currentWingTakumiBlue?'#2e67d1':'#f7f5e9'):(currentWingSpecial?'#fff9d8':'#fffdf5')))));ctx.strokeStyle=currentWingBurning?'#78131d':(currentWingDark?'#090b0f':(currentWingCobalt?'#123d85':(currentWingRed?'#7e2530':(currentWingTakumi?(currentWingTakumiBlue?'#123779':'#242424'):(currentWingSpecial?'#e4b94f':'#c9d9dc')))));ctx.lineWidth=2.2;ctx.lineJoin='round';
+ ctx.fillStyle=currentWingBurning?'#d51f2f':(currentWingTint?.fill||(currentWingDark?'#242832':(currentWingCobalt?'#2f78df':(currentWingRed?'#d74c57':(currentWingTakumi?(currentWingTakumiBlue?'#2e67d1':'#f7f5e9'):(currentWingSpecial?'#fff9d8':'#fffdf5'))))));ctx.strokeStyle=currentWingBurning?'#78131d':(currentWingTint?.stroke||(currentWingDark?'#090b0f':(currentWingCobalt?'#123d85':(currentWingRed?'#7e2530':(currentWingTakumi?(currentWingTakumiBlue?'#123779':'#242424'):(currentWingSpecial?'#e4b94f':'#c9d9dc'))))));ctx.lineWidth=2.2;ctx.lineJoin='round';
  ctx.beginPath();
  ctx.moveTo(0,2);
  ctx.bezierCurveTo(12,-17,32,-27,55,-25);
@@ -1496,7 +1496,7 @@ function angelWing(x,y,side,scale=1,tilt=0){
  ctx.bezierCurveTo(8,31,3,18,0,2);
  ctx.closePath();ctx.fill();ctx.stroke();
  // restrained feather separators: keep the wing reading as one mass, not insect wings
- ctx.strokeStyle=currentWingBurning?'#ff5964':(currentWingDark?'#596171':(currentWingCobalt?'#8fc0ff':(currentWingRed?'#f19a9f':(currentWingTakumi?'#88857e':(currentWingSpecial?'#fff0a6':'#e2ecee')))));ctx.lineWidth=1.8;
+ ctx.strokeStyle=currentWingBurning?'#ff5964':(currentWingTint?.detail||(currentWingDark?'#596171':(currentWingCobalt?'#8fc0ff':(currentWingRed?'#f19a9f':(currentWingTakumi?'#88857e':(currentWingSpecial?'#fff0a6':'#e2ecee'))))));ctx.lineWidth=1.8;
  for(const pts of [[[9,3],[33,-13],[55,-16]],[[10,9],[34,1],[59,1]],[[10,15],[31,13],[55,18]],[[9,21],[25,25],[41,31]]]){
   ctx.beginPath();ctx.moveTo(...pts[0]);ctx.quadraticCurveTo(...pts[1],...pts[2]);ctx.stroke();
  }
@@ -1744,7 +1744,7 @@ function drawRacer(r){
  // Glide: slight forward pitch / streamlined squash.
  if(r.flight===3){ctx.transform(1,0,-Math.sin(r.face)*.045,1,0,0);}
  if(canDrift(r)&&r.drifting){let slip=norm(r.face-(r.driftMoveFace||r.face));ctx.rotate(Math.max(-.22,Math.min(.22,slip*.22)));ctx.scale(1.03,.96);}
- currentWingSpecial=(r.name==='Michael'||r.name==='Inu'||r.name==='Saru'||r.name==='Keisuke'||r.name==='Ryosuke');currentWingDark=r.name==='Kyoichi';currentWingCobalt=r.name==='Kai';currentWingRed=r.name==='Kawazu';currentWingTakumi=(r.name==='Takumi'||r.name==='Bunta');currentWingTakumiBlue=!!r.takumiBlue||r.name==='Bunta';currentWingBurning=r.burningWing>0||r.highJump>0;currentWingFold=Math.min(1,(r.wingSnap||0)/.19);if(r.name==='Inu'||r.name==='Saru'||r.name==='Nakazato'||r.name==='Akiyama'||r.name==='Kyoichi'||r.name==='Kai')drawAnimalRacer(r,dir);else if(dir==='down')frogFront(r);else if(dir==='up')frogBack(r);else frogSide(r,dir==='left');currentWingBurning=false;currentWingTakumi=false;currentWingTakumiBlue=false;currentWingCobalt=false;currentWingDark=false;currentWingFold=0;
+ currentWingSpecial=(r.name==='Keisuke'||r.name==='Ryosuke'||r.name==='Inu');currentWingTint=r.name==='Michael'?{fill:'#c9efc9',stroke:'#79b879',detail:'#efffef'}:r.name==='Saru'?{fill:'#cceeff',stroke:'#76b9d6',detail:'#effaff'}:r.name==='Nakazato'?{fill:'#c8ccd2',stroke:'#777d86',detail:'#edf0f3'}:r.name==='Kyoichi'?{fill:'#555b66',stroke:'#20242b',detail:'#929aa6'}:null;currentWingDark=false;currentWingCobalt=r.name==='Kai';currentWingRed=r.name==='Kawazu';currentWingTakumi=(r.name==='Takumi'||r.name==='Bunta');currentWingTakumiBlue=!!r.takumiBlue||r.name==='Bunta';currentWingBurning=r.burningWing>0||r.highJump>0;currentWingFold=Math.min(1,(r.wingSnap||0)/.19);if(r.name==='Inu'||r.name==='Saru'||r.name==='Nakazato'||r.name==='Akiyama'||r.name==='Kyoichi'||r.name==='Kai')drawAnimalRacer(r,dir);else if(dir==='down')frogFront(r);else if(dir==='up')frogBack(r);else frogSide(r,dir==='left');currentWingBurning=false;currentWingTakumi=false;currentWingTakumiBlue=false;currentWingCobalt=false;currentWingDark=false;currentWingTint=null;currentWingFold=0;
 if(r.name==='Kyoichi'){
  // White head towel: deliberately oversized so the black dog never reads as Nakazato at phone scale.
  ctx.save();ctx.fillStyle='#f5f5f0';ctx.strokeStyle='#bfc5c8';ctx.lineWidth=2.4;
