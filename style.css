@@ -184,3 +184,6 @@ linear-gradient(135deg,#7fcf73,#59a967);overflow:hidden}
 
 .mapSpot.irohazaka{left:74%;top:52%;background:#584482;border-color:#c9b8f2}
 @media(max-width:700px){.mapSpot.irohazaka{left:72%;top:53%}}
+
+.mapSpot.atami{left:56%;top:70%;background:#287f9d;border-color:#b8efff}
+@media(max-width:700px){.mapSpot.atami{left:54%;top:72%}}
