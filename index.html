@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><meta name="theme-color" content="#173a31"><title>いぬさるM / 天使カエル峠レース Prototype</title><link rel="stylesheet" href="style.css"></head>
+
+<body>
+<main id="app">
+  <canvas id="game" width="1280" height="720"></canvas>
+
+  <section id="titleScreen" class="screenLayer">
+    <div class="titleCard">
+      <div class="titleFrog">🐸🪽</div>
+      <h1>いぬさるM</h1>
+      <div class="titleSub">天使カエル・峠レース</div>
+      <div class="titleVersion">TOUGE Prototype v3.00</div>
+      <button id="continueBtn" class="menuBtn">続きから</button>
+      <button id="newBtn" class="menuBtn">はじめから</button>
+      <div class="titleHint">ホームで交代して、アキナ山・ウスイへ</div>
+    </div>
+  </section>
+
+
+  <section id="storyScreen" class="screenLayer hidden">
+    <div class="storyScene">
+      <div id="storyVisual" class="storyVisual">🌆　🧑‍💼　🪷🐸</div>
+      <div class="storyBox">
+        <div id="storyText"></div>
+        <button id="storyNext" class="menuBtn">次へ</button>
+      </div>
+    </div>
+  </section>
+
+
+  <section id="tutorialScreen" class="screenLayer hidden">
+    <div class="panelCard tutorialCard">
+      <h2>🐸 飛び方・加速の基本</h2>
+      <div class="tutorialGrid">
+        <div class="homeBox"><b>① ジャンプ</b><p>地上からジャンプ。まだ低速なので、ここで進みたい方向を作ります。</p></div>
+        <div class="homeBox"><b>② もう一度ジャンプ</b><p>翼を羽ばたかせて加速。空中では速度が上がるほど慣性が強くなります。</p></div>
+        <div class="homeBox"><b>③ 3回目で滑空</b><p>最高速へ。しばらく滑空したあと、タイミングよくジャンプを押すと最高速を維持できます。</p></div>
+        <div class="homeBox"><b>🌳 舌ターン</b><p>コーナー内側の木へ舌を伸ばして長押し。木を中心に回り込み、出口へ向いたところで離します。</p></div>
+        <div class="homeBox"><b>💥 壁に激突すると</b><p>飛行の勢いを失って地上へ着地します。もう一度ジャンプから加速を作り直します。</p></div>
+        <div class="homeBox"><b>✂️ ショートカット</b><p>通れるなら正規の攻略です。バーニングクライムなどで飛び越せる地形は遠慮なく使えます。</p></div>
+      </div>
+      <p class="panelNote">基本は「ジャンプ → 羽ばたき → 滑空 → 維持」。高速中は急には曲がれないので、木・スキル・減速を使ってラインを作ります。</p>
+      <button id="tutorialClose" class="menuBtn">わかった！</button>
+    </div>
+  </section>
+
+  <section id="fieldScreen" class="screenLayer hidden">
+    <div id="fieldTop">
+      <b>フィールドマップ</b>
+      <span id="fieldPlayer">ミカエル</span>
+      <button id="saveBtn" class="smallUiBtn">セーブ</button>
+    </div>
+    <div id="fieldMap">
+      <button class="mapSpot home" data-place="home">🏠<b>ホーム</b><small>ミカエル / タクミ</small></button>
+      <button class="mapSpot practice" data-place="practice">🎯<b>練習場</b><small>操作・スキル練習</small></button>
+      <button class="mapSpot akina" data-place="akina">🍁<b>アキナ山</b><small>一本道・峠バトル</small></button>
+      <button class="mapSpot usui" data-place="usui">🌿<b>ウスイ</b><small>周回・峠バトル</small></button>
+      <div class="mapPath p1"></div><div class="mapPath p2"></div><div class="mapPath p3"></div>
+    </div>
+  </section>
+
+  <section id="homePanel" class="screenLayer panelLayer hidden">
+    <div class="panelCard">
+      <h2>🏠 ホーム</h2>
+      <div class="homeCols">
+        <div class="homeBox">
+          <h3>操作キャラクター</h3>
+          <div id="charSelect">
+            <button class="charBtn" data-char="Michael">ミカエルさん<small>バーニングウィング / ドリフト飛行</small></button>
+            <button id="takumiCharBtn" class="charBtn" data-char="Takumi">タクミさん<small>溝落とし / ドリフト飛行</small></button>
+          </div>
+        </div>
+        <div class="homeBox">
+          <h3 id="skillSetupTitle">ミカエル スキル設定</h3>
+          <label>スキル1（Aボタン）
+            <select id="skillASelect">
+              <option value="burningWing">バーニングウィング</option>
+              
+            </select>
+          </label>
+          <label>スキル2（Bボタン）
+            <select id="skillBSelect">
+              <option value="driftFlight">ドリフト飛行</option>
+              
+            </select>
+          </label>
+          <p id="skillSetupNote" class="panelNote">ミカエルさんのスキルは固定です。</p>
+        </div>
+      </div>
+      <button class="backFieldBtn menuBtn">フィールドへ戻る</button>
+    </div>
+  </section>
+
+  <section id="placePanel" class="screenLayer panelLayer hidden">
+    <div class="panelCard">
+      <h2 id="placeTitle">場所</h2>
+      <p id="placeDesc"></p>
+      <div id="placeActions"></div>
+      <button class="backFieldBtn menuBtn">フィールドへ戻る</button>
+    </div>
+  </section>
+
+  <div id="raceUi" class="hidden">
+    <div id="topHud"><b>いぬさるM</b><span id="who">操作：ミカエル</span><span id="speed">0 km/h</span><span id="lap">LAP 1/3</span><span id="status">ジャンプ3回で最高速！</span></div><div id="curveGuide" class="curveGuide straight">↑ 直線</div>
+    <div id="stick"><i></i></div>
+    <div id="actions">
+      <button id="jump" class="jump">ジャンプ<small>3段階 / 維持</small></button>
+      <button id="tongue" class="tongue">舌<small>長押し：アンカー</small></button>
+      <button id="skillA">A<small>パンチ</small></button>
+      <button id="skillB">B<small>泡弾</small></button>
+    </div>
+    <button id="quitRace" class="smallUiBtn">フィールドへ</button>
+    <div id="help">左スティック：旋回　ジャンプ×3：最高速滑空　A：固有技　B長押し：ドリフト飛行</div>
+  </div>
+
+  <div id="versionBadge"><b>TOUGE v3.00</b><small>アキナ山 + ウスイ / ミカエル・タクミ / 犬猿ライバル</small></div>
+</main>
+<script src="game.js"></script>
+</body></html>

@@ -1,0 +1,174 @@
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#102b25;color:#fff;font-family:system-ui,-apple-system,"Hiragino Sans","Yu Gothic",sans-serif;touch-action:none}main{position:relative;width:100vw;height:100vh;display:grid;place-items:center}canvas{width:min(100vw,177.78vh);height:min(56.25vw,100vh);background:#8bcf72;box-shadow:0 0 50px #0008}#topHud{position:absolute;top:10px;left:50%;transform:translateX(-50%);width:min(96vw,1220px);display:flex;gap:14px;align-items:center;background:#102820d9;border:2px solid #d8f6db88;border-radius:18px;padding:9px 14px;font-size:15px;pointer-events:none}#topHud b{color:#f8ffb0}#status{margin-left:auto;color:#fff7b5}#stick{position:absolute;left:5vw;bottom:clamp(190px,20vh,260px);width:150px;height:150px;border:3px solid #fff9;border-radius:50%;background:#163c3288;touch-action:none}#stick i{position:absolute;width:62px;height:62px;left:41px;top:41px;border-radius:50%;background:#eaffeecc;border:3px solid #173a31}#actions{position:absolute;right:max(18px,3.2vw);bottom:clamp(190px,20vh,260px);display:grid;grid-template-columns:96px 96px;grid-template-rows:96px 96px;gap:10px 12px;width:auto;height:auto;z-index:5}
+button{border:2px solid #fff9;color:#fff;background:#214b40e8;border-radius:50%;font-weight:800;box-shadow:0 5px 0 #0d2721aa;touch-action:none}
+button:active{transform:translateY(3px);box-shadow:0 2px 0 #0d2721aa}
+button small{display:block;font-size:10px;font-weight:600;opacity:.9}
+#actions button{position:static!important;width:96px!important;height:96px!important;font-size:18px}
+#jump{grid-column:1;grid-row:1;background:#4e9f54ee}
+#tongue{grid-column:2;grid-row:1;background:#d15272ee}
+#skillA{grid-column:1;grid-row:2;background:#5c69cfee}
+#skillB{grid-column:2;grid-row:2;background:#287fb9ee}
+#swap{position:absolute;right:24px;top:64px;border-radius:16px;padding:10px 16px;background:#7154a5dd}#help{position:absolute;left:50%;transform:translateX(-50%);bottom:8px;width:min(62vw,790px);padding:7px 12px;text-align:center;background:#102820bb;border-radius:12px;font-size:11px;line-height:1.45;pointer-events:none}@media(max-width:850px){#stick{width:118px;height:118px;left:3vw;bottom:clamp(145px,19vh,205px)}#stick i{width:48px;height:48px;left:32px;top:32px}#actions{right:10px;bottom:clamp(145px,19vh,205px);grid-template-columns:76px 76px;grid-template-rows:76px 76px;gap:7px 8px}#actions button{width:76px!important;height:76px!important;font-size:15px}#actions button small{font-size:8px}#help{display:none}#topHud{font-size:11px;gap:7px;padding:6px 9px}#swap{top:48px;font-size:10px;padding:7px 10px}}
+#versionBadge{position:absolute;left:18px;top:58px;z-index:8;background:#102820d9;border:1px solid #d8f6db77;border-radius:10px;padding:6px 9px;pointer-events:none;font-size:11px;line-height:1.2}
+#versionBadge b{color:#fff7a8;margin-right:7px}
+#versionBadge small{font-size:9px;opacity:.82}
+@media(max-width:850px){#versionBadge{left:8px;top:45px;font-size:9px;padding:4px 6px;max-width:260px}#versionBadge small{font-size:7px}}
+
+
+.hidden{display:none!important}
+.screenLayer{position:absolute;inset:0;z-index:20}
+#titleScreen{display:grid;place-items:center;background:
+radial-gradient(circle at 50% 25%,#dffff0 0,#91d894 38%,#3f8b62 70%,#173a31 100%)}
+.titleCard{width:min(86vw,580px);padding:34px 28px 30px;text-align:center;background:#102820e8;border:3px solid #e8ffe8aa;border-radius:28px;box-shadow:0 18px 70px #0008}
+.titleFrog{font-size:54px}.titleCard h1{font-size:42px;margin:3px 0;color:#fff7a8;letter-spacing:2px}
+.titleSub{font-size:21px;font-weight:800;margin-bottom:6px}.titleVersion{font-size:13px;opacity:.8;margin-bottom:22px}
+.menuBtn{display:block;width:min(90%,360px);height:auto;min-height:58px;margin:12px auto;border-radius:18px;font-size:20px;padding:12px 18px;background:#3b785eee}
+.titleHint{font-size:12px;opacity:.75;margin-top:18px}
+
+#fieldScreen{background:linear-gradient(#92d5e6 0 24%,#6eba72 24% 100%);overflow:hidden}
+#fieldTop{position:absolute;left:18px;right:18px;top:14px;height:44px;padding:0 14px;display:flex;gap:18px;align-items:center;background:#102820df;border-radius:16px;z-index:3}
+#fieldTop #saveBtn{margin-left:auto}
+.smallUiBtn{border-radius:12px;padding:8px 12px;height:auto;width:auto;background:#315e54}
+#fieldMap{position:absolute;inset:72px 16px 18px;border:3px solid #d8ffd999;border-radius:24px;background:
+radial-gradient(circle at 72% 70%,#6ab7ca 0 8%,transparent 8.4%),
+radial-gradient(circle at 78% 70%,#6ab7ca 0 12%,transparent 12.4%),
+linear-gradient(135deg,#7fcf73,#59a967);overflow:hidden}
+.mapSpot{position:absolute;width:150px;height:92px;border-radius:24px;background:#173c32e6;z-index:2;font-size:26px}
+.mapSpot b,.mapSpot small{display:block}.mapSpot b{font-size:14px}.mapSpot small{font-size:9px;opacity:.8}
+.mapSpot.home{left:4%;top:78%}.mapSpot.a1{left:31%;top:16%}.mapSpot.a2{left:56%;top:17%}.mapSpot.a3{left:75%;top:39%}
+.mapSpot.practice{left:26%;top:66%}.mapSpot.forest{left:55%;top:63%}.mapSpot.pond{left:76%;top:69%}
+.mapPath{position:absolute;height:14px;background:#d9bd79;border-radius:20px;transform-origin:left center;opacity:.85}
+.mapPath.p1{left:19%;top:58%;width:250px;transform:rotate(-45deg)}
+.mapPath.p2{left:42%;top:29%;width:235px;transform:rotate(2deg)}
+.mapPath.p3{left:67%;top:29%;width:190px;transform:rotate(31deg)}
+.mapPath.p4{left:19%;top:64%;width:300px;transform:rotate(13deg)}
+.mapPath.p5{left:48%;top:69%;width:340px;transform:rotate(3deg)}
+
+.panelLayer{display:grid;place-items:center;background:#102820b8}
+.panelCard{width:min(88vw,760px);max-height:86vh;overflow:auto;padding:26px;background:#eaffee;color:#17352d;border-radius:24px;border:4px solid #4b8f65;box-shadow:0 20px 60px #0008}
+.panelCard h2{margin-top:0;text-align:center}.homeCols{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.homeBox{background:#fff;border:2px solid #84b995;border-radius:18px;padding:16px}
+.charBtn{width:100%;height:auto;min-height:66px;margin:8px 0;border-radius:16px;background:#4f806b}
+.charBtn.selected{outline:4px solid #f6cf56}.charBtn small{font-size:10px}
+.homeBox label{display:block;font-weight:800;margin:12px 0}.homeBox select{width:100%;padding:9px;border-radius:10px}
+.panelNote{font-size:11px;opacity:.7}.panelCard .menuBtn{background:#40765f}
+
+#raceUi{position:absolute;inset:0;z-index:10;pointer-events:none}
+#raceUi #stick,#raceUi #actions,#raceUi #swap,#raceUi #quitRace{pointer-events:auto}
+#quitRace{position:absolute;right:24px;top:108px;z-index:8}
+#versionBadge{z-index:40}
+@media(max-width:850px){
+ .titleCard h1{font-size:28px}.titleFrog{font-size:38px}
+ .mapSpot{width:105px;height:70px;font-size:20px}.mapSpot b{font-size:11px}.mapSpot small{font-size:7px}
+ .homeCols{grid-template-columns:1fr}.panelCard{padding:16px}
+}
+
+.mapSpot.master{left:45%;top:42%;background:#202729e8;border-color:#b5ff48;color:#d8ff72}
+
+.mapSpot.kawazu{left:63%;top:48%;background:#356e45e8;border-color:#e34f5b}.mapSpot.kawazu small{color:#ffd3d6}
+
+#storyScreen{display:grid;place-items:center;background:linear-gradient(#f0a56f 0 36%,#496d70 36% 53%,#276a55 53% 100%)}
+.storyScene{width:min(92vw,850px);height:min(82vh,570px);display:flex;flex-direction:column;justify-content:flex-end}
+.storyVisual{flex:1;display:grid;place-items:center;font-size:70px;text-shadow:0 6px 12px #0005;letter-spacing:18px}
+.storyBox{background:#102820ed;border:3px solid #eaffdf;border-radius:22px;padding:22px 26px;min-height:180px;box-shadow:0 12px 40px #0008}
+#storyText{white-space:pre-line;font-size:19px;line-height:1.75;min-height:95px}
+#storyNext{min-height:45px;font-size:16px;margin:10px 0 0 auto;width:150px}
+
+.tutorialCard{max-width:980px;max-height:88vh;overflow:auto}
+.tutorialGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:14px 0}
+.tutorialGrid .homeBox{min-height:110px}
+.tutorialGrid p{margin:.5em 0 0;line-height:1.55}
+@media(max-width:700px){.tutorialGrid{grid-template-columns:1fr}.tutorialCard{max-height:92vh}}
+
+.mapSpot.a4{left:55%;top:10%}
+.mapSpot.a5{left:68%;top:61%}
+
+.mapSpot.akina{left:10%;top:54%;background:#8b4b2f}
+
+
+/* v2.30: Akina mountain terrain */
+#fieldMap::before{
+ content:"";position:absolute;left:1.5%;top:34%;width:30%;height:39%;z-index:0;pointer-events:none;
+ background:
+   radial-gradient(ellipse at 52% 70%,#526f46 0 24%,transparent 25%),
+   radial-gradient(ellipse at 28% 62%,#65834e 0 31%,transparent 32%),
+   radial-gradient(ellipse at 68% 43%,#79995b 0 28%,transparent 29%),
+   radial-gradient(ellipse at 39% 34%,#8aaa61 0 25%,transparent 26%);
+ clip-path:polygon(4% 94%,15% 67%,28% 71%,40% 38%,51% 53%,67% 12%,79% 39%,94% 25%,100% 100%,0 100%);
+ filter:drop-shadow(0 8px 5px #315a3a55);
+ opacity:.95
+}
+#fieldMap::after{
+ content:"";position:absolute;left:6%;top:42%;width:22%;height:25%;z-index:1;pointer-events:none;
+ border:7px solid #d5c187;border-color:#d5c187 transparent transparent #d5c187;
+ border-radius:52% 22% 48% 30%;transform:rotate(-17deg);opacity:.72
+}
+.mapSpot.akina{z-index:2}
+
+/* Keep the many map destinations readable instead of stacking on narrow phones. */
+@media (max-width:700px){
+ #fieldTop{left:10px;right:10px;gap:8px;padding:0 10px}
+ #fieldTop #saveBtn{max-width:72px;padding:7px 8px}
+ #fieldMap{inset:72px 10px 10px}
+ .mapSpot{width:94px;height:64px;border-radius:18px;padding:4px}
+ .mapSpot b{font-size:10px;line-height:1.12}.mapSpot small{font-size:6.5px;line-height:1.1}
+ .mapSpot.a1{left:29%;top:13%}
+ .mapSpot.a2{left:61%;top:22%}
+ .mapSpot.a4{left:62%;top:7%}
+ .mapSpot.a3{left:70%;top:39%}
+ .mapSpot.master{left:39%;top:40%}
+ .mapSpot.kawazu{left:65%;top:51%}
+ .mapSpot.akina{left:5%;top:48%}
+ .mapSpot.practice{left:25%;top:68%}
+ .mapSpot.forest{left:53%;top:62%}
+ .mapSpot.a5{left:70%;top:70%}
+ .mapSpot.pond{left:72%;top:82%}
+ .mapSpot.home{left:5%;top:73%}
+ .mapPath{height:9px}
+}
+@media (max-width:430px){
+ .mapSpot{width:86px;height:60px}
+ .mapSpot.a1{left:27%;top:14%}
+ .mapSpot.a2{left:59%;top:23%}
+ .mapSpot.a4{left:61%;top:6%}
+ .mapSpot.a3{left:69%;top:39%}
+ .mapSpot.master{left:36%;top:40%}
+ .mapSpot.kawazu{left:62%;top:50%}
+ .mapSpot.akina{left:4%;top:48%}
+ .mapSpot.practice{left:23%;top:68%}
+ .mapSpot.forest{left:49%;top:61%}
+ .mapSpot.a5{left:68%;top:69%}
+ .mapSpot.pond{left:69%;top:81%}
+ .mapSpot.home{left:4%;top:74%}
+}
+
+
+/* v2.50: foldable / wide-phone map spacing */
+@media (min-width:701px) and (max-width:1100px){
+  .mapSpot.akina{left:7%;top:49%}
+  .mapSpot.home{left:7%;top:78%}
+  .mapSpot.practice{left:27%;top:69%}
+}
+
+
+/* v2.54 upcoming-curve guide */
+.curveGuide{
+  position:absolute;z-index:18;top:72px;left:50%;transform:translateX(-50%);
+  min-width:180px;max-width:min(62vw,520px);padding:8px 16px;border-radius:22px;
+  text-align:center;font-weight:800;font-size:18px;letter-spacing:.02em;
+  color:#f6fff7;background:rgba(6,51,43,.82);border:2px solid rgba(235,255,225,.62);
+  box-shadow:0 3px 0 rgba(0,0,0,.24);pointer-events:none;
+}
+.curveGuide.mild{background:rgba(31,108,72,.84)}
+.curveGuide.medium{background:rgba(124,105,23,.86)}
+.curveGuide.hard{background:rgba(154,73,22,.88)}
+.curveGuide.hairpin{background:rgba(160,43,43,.90);font-size:20px}
+.curveGuide.sequence{background:rgba(98,49,145,.90)}
+@media (max-width:700px){
+  .curveGuide{top:68px;font-size:15px;padding:6px 11px;min-width:145px;max-width:64vw}
+  .curveGuide.hairpin{font-size:16px}
+}
+/* TOUGE v3.00 map layout */
+.mapSpot.home{left:8%;top:12%}
+.mapSpot.practice{left:10%;top:68%}
+.mapSpot.akina{left:55%;top:15%}
+.mapSpot.usui{left:68%;top:62%}
