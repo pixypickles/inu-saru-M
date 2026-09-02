@@ -2,7 +2,7 @@
 
 
 // ===== v1.5 meta game / field map =====
-const VERSION='v3.34-SHOMARU-AKAGI-FEEL';
+const VERSION='v3.35-AKIYAMA-TURBO-BALANCE';
 const RACE_LAPS=1;
 
 const CHARACTER_DATA={
@@ -993,9 +993,10 @@ r.takumiPassiveCd=Math.max(0,(r.takumiPassiveCd||0)-dt);r.dokkanTurbo=Math.max(0
      // Dokkan Turbo: explosive straight-line acceleration, offset by a mild weave.
      // He still has to shed speed for Shomaru's tight hairpins and uses drift to finish the turn.
      if(r.dokkanTurbo>0){
-       const target=bend<.20?maxSpeed+235:bend<.42?maxSpeed+145:610;
-       r.speed=approach(r.speed,target,940*dt);
-     }else if(bend<.18)r.speed=approach(r.speed,maxSpeed+35,350*dt);
+       // Short, violent burst rather than a near-permanent top-speed state.
+       const target=bend<.20?maxSpeed+155:bend<.42?maxSpeed+85:590;
+       r.speed=approach(r.speed,target,820*dt);
+     }else if(bend<.18)r.speed=approach(r.speed,maxSpeed-20,300*dt);
      else if(bend>.98)r.speed=Math.min(r.speed,420);
      else if(bend>.62)r.speed=Math.min(r.speed,480);
      else if(bend>.38)r.speed=Math.min(r.speed,555);
@@ -1217,7 +1218,7 @@ function pressJumpSilent(r){snapWings(r);if(r.flight===0){r.flight=1;r.speed=Mat
 function aiSkills(r,dt){if(r.name==='Ryosuke'){let bend=r.aiBend||0,seg=aiForwardSegment(r);if(bend>.58){let j=Math.min(path.length-1,seg.i+2),t=path[j];r.ryosukeTongue={x:t.x,y:t.y,t:.18};r.wallGrace=Math.max(r.wallGrace,.65);}else r.ryosukeTongue=null;return;}if(r.name==='Keisuke'){let ns=aiForwardSegment(r),bend=r.aiBend||0;if(bend>.34&&!r.drifting&&r.skillCdB<=0&&Math.random()<dt*7.5){startTakumiDrift(r);r.speed=Math.max(r.speed,545);}if(r.drifting&&(r.driftCharge>1.15||bend<.16))releaseTakumiDrift(r);if((bend>.62||trackInfo(r.x,r.y).d>courseHalfWidth*.66)&&r.extremeFocusCd<=0){r.extremeFocus=1.65;r.extremeFocusCd=4.2;r.wallGrace=Math.max(r.wallGrace,1.7);}return;}if(r.name==='Akiyama'){
  let bend=r.aiBend||0;
  // Use turbo on straights and just after a corner. The wobble is intentional risk/reward flavor.
- if(bend<.19&&r.dokkanTurboCd<=0&&r.speed>300&&Math.random()<dt*2.7){r.dokkanTurbo=1.55;r.dokkanTurboCd=4.1;r.speed=Math.max(r.speed,560);r.boost=Math.max(r.boost,.22);}
+ if(bend<.19&&r.dokkanTurboCd<=0&&r.speed>300&&Math.random()<dt*1.8){r.dokkanTurbo=1.30;r.dokkanTurboCd=8.0;r.speed=Math.max(r.speed,535);r.boost=Math.max(r.boost,.22);}
  // Ordinary drift is the second skill: start before medium/tight bends, release on exit.
  if(bend>.40&&!r.drifting&&r.skillCdB<=0&&Math.random()<dt*6.2)startTakumiDrift(r);
  if(r.drifting&&(r.driftCharge>.95||bend<.16))releaseTakumiDrift(r);
@@ -1304,7 +1305,7 @@ function useMichaelSkill(r,id,slot){
  if(id==='extremeFocus'){r[cdKey]=4.2;r.extremeFocus=1.8;r.wallGrace=Math.max(r.wallGrace,1.8);r.speed=Math.max(r.speed,500);msg('コピー：極限集中！');return true;}
  if(id==='treeSwing'){r[cdKey]=2.8;r.wallGrace=Math.max(r.wallGrace,1.0);r.speed=Math.min(maxSpeed+110,r.speed+120);r.boost=.65;msg('コピー：インサイド・スイング！');return true;}
  if(id==='blackBoost'){r[cdKey]=2.6;r.speed=Math.min(maxSpeed+190,r.speed+205);r.boost=.9;msg('コピー：ブラック・ブースト！');return true;}
- if(id==='dokkanTurbo'){r[cdKey]=3.6;r.dokkanTurbo=1.65;r.speed=Math.min(maxSpeed+230,r.speed+245);r.boost=1.0;msg('コピー：ドッカン・ターボ！ 少しブレる！');return true;}
+ if(id==='dokkanTurbo'){r[cdKey]=6.5;r.dokkanTurbo=1.40;r.speed=Math.min(maxSpeed+170,r.speed+205);r.boost=1.0;msg('コピー：ドッカン・ターボ！ 短時間の強烈加速！');return true;}
  if(id==='wallSkim'){r[cdKey]=3.0;r.kaiWallSkim=1.8;r.wallGrace=Math.max(r.wallGrace,1.9);r.speed=Math.max(r.speed,510);msg('コピー：ヘアピン・スレスレ！');return true;}
  if(id==='cornerExitBoost'){r[cdKey]=2.5;r.speed=Math.min(maxSpeed+165,r.speed+175);r.boost=.8;msg('コピー：コーナー出口加速！');return true;}
  if(id==='fastTheory'){r[cdKey]=5.0;r.ryosukeTheory=2.5;r.wallGrace=Math.max(r.wallGrace,2.5);r.speed=Math.max(r.speed,535);msg('コピー：公道最速理論！');return true;}
