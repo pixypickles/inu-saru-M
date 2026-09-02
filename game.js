@@ -2,7 +2,7 @@
 
 
 // ===== v1.5 meta game / field map =====
-const VERSION='v3.30-MICHAEL-NAME-GAG';
+const VERSION='v3.31-DEFEAT-CHECK-PASSIVE-COPY';
 const RACE_LAPS=1;
 
 const CHARACTER_DATA={
@@ -111,6 +111,26 @@ const RIVAL_COPY_SKILLS={
  Ryosuke:[['fastTheory','公道最速理論']],
  Kanata:[['kanataTrace','ライン・トレース']]
 };
+
+const RIVAL_PASSIVE_SKILLS={
+ Keisuke:'極限集中感覚',
+ Saru:'インサイド感覚',
+ Nakazato:'レイトブレーキ',
+ Akiyama:'ターボレスポンス',
+ Kai:'壁際感覚',
+ Kyoichi:'アンチラグ',
+ Ryosuke:'ゼロ・ミス',
+ Kanata:'エア・リカバリー'
+};
+function michaelHasPassive(name){return (saveData.defeatedRivals||[]).includes(name);}
+function michaelSpeedBonus(r){return r?.name==='Michael'?Math.min(24,(saveData.defeatedRivals||[]).filter(n=>RIVAL_PASSIVE_SKILLS[n]).length*3):0;}
+function defeatMark(name){return (saveData.defeatedRivals||[]).includes(name)?' ✓':'';}
+function michaelPassiveSummary(){
+ const got=(saveData.defeatedRivals||[]).filter(n=>RIVAL_PASSIVE_SKILLS[n]).map(n=>RIVAL_PASSIVE_SKILLS[n]);
+ const bonus=michaelSpeedBonus({name:'Michael'});
+ return got.length?'パッシブ：'+got.join(' / ')+'　基本速度 +'+bonus:'パッシブ：まだなし';
+}
+
 const LEARNABLE_SKILLS={
  Gabriel:[['waterBoost','水ブースト'],['waterLaser','水レーザー']],
  Raphael:[['airBarrier','エアバリア'],['airBoost','エアブースト']],
@@ -135,7 +155,7 @@ function rebuildSkillSelects(){
    if(!opts.some(x=>x[0]===saveData.michaelSkillA))saveData.michaelSkillA='burningWing';
    if(!opts.some(x=>x[0]===saveData.michaelSkillB))saveData.michaelSkillB='driftFlight';
    a.disabled=false;b.disabled=false;a.innerHTML=opts.map(x=>'<option value="'+x[0]+'">'+x[1]+'</option>').join('');b.innerHTML=a.innerHTML;a.value=saveData.michaelSkillA;b.value=saveData.michaelSkillB;
-   document.querySelector('#skillSetupTitle').textContent=((saveData.defeatedRivals||[]).includes('Ryosuke')?'ミカエル・ベッケンバウアー':'ミカエル')+' コピー・スキル';document.querySelector('#skillSetupNote').textContent='倒したライバルの技をA/Bにセットできます。最初はバーニングウィング＋ドリフト飛行。';
+   document.querySelector('#skillSetupTitle').textContent=((saveData.defeatedRivals||[]).includes('Ryosuke')?'ミカエル・ベッケンバウアー':'ミカエル')+' コピー・スキル';document.querySelector('#skillSetupNote').textContent='倒したライバルの技をA/Bにセット。倒した相手のパッシブは自動で常時発動します。\n'+michaelPassiveSummary();
  }
 }
 function learnFromOpponent(name){
@@ -161,13 +181,13 @@ function showPlace(place){
  const data={practice:['🎯 練習場','ジャンプ、バーニングウィング、ドリフト飛行を自由に練習できます。'],akina:['🍁 アキナ','黄色いカエルのケイスケさんが待つ一本道の峠。高速ドリフトと極限集中を使います。'],usui:['🌿 ウスイ','40000×40000ワールドの閉ループ峠。近接道路は別区間のまま保持します。'],myogi:['⛰️ ミョウギ','細長い折り返しと連続S字が続くポイント・トゥ・ポイント峠。ナカザトさんが待っています。'],shomaru:['🛣️ ショウマル','細かい切り返しと複合ヘアピンが続くポイント・トゥ・ポイント峠。タクミさんと同系色の犬・アキヤマさんが待っています。ドッカン・ターボとドリフトを使います。'],akagi:['🔴 アカギ','高密度180点トレースをそのまま折れ線で結ぶダウンヒル。アカギだけはスプラインで形を作り直さず、近接する折り返しも別道路のまま保持します。純白のカエル・リョウスケさんは「公道最速理論」と「ゼロ・ミス」を常時発動する最強ライバルです。'],irohazaka:['🌀 イロハザカ','連続ヘアピンが密集するポイント・トゥ・ポイント峠。第2・第3区間は折れ線をそのまま使い、近接道路を絶対に接続しません。コバルトブルーのカイさんは「ヘアピン・スレスレ」と「ジャンピングライン」、黒い犬のキョウイチさんは「コーナー出口加速」と「アンチラグ」を使います。'],atami:['🌊 アタミ','リョウスケさん撃破後に現れる海沿いショートコース。HYDRO TRAPと本物のJUMP STAGEを越え、赤い翼のカエル・カナタさんと勝負。カナタさんは「ライン・トレース」と「エア・リカバリー」を使います。']}[place]||['峠','準備中のコースです。'];
  document.querySelector('#placeTitle').textContent=data[0];document.querySelector('#placeDesc').textContent=data[1];const actions=document.querySelector('#placeActions');actions.innerHTML='';
  if(place==='practice'){const g=document.createElement('button');g.className='menuBtn';g.textContent='📖 操作説明を見る';g.onclick=()=>showTutorial('practice');actions.appendChild(g);for(const n of ['Inu','Saru']){const q=document.createElement('button');q.className='menuBtn';q.textContent=(CHARACTER_DATA[n]?.jp||n)+'と練習';q.onclick=()=>{tournament=null;currentPlace='practice';startRaceRound(n,true)};actions.appendChild(q);}}
- else if(place==='akina'){const o='Keisuke';const q=document.createElement('button');q.className='menuBtn';q.textContent=(CHARACTER_DATA[o]?.jp||o)+'とアキナバトル';q.onclick=()=>{tournament={place:'akina',round:0,courseIndex:0,opponents:[o]};startRaceRound(o,false)};actions.appendChild(q);}
- else if(place==='usui'){const n='Saru';const q=document.createElement('button');q.className='menuBtn';q.textContent=(CHARACTER_DATA[n]?.jp||n)+'とウスイバトル';q.onclick=()=>{tournament={place:'usui',round:0,courseIndex:0,opponents:[n]};startRaceRound(n,false)};actions.appendChild(q);}
- else if(place==='myogi'){const n='Nakazato';const q=document.createElement('button');q.className='menuBtn';q.textContent=(CHARACTER_DATA[n]?.jp||n)+'とミョウギバトル';q.onclick=()=>{tournament={place:'myogi',round:0,courseIndex:0,opponents:[n]};startRaceRound(n,false)};actions.appendChild(q);}
- else if(place==='shomaru'){const n='Akiyama';const q=document.createElement('button');q.className='menuBtn';q.textContent=(CHARACTER_DATA[n]?.jp||n)+'とショウマルバトル';q.onclick=()=>{tournament={place:'shomaru',round:0,courseIndex:0,opponents:[n]};startRaceRound(n,false)};actions.appendChild(q);}
- else if(place==='akagi'){const n='Ryosuke',need=['Keisuke','Saru','Nakazato','Akiyama','Kai','Kyoichi'],ready=need.every(x=>(saveData.defeatedRivals||[]).includes(x));const q=document.createElement('button');q.className='menuBtn';q.textContent=(CHARACTER_DATA[n]?.jp||n)+'とアカギダウンヒル'+(ready?'':' 🔒');q.onclick=()=>{if(!ready){msg('リョウスケさん「まだ早い。」\n先にほかのライバル全員を倒してこよう。');return;}tournament={place:'akagi',round:0,courseIndex:0,opponents:[n]};startRaceRound(n,false)};actions.appendChild(q);}
- else if(place==='irohazaka'){for(const n of ['Kai','Kyoichi']){const q=document.createElement('button');q.className='menuBtn';q.textContent=(CHARACTER_DATA[n]?.jp||n)+'とイロハザカバトル';q.onclick=()=>{tournament={place:'irohazaka',round:0,courseIndex:0,opponents:[n]};startRaceRound(n,false)};actions.appendChild(q);}}
- else if(place==='atami'){const n='Kanata',ready=(saveData.defeatedRivals||[]).includes('Ryosuke');const q=document.createElement('button');q.className='menuBtn';q.textContent=(CHARACTER_DATA[n]?.jp||n)+'とアタミ・ショートバトル'+(ready?'':' 🔒');q.onclick=()=>{if(!ready){msg('まだこの海沿いコースは現れていない。\nまずリョウスケさんを倒そう。');return;}msg('カナタさん「勝負だ！ ミカエル・ベッケンバウアー！」');setTimeout(()=>{tournament={place:'atami',round:0,courseIndex:0,opponents:[n]};startRaceRound(n,false)},900)};actions.appendChild(q);}
+ else if(place==='akina'){const o='Keisuke';const q=document.createElement('button');q.className='menuBtn';q.textContent=(CHARACTER_DATA[o]?.jp||o)+'とアキナバトル'+defeatMark(o);q.onclick=()=>{tournament={place:'akina',round:0,courseIndex:0,opponents:[o]};startRaceRound(o,false)};actions.appendChild(q);}
+ else if(place==='usui'){const n='Saru';const q=document.createElement('button');q.className='menuBtn';q.textContent=(CHARACTER_DATA[n]?.jp||n)+'とウスイバトル'+defeatMark(n);q.onclick=()=>{tournament={place:'usui',round:0,courseIndex:0,opponents:[n]};startRaceRound(n,false)};actions.appendChild(q);}
+ else if(place==='myogi'){const n='Nakazato';const q=document.createElement('button');q.className='menuBtn';q.textContent=(CHARACTER_DATA[n]?.jp||n)+'とミョウギバトル'+defeatMark(n);q.onclick=()=>{tournament={place:'myogi',round:0,courseIndex:0,opponents:[n]};startRaceRound(n,false)};actions.appendChild(q);}
+ else if(place==='shomaru'){const n='Akiyama';const q=document.createElement('button');q.className='menuBtn';q.textContent=(CHARACTER_DATA[n]?.jp||n)+'とショウマルバトル'+defeatMark(n);q.onclick=()=>{tournament={place:'shomaru',round:0,courseIndex:0,opponents:[n]};startRaceRound(n,false)};actions.appendChild(q);}
+ else if(place==='akagi'){const n='Ryosuke',need=['Keisuke','Saru','Nakazato','Akiyama','Kai','Kyoichi'],ready=need.every(x=>(saveData.defeatedRivals||[]).includes(x));const q=document.createElement('button');q.className='menuBtn';q.textContent=(CHARACTER_DATA[n]?.jp||n)+'とアカギダウンヒル'+defeatMark(n)+(ready?'':' 🔒');q.onclick=()=>{if(!ready){msg('リョウスケさん「まだ早い。」\n先にほかのライバル全員を倒してこよう。');return;}tournament={place:'akagi',round:0,courseIndex:0,opponents:[n]};startRaceRound(n,false)};actions.appendChild(q);}
+ else if(place==='irohazaka'){for(const n of ['Kai','Kyoichi']){const q=document.createElement('button');q.className='menuBtn';q.textContent=(CHARACTER_DATA[n]?.jp||n)+'とイロハザカバトル'+defeatMark(n);q.onclick=()=>{tournament={place:'irohazaka',round:0,courseIndex:0,opponents:[n]};startRaceRound(n,false)};actions.appendChild(q);}}
+ else if(place==='atami'){const n='Kanata',ready=(saveData.defeatedRivals||[]).includes('Ryosuke');const q=document.createElement('button');q.className='menuBtn';q.textContent=(CHARACTER_DATA[n]?.jp||n)+'とアタミ・ショートバトル'+defeatMark(n)+(ready?'':' 🔒');q.onclick=()=>{if(!ready){msg('まだこの海沿いコースは現れていない。\nまずリョウスケさんを倒そう。');return;}msg('カナタさん「勝負だ！ ミカエル・ベッケンバウアー！」');setTimeout(()=>{tournament={place:'atami',round:0,courseIndex:0,opponents:[n]};startRaceRound(n,false)},900)};actions.appendChild(q);}
 }
 
 function makeShootingCourse(place){
@@ -365,7 +385,7 @@ function startRaceRound(opponent,practice=false){
 }
 function showRaceResult(win){
  if(!tournament){msg(win?'練習終了！':'練習終了');setTimeout(()=>showPlace('practice'),550);return;}
- const back=tournament.place;msg(win?'勝利！':'敗北… もう一度挑戦できます。');if(win){saveData.wins=(saveData.wins||0)+1;saveData.tournamentWins=saveData.tournamentWins||{};saveData.tournamentWins[back]=(saveData.tournamentWins[back]||0)+1;let beaten=tournament.opponents?.[tournament.round]||tournament.opponents?.[0];saveData.defeatedRivals=saveData.defeatedRivals||[];if(beaten&&!saveData.defeatedRivals.includes(beaten)){saveData.defeatedRivals.push(beaten);let cp=RIVAL_COPY_SKILLS[beaten]?.[0];if(cp)msg('勝利！ ミカエルさんが「'+cp[1]+'」をコピーした！');if(beaten==='Ryosuke')setTimeout(()=>msg('リョウスケさん撃破！\n新たな舞台「アタミ」が出現した！'),260);}saveGame();}tournament=null;setTimeout(()=>showPlace(back),700);
+ const back=tournament.place;msg(win?'勝利！':'敗北… もう一度挑戦できます。');if(win){saveData.wins=(saveData.wins||0)+1;saveData.tournamentWins=saveData.tournamentWins||{};saveData.tournamentWins[back]=(saveData.tournamentWins[back]||0)+1;let beaten=tournament.opponents?.[tournament.round]||tournament.opponents?.[0];saveData.defeatedRivals=saveData.defeatedRivals||[];if(beaten&&!saveData.defeatedRivals.includes(beaten)){saveData.defeatedRivals.push(beaten);let cp=RIVAL_COPY_SKILLS[beaten]?.[0];if(cp){let ps=RIVAL_PASSIVE_SKILLS[beaten];msg('勝利！ ミカエルさんが「'+cp[1]+'」をコピー！'+(ps?'\nパッシブ「'+ps+'」も習得！ 基本速度も少し上昇。':''));}if(beaten==='Ryosuke')setTimeout(()=>msg('リョウスケさん撃破！\n新たな舞台「アタミ」が出現した！'),260);}saveGame();}tournament=null;setTimeout(()=>showPlace(back),700);
 }
 function showTutorial(returnTo='field'){
  tutorialReturn=returnTo;appState='tutorial';hideAllScreens();
@@ -833,14 +853,15 @@ function updateRacer(r,dt){
   if(r.tongueBoostTimer>0)r.speed=Math.min(maxSpeed+130,r.speed+360*dt);
 r.takumiPassiveCd=Math.max(0,(r.takumiPassiveCd||0)-dt);r.dokkanTurbo=Math.max(0,(r.dokkanTurbo||0)-dt);r.dokkanTurboCd=Math.max(0,(r.dokkanTurboCd||0)-dt);r.dokkanPhase=(r.dokkanPhase||0)+dt;r.wingSnap=Math.max(0,(r.wingSnap||0)-dt);r.aiWallHitTimer=Math.max(0,(r.aiWallHitTimer||0)-dt);if(r.aiWallHitTimer<=0)r.aiWallHits=0;r.airBarrier=Math.max(0,(r.airBarrier||0)-dt);r.wallGrace=Math.max(0,(r.wallGrace||0)-dt);r.wallEscape=Math.max(0,(r.wallEscape||0)-dt);r.highJump=Math.max(0,(r.highJump||0)-dt);r.normalHighJump=Math.max(0,(r.normalHighJump||0)-dt);r.confuse=Math.max(0,(r.confuse||0)-dt);r.burningWing=Math.max(0,(r.burningWing||0)-dt);if(r.charging)r.charge=Math.min(1.8,(r.charge||0)+dt);if(r.finished)return;r.skillCdA=Math.max(0,r.skillCdA-dt);r.skillCdB=Math.max(0,r.skillCdB-dt);r.hitSlow=Math.max(0,r.hitSlow-dt);r.boost=Math.max(0,r.boost-dt);r.bump=Math.max(0,r.bump-dt);r.wing=Math.max(0,r.wing-dt);r.jumpAge+=dt;r.flapAge+=dt;r.landAge=Math.max(0,r.landAge-dt);
  const inp=desiredInput(r),want=Math.atan2(inp.y,inp.x),diff=norm(want-r.face);
+ const michaelBonus=michaelSpeedBonus(r),michaelAccel=(r.name==='Michael'&&michaelHasPassive('Akiyama'))?1.05:1;
  if(!r.ai&&r.flight>0&&inp.manual&&Math.cos(diff)<-.82){r.airReverseBrake=.28;r.speed=approach(r.speed,265,520*dt);}
  r.airReverseBrake=Math.max(0,(r.airReverseBrake||0)-dt);
  const hydroSeg=(courseTheme==='atami')?routeLockedTrackInfo(r).i:-1;
  const inHydro=r.flight===0&&hydroSeg>=19&&hydroSeg<=23;
  if(inHydro)r.hydroWet=.8;else r.hydroWet=Math.max(0,(r.hydroWet||0)-dt);
  r.hydroMsgCd=Math.max(0,(r.hydroMsgCd||0)-dt);r.jumpFailCd=Math.max(0,(r.jumpFailCd||0)-dt);
- const wetSteer=r.hydroWet>0?(r.name==='Kanata'?.93:.82):1;
- const ratio=Math.min(1,r.speed/maxSpeed),aiTurn=r.ai?((r.name==='Bunta'?2.25:(r.name==='Takumi'||r.name==='Inu'||r.name==='Saru'||r.name==='Nakazato'||r.name==='Keisuke'||r.name==='Akiyama'||r.name==='Ryosuke'||r.name==='Kyoichi'||r.name==='Kai')?1.72:1.28)+Math.min(r.name==='Bunta'?1.05:(r.name==='Takumi'||r.name==='Inu'||r.name==='Saru'||r.name==='Nakazato'||r.name==='Keisuke'||r.name==='Akiyama'||r.name==='Ryosuke'||r.name==='Kyoichi'||r.name==='Kai')?.82:.55,(r.aiBend||0)*(r.name==='Bunta'?.72:(r.name==='Takumi'||r.name==='Inu'||r.name==='Saru'||r.name==='Nakazato'||r.name==='Keisuke'||r.name==='Akiyama'||r.name==='Ryosuke'||r.name==='Kyoichi'||r.name==='Kai')?.58:.42))):1,driftTurn=(canDrift(r)&&r.drifting)?2.15:1,turn=(turnGround*(1-ratio)+turnFast*ratio)*dt*(r.name==='Raphael'?1.22:1)*(r.highJump>0?.28:1)*aiTurn*driftTurn*wetSteer;
+ const wetSteer=r.hydroWet>0?(r.name==='Kanata'||(r.name==='Michael'&&michaelHasPassive('Kanata'))?.93:.82):1;
+ const ratio=Math.min(1,r.speed/maxSpeed),aiTurn=r.ai?((r.name==='Bunta'?2.25:(r.name==='Takumi'||r.name==='Inu'||r.name==='Saru'||r.name==='Nakazato'||r.name==='Keisuke'||r.name==='Akiyama'||r.name==='Ryosuke'||r.name==='Kyoichi'||r.name==='Kai')?1.72:1.28)+Math.min(r.name==='Bunta'?1.05:(r.name==='Takumi'||r.name==='Inu'||r.name==='Saru'||r.name==='Nakazato'||r.name==='Keisuke'||r.name==='Akiyama'||r.name==='Ryosuke'||r.name==='Kyoichi'||r.name==='Kai')?.82:.55,(r.aiBend||0)*(r.name==='Bunta'?.72:(r.name==='Takumi'||r.name==='Inu'||r.name==='Saru'||r.name==='Nakazato'||r.name==='Keisuke'||r.name==='Akiyama'||r.name==='Ryosuke'||r.name==='Kyoichi'||r.name==='Kai')?.58:.42))):1,driftTurn=(canDrift(r)&&r.drifting)?2.15:1,turn=(turnGround*(1-ratio)+turnFast*ratio)*dt*(r.name==='Raphael'?1.22:1)*(r.highJump>0?.28:1)*aiTurn*driftTurn*wetSteer*(r.name==='Michael'&&michaelHasPassive('Saru')?1.035:1);
  // Saru special: on Usui, grab a tree on the inside of a sharp corner and swing around it.
  if(r.ai&&r.name==='Saru'&&courseTheme==='usui'&&!r.treeGrab&&r.treeGrabCd<=0&&(r.aiBend||0)>.42){
    let best=null,bd=1e9;
@@ -851,7 +872,7 @@ r.takumiPassiveCd=Math.max(0,(r.takumiPassiveCd||0)-dt);r.dokkanTurbo=Math.max(0
  if(r.name==='Akiyama'&&r.dokkanTurbo>0){const wob=Math.sin((r.dokkanPhase||0)*15.5)*.055+Math.sin((r.dokkanPhase||0)*27.0)*.022;r.face=norm(r.face+wob*dt*8.5);}
  if(canDrift(r)&&r.drifting){
    let slip=Math.abs(norm(r.face-r.driftMoveFace));
-   r.driftCharge=Math.min(1.8,(r.driftCharge||0)+dt*(.55+Math.min(1.1,slip)));
+   r.driftCharge=Math.min(1.8,(r.driftCharge||0)+dt*(.55+Math.min(1.1,slip))*(r.name==='Michael'&&michaelHasPassive('Keisuke')?1.10:1));
    r.wingSnap=Math.max(r.wingSnap,.06); // rapid little flaps while sliding
    r.driftFxClock=(r.driftFxClock||0)-dt;
    if(r.driftFxClock<=0){
@@ -870,13 +891,13 @@ r.takumiPassiveCd=Math.max(0,(r.takumiPassiveCd||0)-dt);r.dokkanTurbo=Math.max(0
  if(r.ai){if(r.flight<3&&Math.random()<dt*2.8)pressJumpSilent(r);if(r.flight===3&&r.glideClock>4.55&&r.glideClock<5.45)pressJumpSilent(r);}
  if(r.flight===0){
    const aiBase=r.ai?(r.name==='Plain'?1.035:(r.name==='Bunta'||r.name==='Takumi'||r.name==='Inu'||r.name==='Saru'||r.name==='Nakazato'||r.name==='Keisuke'||r.name==='Akiyama'||r.name==='Ryosuke'||r.name==='Kyoichi'||r.name==='Kai'||r.name==='Kawazu'?1:1.06)):1;
-   r.speed=approach(r.speed,groundSpeed*inp.m*(r.name==='Kawazu'?1.14:r.name==='Takumi'?1.12:aiBase),380*dt);
+   r.speed=approach(r.speed,(groundSpeed*inp.m*(r.name==='Kawazu'?1.14:r.name==='Takumi'?1.12:aiBase))+michaelBonus*.45,380*dt*michaelAccel);
  }else if(r.flight===1){
    const aiLift=r.ai?(r.name==='Plain'?340:(r.name==='Bunta'||r.name==='Takumi'||r.name==='Inu'||r.name==='Saru'||r.name==='Nakazato'||r.name==='Keisuke'||r.name==='Akiyama'||r.name==='Ryosuke'||r.name==='Kyoichi'||r.name==='Kai'||r.name==='Kawazu'?330:348)):330;
-   r.speed=approach(r.speed,r.name==='Takumi'?355:aiLift,230*dt);
+   r.speed=approach(r.speed,(r.name==='Takumi'?355:aiLift)+michaelBonus*.55,230*dt*michaelAccel);
  }else if(r.flight===2){
    const aiFlap=r.ai?(r.name==='Plain'?470:(r.name==='Bunta'||r.name==='Takumi'||r.name==='Inu'||r.name==='Saru'||r.name==='Nakazato'||r.name==='Keisuke'||r.name==='Akiyama'||r.name==='Ryosuke'||r.name==='Kyoichi'||r.name==='Kai'||r.name==='Kawazu'?455:480)):455;
-   r.speed=approach(r.speed,r.name==='Takumi'?485:aiFlap,260*dt);
+   r.speed=approach(r.speed,(r.name==='Takumi'?485:aiFlap)+michaelBonus*.75,260*dt*michaelAccel);
  }else {
    r.glideClock+=dt;
    if(r.glideClock>=5.65&&r.glideExtendStock&&!r.glideExtendUsed){
@@ -886,7 +907,7 @@ r.takumiPassiveCd=Math.max(0,(r.takumiPassiveCd||0)-dt);r.dokkanTurbo=Math.max(0
    }
    if(r.glideClock<5.65){
      const aiCruise=r.ai?(r.name==='Inu'?maxSpeed+95:r.name==='Plain'?600:(r.name==='Bunta'||r.name==='Takumi'||r.name==='Saru'||r.name==='Keisuke'||r.name==='Akiyama'||r.name==='Ryosuke'||r.name==='Kyoichi'||r.name==='Kai'||r.name==='Kawazu'?maxSpeed:615)):maxSpeed;
-     r.speed=approach(r.speed,r.name==='Kawazu'?maxSpeed+65:r.name==='Takumi'?maxSpeed+55:aiCruise,glideAccel*dt);
+     r.speed=approach(r.speed,(r.name==='Kawazu'?maxSpeed+65:r.name==='Takumi'?maxSpeed+55:aiCruise)+michaelBonus,glideAccel*dt*michaelAccel);
    }else{
      r.glideGrace+=dt;
      const tiredTarget=(r.ai&&r.name!=='Plain'&&r.name!=='Bunta'&&r.name!=='Kawazu'&&r.name!=='Takumi')?260:245;
@@ -918,9 +939,16 @@ r.takumiPassiveCd=Math.max(0,(r.takumiPassiveCd||0)-dt);r.dokkanTurbo=Math.max(0
  }
  if(r.bump>0)r.speed=Math.min(r.speed,r.name==='Bunta'?430:360);
  if(r.hydroWet>0){
-   const kmh=r.speed*.56,baseSev=kmh<80?.04:kmh<130?.12:kmh<170?.23:.34,sev=r.name==='Kanata'?baseSev*.48:baseSev;
+   const kmh=r.speed*.56,baseSev=kmh<80?.04:kmh<130?.12:kmh<170?.23:.34,sev=(r.name==='Kanata'||(r.name==='Michael'&&michaelHasPassive('Kanata')))?baseSev*.48:baseSev;
    r.speed=Math.max(180,r.speed*(1-dt*(.10+sev)));
    if(inHydro&&kmh>80){r.face=norm(r.face+Math.sin(performance.now()/95+r.index*2.1)*sev*.012);if(!r.ai&&r.hydroMsgCd<=0){msg(kmh>=170?'HYDRO TRAP！ 強いハイドロプレーニング！':'HYDRO TRAP！ グリップ低下');r.hydroMsgCd=1.4;}}
+ }
+ if(r.name==='Michael'){
+   // Defeated rivals also leave behind automatic passive techniques.
+   if(michaelHasPassive('Kai')){let ti=routeLockedTrackInfo(r);if(ti.d>courseHalfWidth*.54)r.wallGrace=Math.max(r.wallGrace,.18);}
+   if(michaelHasPassive('Kyoichi')&&r.speed<330&&r.flight>0)r.speed=approach(r.speed,350+michaelBonus,95*dt);
+   if(michaelHasPassive('Ryosuke')){let ti=routeLockedTrackInfo(r);if(ti.d>courseHalfWidth*.62){r.x+=(ti.qx-r.x)*Math.min(1,dt*.70);r.y+=(ti.qy-r.y)*Math.min(1,dt*.70);}}
+   if(michaelHasPassive('Nakazato')&&r.hitSlow>0)r.hitSlow=Math.max(0,r.hitSlow-dt*.35);
  }
  if(r.ai){
    const bend=r.aiBend||0;
