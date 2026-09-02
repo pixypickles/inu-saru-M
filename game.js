@@ -2,7 +2,7 @@
 
 
 // ===== v1.5 meta game / field map =====
-const VERSION='v3.31-DEFEAT-CHECK-PASSIVE-COPY';
+const VERSION='v3.32-DEFEAT-CHECK-PASSIVE-COPY';
 const RACE_LAPS=1;
 
 const CHARACTER_DATA={
@@ -610,7 +610,7 @@ function rebuildCourseObjects(){
  // Akina: move only the first generated corner tree a little farther up on screen.
  // Keep the road geometry and every later tongue anchor unchanged.
  if(courseTheme==='akina'&&anchors.length&&anchors[0].kind==='tree'){
-   anchors[0].y-=520;
+   anchors[0].y-=140;
  }
  if(activeCourse.extraAnchors)for(const [x,y] of activeCourse.extraAnchors)anchors.push({x,y,manual:true});
  lilies=[];
@@ -854,7 +854,11 @@ function updateRacer(r,dt){
 r.takumiPassiveCd=Math.max(0,(r.takumiPassiveCd||0)-dt);r.dokkanTurbo=Math.max(0,(r.dokkanTurbo||0)-dt);r.dokkanTurboCd=Math.max(0,(r.dokkanTurboCd||0)-dt);r.dokkanPhase=(r.dokkanPhase||0)+dt;r.wingSnap=Math.max(0,(r.wingSnap||0)-dt);r.aiWallHitTimer=Math.max(0,(r.aiWallHitTimer||0)-dt);if(r.aiWallHitTimer<=0)r.aiWallHits=0;r.airBarrier=Math.max(0,(r.airBarrier||0)-dt);r.wallGrace=Math.max(0,(r.wallGrace||0)-dt);r.wallEscape=Math.max(0,(r.wallEscape||0)-dt);r.highJump=Math.max(0,(r.highJump||0)-dt);r.normalHighJump=Math.max(0,(r.normalHighJump||0)-dt);r.confuse=Math.max(0,(r.confuse||0)-dt);r.burningWing=Math.max(0,(r.burningWing||0)-dt);if(r.charging)r.charge=Math.min(1.8,(r.charge||0)+dt);if(r.finished)return;r.skillCdA=Math.max(0,r.skillCdA-dt);r.skillCdB=Math.max(0,r.skillCdB-dt);r.hitSlow=Math.max(0,r.hitSlow-dt);r.boost=Math.max(0,r.boost-dt);r.bump=Math.max(0,r.bump-dt);r.wing=Math.max(0,r.wing-dt);r.jumpAge+=dt;r.flapAge+=dt;r.landAge=Math.max(0,r.landAge-dt);
  const inp=desiredInput(r),want=Math.atan2(inp.y,inp.x),diff=norm(want-r.face);
  const michaelBonus=michaelSpeedBonus(r),michaelAccel=(r.name==='Michael'&&michaelHasPassive('Akiyama'))?1.05:1;
- if(!r.ai&&r.flight>0&&inp.manual&&Math.cos(diff)<-.82){r.airReverseBrake=.28;r.speed=approach(r.speed,265,520*dt);}
+ // Only treat a deliberate near-180-degree reversal as air braking.
+ // Comparing against the current facing angle made ordinary hairpin steering feel like a sudden speed loss.
+ const lastDot=inp.manual?(inp.x*(r.lastManualPrevX??r.lastManualX)+inp.y*(r.lastManualPrevY??r.lastManualY)):1;
+ if(!r.ai&&r.flight>0&&inp.manual&&lastDot<-.94){r.airReverseBrake=.18;r.speed=approach(r.speed,330,230*dt);}
+ if(inp.manual){r.lastManualPrevX=inp.x;r.lastManualPrevY=inp.y;}
  r.airReverseBrake=Math.max(0,(r.airReverseBrake||0)-dt);
  const hydroSeg=(courseTheme==='atami')?routeLockedTrackInfo(r).i:-1;
  const inHydro=r.flight===0&&hydroSeg>=19&&hydroSeg<=23;
