@@ -2,7 +2,7 @@
 
 
 // ===== v1.5 meta game / field map =====
-const VERSION='v3.15-AKAGI-AIR-GUIDE';
+const VERSION='v3.17-TOUGE-EASY-ASSIST';
 const RACE_LAPS=1;
 
 const CHARACTER_DATA={
@@ -133,14 +133,14 @@ function startLearningRace(name,place){
 }
 function showPlace(place){
  appState='place';currentPlace=place;hideAllScreens();document.querySelector('#fieldScreen')?.classList.remove('hidden');document.querySelector('#placePanel')?.classList.remove('hidden');
- const data={practice:['🎯 練習場','ジャンプ、バーニングウィング、ドリフト飛行を自由に練習できます。'],akina:['🍁 アキナ山','黄色いカエルのケイスケさんが待つ一本道の峠。高速ドリフトと極限集中を使います。'],usui:['🌿 ウスイ','40000×40000ワールドの閉ループ峠。近接道路は別区間のまま保持します。'],myogi:['⛰️ 妙義','細長い折り返しと連続S字が続くポイント・トゥ・ポイント峠。ナカザトさんが待っています。'],shomaru:['🛣️ 正丸','細かい切り返しと複合ヘアピンが続くポイント・トゥ・ポイント峠。タクミさんと同系色の犬・アキヤマさんが待っています。ドッカン・ターボとドリフトを使います。'],akagi:['🔴 赤城','高密度180点トレースをそのまま折れ線で結ぶダウンヒル。赤城だけはスプラインで形を作り直さず、近接する折り返しも別道路のまま保持します。純白のカエル・リョウスケさんは「公道最速理論」と「ゼロ・ミス」を常時発動する最強ライバルです。']}[place]||['峠','準備中のコースです。'];
+ const data={practice:['🎯 練習場','ジャンプ、バーニングウィング、ドリフト飛行を自由に練習できます。'],akina:['🍁 アキナ','黄色いカエルのケイスケさんが待つ一本道の峠。高速ドリフトと極限集中を使います。'],usui:['🌿 ウスイ','40000×40000ワールドの閉ループ峠。近接道路は別区間のまま保持します。'],myogi:['⛰️ ミョウギ','細長い折り返しと連続S字が続くポイント・トゥ・ポイント峠。ナカザトさんが待っています。'],shomaru:['🛣️ ショウマル','細かい切り返しと複合ヘアピンが続くポイント・トゥ・ポイント峠。タクミさんと同系色の犬・アキヤマさんが待っています。ドッカン・ターボとドリフトを使います。'],akagi:['🔴 アカギ','高密度180点トレースをそのまま折れ線で結ぶダウンヒル。アカギだけはスプラインで形を作り直さず、近接する折り返しも別道路のまま保持します。純白のカエル・リョウスケさんは「公道最速理論」と「ゼロ・ミス」を常時発動する最強ライバルです。']}[place]||['峠','準備中のコースです。'];
  document.querySelector('#placeTitle').textContent=data[0];document.querySelector('#placeDesc').textContent=data[1];const actions=document.querySelector('#placeActions');actions.innerHTML='';
  if(place==='practice'){const g=document.createElement('button');g.className='menuBtn';g.textContent='📖 操作説明を見る';g.onclick=()=>showTutorial('practice');actions.appendChild(g);for(const n of ['Inu','Saru']){const q=document.createElement('button');q.className='menuBtn';q.textContent=(CHARACTER_DATA[n]?.jp||n)+'と練習';q.onclick=()=>{tournament=null;currentPlace='practice';startRaceRound(n,true)};actions.appendChild(q);}}
  else if(place==='akina'){const o='Keisuke';const q=document.createElement('button');q.className='menuBtn';q.textContent=(CHARACTER_DATA[o]?.jp||o)+'とアキナバトル';q.onclick=()=>{tournament={place:'akina',round:0,courseIndex:0,opponents:[o]};startRaceRound(o,false)};actions.appendChild(q);}
  else if(place==='usui'){const n='Saru';const q=document.createElement('button');q.className='menuBtn';q.textContent=(CHARACTER_DATA[n]?.jp||n)+'とウスイバトル';q.onclick=()=>{tournament={place:'usui',round:0,courseIndex:0,opponents:[n]};startRaceRound(n,false)};actions.appendChild(q);}
- else if(place==='myogi'){const n='Nakazato';const q=document.createElement('button');q.className='menuBtn';q.textContent=(CHARACTER_DATA[n]?.jp||n)+'と妙義バトル';q.onclick=()=>{tournament={place:'myogi',round:0,courseIndex:0,opponents:[n]};startRaceRound(n,false)};actions.appendChild(q);}
- else if(place==='shomaru'){const n='Akiyama';const q=document.createElement('button');q.className='menuBtn';q.textContent=(CHARACTER_DATA[n]?.jp||n)+'と正丸バトル';q.onclick=()=>{tournament={place:'shomaru',round:0,courseIndex:0,opponents:[n]};startRaceRound(n,false)};actions.appendChild(q);}
- else if(place==='akagi'){const n='Ryosuke';const q=document.createElement('button');q.className='menuBtn';q.textContent=(CHARACTER_DATA[n]?.jp||n)+'と赤城ダウンヒル';q.onclick=()=>{tournament={place:'akagi',round:0,courseIndex:0,opponents:[n]};startRaceRound(n,false)};actions.appendChild(q);}
+ else if(place==='myogi'){const n='Nakazato';const q=document.createElement('button');q.className='menuBtn';q.textContent=(CHARACTER_DATA[n]?.jp||n)+'とミョウギバトル';q.onclick=()=>{tournament={place:'myogi',round:0,courseIndex:0,opponents:[n]};startRaceRound(n,false)};actions.appendChild(q);}
+ else if(place==='shomaru'){const n='Akiyama';const q=document.createElement('button');q.className='menuBtn';q.textContent=(CHARACTER_DATA[n]?.jp||n)+'とショウマルバトル';q.onclick=()=>{tournament={place:'shomaru',round:0,courseIndex:0,opponents:[n]};startRaceRound(n,false)};actions.appendChild(q);}
+ else if(place==='akagi'){const n='Ryosuke';const q=document.createElement('button');q.className='menuBtn';q.textContent=(CHARACTER_DATA[n]?.jp||n)+'とアカギダウンヒル';q.onclick=()=>{tournament={place:'akagi',round:0,courseIndex:0,opponents:[n]};startRaceRound(n,false)};actions.appendChild(q);}
 }
 
 function makeShootingCourse(place){
@@ -429,7 +429,7 @@ const COURSE_SETS={
   {name:'古代迷宮スパイラル',theme:'master',pointToPoint:true,halfWidth:160,path:[[450,450],[5250,450],[5250,4150],[450,4150],[450,1250],[4550,1250],[4550,3350],[1250,3350],[1250,2050],[3850,2050],[3850,2850],[2050,2850],[2050,2450],[3150,2450]]},
   {name:'遺跡ダウンヒル',theme:'master',pointToPoint:true,halfWidth:225,extraAnchors:[[1450,800],[2150,1150],[1700,1600],[2750,1950],[2200,2400],[3400,2750],[2950,3250],[4200,3500]],path:[[650,550],[1500,550],[2200,900],[1650,1250],[2450,1600],[1800,2050],[2900,2350],[2250,2800],[3500,3100],[3000,3550],[4300,3800],[5200,3450]]}
  ],
- akina:[{name:'アキナ山・下り（113点精密稿）',theme:'akina',pointToPoint:true,halfWidth:190,
+ akina:[{name:'アキナ・下り（113点精密稿）',theme:'akina',pointToPoint:true,halfWidth:190,
  worldOverride:{w:40000,h:40000},originBottomLeft:true,courseDraft:true,courseScale:2,
  spline:'centripetal',splineAlpha:.5,splineTension:.38,splineSteps:7,extraAnchors:[],
  path:[
@@ -454,9 +454,9 @@ const COURSE_SETS={
   [17139,15975],[17338,15792],[17488,15776],[17687,15892],[17936,16540]
  ]}],
 
- myogi:[{name:'妙義・峠',theme:'myogi',pointToPoint:true,halfWidth:200,worldOverride:{w:40000,h:40000},originBottomLeft:true,courseDraft:true,spline:'centripetal',splineAlpha:.5,splineTension:.24,splineSteps:24,extraAnchors:[],path:[[1800,18580],[1930,19360],[2450,20400],[2970,21440],[3360,21960],[4010,21960],[4790,21830],[5700,21830],[6350,21960],[6610,22480],[6610,23260],[6532,24040],[6740,24560],[7260,25080],[7780,25652],[8040,26250],[7910,26770],[7390,27290],[6610,27810],[5960,28200],[5700,28590],[5960,28850],[6480,28668],[7260,28148],[8040,27550],[8820,26900],[9340,26250],[9730,26120],[10120,26328],[10250,26770],[10068,27160],[9340,27810],[8820,28330],[9080,28772],[9600,28590],[10380,27940],[11160,27290],[11940,27030],[12720,27030],[13500,27030],[14020,26770],[14540,26250],[15060,25860],[15580,25600],[16100,25340],[16360,24820],[16100,24040],[16100,23260],[16360,22480],[16880,21960],[17530,21960],[18180,22350],[18830,23000],[19350,23520],[20000,23780],[20650,23780],[21170,23520],[21300,23130],[21040,22740],[20520,22220],[20000,21700],[19480,21050],[18830,20400],[18180,19750],[17660,19230],[17140,18840],[16880,18450],[17140,18190],[17660,18242],[18180,18580],[18700,18970],[19350,19100],[19870,19360],[20520,19880],[21040,20140],[21560,20010],[22080,19620],[22600,18970],[22990,18320],[23250,17540],[23250,16760],[23250,15980],[22860,15460],[22210,15408],[21690,15590],[21170,15460],[20780,15070],[20780,14550],[21040,14160],[21300,13900],[21690,13640],[22080,13250],[22600,13120],[23120,13250],[23510,13640],[23770,14030],[24160,14030],[24550,13770],[24758,13250],[24810,12600],[24888,11820],[25200,11300],[25590,11170],[25928,11430],[25980,12080],[25980,12730],[26240,13120],[26630,12990],[26890,12470],[26968,11820],[27280,11508],[27670,11690],[27800,12210],[27748,12860],[27930,13380],[28450,13432],[28970,13250],[29360,12860],[29620,12470],[30140,12340],[30660,12210],[31180,12210],[31700,12080],[32220,11820],[32740,11430],[33260,11300],[33780,11300],[34300,11560],[34690,11950],[35080,12340],[35600,12600],[35990,12340],[36120,12470],[36510,13380],[36900,14290],[36510,14940],[36120,15460],[35990,16240],[36250,17020],[36640,17800],[36510,18450],[36120,18970],[35990,19620],[36380,20400],[36770,21050],[37030,21700],[36640,22090],[35860,21960],[34950,21570],[34040,21180],[33130,20790],[32480,20400],[31960,20530],[32090,21050],[32480,21570],[33000,22090],[33520,22610],[33780,23260],[33832,24300],[33650,25340],[33260,26120],[32740,26510],[32350,26380],[31960,25860],[31570,25210],[31180,24820],[30660,24820],[30140,25080],[29620,25600],[29100,26250],[28580,26900],[28060,27390],[27540,27780],[28320,28720]]}],
- akagi:[{name:'赤城・ダウンヒル',theme:'akagi',pointToPoint:true,halfWidth:95,worldOverride:{w:40000,h:40000},originBottomLeft:true,courseDraft:false,spline:'polyline',extraAnchors:[],path:[[30807,33802],[30743,33451],[30490,33172],[30204,32938],[29910,32682],[29616,32429],[29334,32147],[29045,31883],[28761,31641],[28476,31367],[28203,31096],[27882,30911],[27549,30752],[27340,30439],[27243,30081],[27109,29737],[27028,29372],[27005,28982],[27083,28616],[27258,28289],[27556,28047],[27912,27943],[28021,28101],[27885,28443],[27820,28809],[28120,29010],[28476,29115],[28854,29166],[29242,29141],[29641,29141],[30018,29089],[30409,29107],[30784,29167],[31118,29323],[31474,29427],[31589,29202],[31717,28856],[31978,28595],[31838,28323],[31488,28206],[31615,27906],[31667,27528],[31693,27140],[31823,26795],[31726,26484],[31358,26559],[31007,26658],[31042,26288],[31172,25943],[31276,25587],[31250,25199],[31145,24843],[31029,24493],[31016,24099],[31094,23733],[31198,23377],[31224,22989],[31140,22624],[31094,22245],[31042,21867],[31197,21562],[31548,21447],[31681,21134],[31491,20814],[31116,20755],[30728,20781],[30329,20781],[29941,20755],[29585,20652],[29257,20481],[29012,20184],[28802,19871],[28620,19548],[28516,19192],[28362,18857],[28113,18568],[27864,18281],[27692,17953],[27604,17590],[27433,17277],[27136,17032],[26901,16746],[26901,16368],[26953,15991],[26874,15624],[26745,15279],[26823,14913],[26953,14568],[26979,14201],[26849,13856],[26623,13550],[26314,13333],[25990,13432],[25927,13792],[25990,14165],[26049,14539],[25990,14898],[25798,15218],[25599,15534],[25312,15677],[25026,15519],[24922,15163],[24773,14826],[24502,14554],[24145,14453],[23762,14493],[23390,14557],[23013,14609],[22625,14583],[22280,14453],[21963,14255],[21728,13968],[21538,13648],[21267,13377],[20916,13407],[20916,13780],[21050,14123],[21240,14444],[21380,14785],[21354,15151],[21003,15260],[20664,15117],[20335,14948],[20016,14755],[19744,14484],[19554,14164],[19375,13839],[19193,13516],[19003,13196],[18813,12875],[18623,12555],[18451,12227],[18261,11907],[18073,11586],[17751,11484],[17578,11771],[17630,12149],[17708,12515],[17708,12893],[17630,13259],[17530,13616],[17422,13971],[17292,14316],[17038,14583],[16661,14583],[16457,14296],[16304,13960],[16172,13616],[16042,13271],[15911,12926],[15710,12611],[15547,12279],[15440,11925],[15339,11568],[15189,11231],[14936,10952],[14639,10706],[14334,10480],[14089,10197],[13946,9858],[13793,9522],[13566,9217],[13302,8927],[13020,8645],[12738,8363],[12416,8177],[12093,7995],[11769,7969],[11432,7935],[11237,7617],[10924,7800],[10550,7816],[10365,7494],[10061,7292],[9842,7004],[9661,6680],[9481,6356],[9158,6172],[8926,5879],[8672,5677]]}],
- shomaru:[{name:'正丸・峠',theme:'shomaru',pointToPoint:true,halfWidth:200,worldOverride:{w:40000,h:40000},originBottomLeft:true,courseDraft:true,spline:'centripetal',splineAlpha:.5,splineTension:.22,splineSteps:24,extraAnchors:[],path:[
+ myogi:[{name:'ミョウギ・峠',theme:'myogi',pointToPoint:true,halfWidth:200,worldOverride:{w:40000,h:40000},originBottomLeft:true,courseDraft:true,spline:'centripetal',splineAlpha:.5,splineTension:.24,splineSteps:24,extraAnchors:[],path:[[1800,18580],[1930,19360],[2450,20400],[2970,21440],[3360,21960],[4010,21960],[4790,21830],[5700,21830],[6350,21960],[6610,22480],[6610,23260],[6532,24040],[6740,24560],[7260,25080],[7780,25652],[8040,26250],[7910,26770],[7390,27290],[6610,27810],[5960,28200],[5700,28590],[5960,28850],[6480,28668],[7260,28148],[8040,27550],[8820,26900],[9340,26250],[9730,26120],[10120,26328],[10250,26770],[10068,27160],[9340,27810],[8820,28330],[9080,28772],[9600,28590],[10380,27940],[11160,27290],[11940,27030],[12720,27030],[13500,27030],[14020,26770],[14540,26250],[15060,25860],[15580,25600],[16100,25340],[16360,24820],[16100,24040],[16100,23260],[16360,22480],[16880,21960],[17530,21960],[18180,22350],[18830,23000],[19350,23520],[20000,23780],[20650,23780],[21170,23520],[21300,23130],[21040,22740],[20520,22220],[20000,21700],[19480,21050],[18830,20400],[18180,19750],[17660,19230],[17140,18840],[16880,18450],[17140,18190],[17660,18242],[18180,18580],[18700,18970],[19350,19100],[19870,19360],[20520,19880],[21040,20140],[21560,20010],[22080,19620],[22600,18970],[22990,18320],[23250,17540],[23250,16760],[23250,15980],[22860,15460],[22210,15408],[21690,15590],[21170,15460],[20780,15070],[20780,14550],[21040,14160],[21300,13900],[21690,13640],[22080,13250],[22600,13120],[23120,13250],[23510,13640],[23770,14030],[24160,14030],[24550,13770],[24758,13250],[24810,12600],[24888,11820],[25200,11300],[25590,11170],[25928,11430],[25980,12080],[25980,12730],[26240,13120],[26630,12990],[26890,12470],[26968,11820],[27280,11508],[27670,11690],[27800,12210],[27748,12860],[27930,13380],[28450,13432],[28970,13250],[29360,12860],[29620,12470],[30140,12340],[30660,12210],[31180,12210],[31700,12080],[32220,11820],[32740,11430],[33260,11300],[33780,11300],[34300,11560],[34690,11950],[35080,12340],[35600,12600],[35990,12340],[36120,12470],[36510,13380],[36900,14290],[36510,14940],[36120,15460],[35990,16240],[36250,17020],[36640,17800],[36510,18450],[36120,18970],[35990,19620],[36380,20400],[36770,21050],[37030,21700],[36640,22090],[35860,21960],[34950,21570],[34040,21180],[33130,20790],[32480,20400],[31960,20530],[32090,21050],[32480,21570],[33000,22090],[33520,22610],[33780,23260],[33832,24300],[33650,25340],[33260,26120],[32740,26510],[32350,26380],[31960,25860],[31570,25210],[31180,24820],[30660,24820],[30140,25080],[29620,25600],[29100,26250],[28580,26900],[28060,27390],[27540,27780],[28320,28720]]}],
+ akagi:[{name:'アカギ・ダウンヒル',theme:'akagi',pointToPoint:true,halfWidth:95,worldOverride:{w:40000,h:40000},originBottomLeft:true,courseDraft:false,spline:'polyline',extraAnchors:[],path:[[30807,33802],[30743,33451],[30490,33172],[30204,32938],[29910,32682],[29616,32429],[29334,32147],[29045,31883],[28761,31641],[28476,31367],[28203,31096],[27882,30911],[27549,30752],[27340,30439],[27243,30081],[27109,29737],[27028,29372],[27005,28982],[27083,28616],[27258,28289],[27556,28047],[27912,27943],[28021,28101],[27885,28443],[27820,28809],[28120,29010],[28476,29115],[28854,29166],[29242,29141],[29641,29141],[30018,29089],[30409,29107],[30784,29167],[31118,29323],[31474,29427],[31589,29202],[31717,28856],[31978,28595],[31838,28323],[31488,28206],[31615,27906],[31667,27528],[31693,27140],[31823,26795],[31726,26484],[31358,26559],[31007,26658],[31042,26288],[31172,25943],[31276,25587],[31250,25199],[31145,24843],[31029,24493],[31016,24099],[31094,23733],[31198,23377],[31224,22989],[31140,22624],[31094,22245],[31042,21867],[31197,21562],[31548,21447],[31681,21134],[31491,20814],[31116,20755],[30728,20781],[30329,20781],[29941,20755],[29585,20652],[29257,20481],[29012,20184],[28802,19871],[28620,19548],[28516,19192],[28362,18857],[28113,18568],[27864,18281],[27692,17953],[27604,17590],[27433,17277],[27136,17032],[26901,16746],[26901,16368],[26953,15991],[26874,15624],[26745,15279],[26823,14913],[26953,14568],[26979,14201],[26849,13856],[26623,13550],[26314,13333],[25990,13432],[25927,13792],[25990,14165],[26049,14539],[25990,14898],[25798,15218],[25599,15534],[25312,15677],[25026,15519],[24922,15163],[24773,14826],[24502,14554],[24145,14453],[23762,14493],[23390,14557],[23013,14609],[22625,14583],[22280,14453],[21963,14255],[21728,13968],[21538,13648],[21267,13377],[20916,13407],[20916,13780],[21050,14123],[21240,14444],[21380,14785],[21354,15151],[21003,15260],[20664,15117],[20335,14948],[20016,14755],[19744,14484],[19554,14164],[19375,13839],[19193,13516],[19003,13196],[18813,12875],[18623,12555],[18451,12227],[18261,11907],[18073,11586],[17751,11484],[17578,11771],[17630,12149],[17708,12515],[17708,12893],[17630,13259],[17530,13616],[17422,13971],[17292,14316],[17038,14583],[16661,14583],[16457,14296],[16304,13960],[16172,13616],[16042,13271],[15911,12926],[15710,12611],[15547,12279],[15440,11925],[15339,11568],[15189,11231],[14936,10952],[14639,10706],[14334,10480],[14089,10197],[13946,9858],[13793,9522],[13566,9217],[13302,8927],[13020,8645],[12738,8363],[12416,8177],[12093,7995],[11769,7969],[11432,7935],[11237,7617],[10924,7800],[10550,7816],[10365,7494],[10061,7292],[9842,7004],[9661,6680],[9481,6356],[9158,6172],[8926,5879],[8672,5677]]}],
+ shomaru:[{name:'ショウマル・峠',theme:'shomaru',pointToPoint:true,halfWidth:200,worldOverride:{w:40000,h:40000},originBottomLeft:true,courseDraft:true,spline:'centripetal',splineAlpha:.5,splineTension:.22,splineSteps:24,extraAnchors:[],path:[
 [5152,4953],[5715,6242],[6301,7063],[6980,7344],[8902,7227],[8855,8234],[8527,8867],[8621,9195],[9184,9711],[9301,10086],[9137,10438],[8527,10695],[8410,11047],[9301,12148],[9465,12898],[9980,13273],[10121,13930],[10355,14023],[11199,13859],[11691,14094],[11762,14750],[11457,15664],[12113,16555],[11973,16977],[12113,17258],[13426,17703],[13801,18711],[14410,18992],[14855,19719],[15137,19836],[15887,19531],[17363,18289],[17691,18617],[17785,19367],[19168,19297],[18980,20656],[19074,21406],[18816,22133],[19004,23422],[19590,23844],[19801,24406],[20340,24078],[20996,24852],[21395,25109],[21465,25391],[21254,26469],[22098,26727],[23527,25180],[24348,24828],[24840,23469],[25496,23188],[25613,22438],[25895,22180],[26879,22344],[27254,22859],[28098,22930],[28777,23328],[29246,23258],[30043,22859],[30254,22977],[30371,23469],[30863,23844],[31473,23844],[31613,23516],[31848,23211],[32176,22930],[32270,22297],[32645,21969],[33910,21992],[34238,22484],[34285,24219],[33582,25156],[33535,26492],[32949,26961],[32434,27734],[31777,27898],[30910,28812],[31051,29211],[32199,30078],[32387,30430],[32293,31461],[31707,32398],[31660,33125],[31871,33242],[32855,33195],[33652,33664],[33723,34156],[34074,34438],[34121,34859],[34004,35234],[33723,35258]]}],
  usui:[{name:'ウスイ・峠周回',theme:'usui',pointToPoint:false,halfWidth:220,worldOverride:{w:40000,h:40000},originBottomLeft:true,courseDraft:true,spline:'centripetal',splineAlpha:.5,splineTension:.30,splineSteps:24,extraAnchors:[],path:[
 [28438,15362],[28438,17206],[28438,19162],[28438,20559],[28243,21676],[27684,22515],[26846,22934],[25868,22794],[24890,22235],[24051,21537],[23074,20838],[22375,20838],[21816,21257],[21537,21956],[21676,22794],[22375,23912],[23213,24890],[23493,25868],[23213,26846],[22515,27963],[21537,29221],[20419,30478],[19581,31735],[18882,32993],[18743,34110],[19022,35368],[19301,36625],[19022,37743],[18324,38581],[17485,38860],[16787,38441],[16228,37603],[15669,36485],[14831,35088],[13993,33691],[13434,32434],[13574,31176],[14132,30059],[14412,29081],[14272,28103],[13713,27125],[12875,26007],[12176,24890],[11618,23772],[11478,22794],[11757,21956],[12316,21537],[13015,21676],[13434,22375],[13853,23353],[14412,23912],[14831,23632],[14971,22934],[14831,21956],[14412,20559],[13993,19162],[13574,17625],[13154,16088],[12596,14551],[12456,13434],[12735,12596],[13434,12037],[14412,11897],[15669,12176],[16926,12735],[18184,13294],[19022,13574],[19441,13154],[19441,12456],[18882,11897],[18044,11338],[17066,10779],[16088,10221],[15110,9382],[14412,8544],[14132,7706],[14412,6868],[15110,6029],[15949,5191],[16787,4353],[17625,3515],[18603,2956],[19860,2816],[21257,2537],[22654,2257],[24191,1978],[25728,1699],[27265,1838],[28243,2537],[28662,3515],[28522,4493],[27963,5191],[26985,5471],[25868,5471],[24750,5243],[24051,5471],[23772,6029],[23912,6728],[24610,7566],[25449,8404],[26426,8824],[27265,9382],[27963,10221],[28382,11199],[28438,12456],[28438,13853]
@@ -953,20 +953,27 @@ r.takumiPassiveCd=Math.max(0,(r.takumiPassiveCd||0)-dt);r.dokkanTurbo=Math.max(0
    let pre=routeLockedTrackInfo(r),dx=pre.qx-r.x,dy=pre.qy-r.y,d=Math.hypot(dx,dy)||1,pull=Math.min(d,310*dt);
    r.x+=dx/d*pull;r.y+=dy/d*pull;
  }
+ // Touge driving assist: keep the forgiving Akagi feel while preserving each course's character.
+ const assistCfg={
+   akina:{guide:.66,soft:2.15,hard:4.5,brake:48,wallSpeed:120,escapeSpeed:135},
+   usui:{guide:.60,soft:2.65,hard:5.2,brake:55,wallSpeed:115,escapeSpeed:130},
+   myogi:{guide:.62,soft:2.45,hard:4.9,brake:52,wallSpeed:118,escapeSpeed:132},
+   shomaru:{guide:.59,soft:2.8,hard:5.5,brake:58,wallSpeed:112,escapeSpeed:128},
+   akagi:{guide:.56,soft:3.6,hard:7.2,brake:75,wallSpeed:125,escapeSpeed:140}
+ }[courseTheme]||null;
  // Guard-grass wall.
  let hit=routeLockedTrackInfo(r);
- // Akagi is intentionally narrow and dense. While the player is airborne, add a
- // gentle invisible guide toward the CURRENT ordered route instead of letting one
- // jump immediately leave the road. This never snaps to a nearby switchback.
- if(courseTheme==='akagi'&&!r.ai&&r.flight>0&&r.highJump<=0){
-   const guideStart=courseHalfWidth*.56;
+ // Airborne course-edge assist. Akagi remains strongest; the other touges get a
+ // lighter version so jumping stays useful without turning every mistake into a fall.
+ if(assistCfg&&!r.ai&&r.flight>0&&r.highJump<=0){
+   const guideStart=courseHalfWidth*assistCfg.guide;
    if(hit.d>guideStart){
      let dx=hit.qx-r.x,dy=hit.qy-r.y,d=Math.hypot(dx,dy)||1;
      let excess=hit.d-guideStart;
-     let rate=excess>courseHalfWidth*.26?7.2:3.6;
+     let rate=excess>courseHalfWidth*.27?assistCfg.hard:assistCfg.soft;
      let pull=Math.min(d,excess*rate*dt);
      r.x+=dx/d*pull;r.y+=dy/d*pull;
-     if(excess>courseHalfWidth*.34)r.speed=Math.max(250,r.speed-75*dt);
+     if(excess>courseHalfWidth*.36)r.speed=Math.max(245,r.speed-assistCfg.brake*dt);
      hit=routeLockedTrackInfo(r);
    }
  }
@@ -1010,20 +1017,20 @@ r.takumiPassiveCd=Math.max(0,(r.takumiPassiveCd||0)-dt);r.dokkanTurbo=Math.max(0
      }else{
        // Move only from the penetrated wall edge to a safe position inside the corridor.
        let nx=(r.x-hit.qx)/(hit.d||1),ny=(r.y-hit.qy)/(hit.d||1);
-       const safeD=Math.max(105,courseHalfWidth-70);
+       const safeD=Math.max(24,courseHalfWidth*.58);
        r.x=hit.qx+nx*safeD;r.y=hit.qy+ny*safeD;
        r.face=lerpAngle(r.face,toLook,.80);
        r.wallEscape=.42;
      }
      if(r.wallGrace<=0){
        // A hard wall hit kills the airborne momentum. These frogs settle to the ground once speed is lost.
-       r.speed=r.ai?Math.max(r.speed,185):70;
+       r.speed=r.ai?Math.max(r.speed,185):(assistCfg?assistCfg.wallSpeed:70);
        r.flight=r.ai?1:0;r.onGround=!r.ai;r.glideClock=0;r.glideGrace=0;r.landAge=.28;r.tongue=null;
-       r.wallGrace=r.ai?.44:.40;r.bump=.08;
+       r.wallGrace=r.ai?.44:(assistCfg?.52:.40);r.bump=.08;
        if(!r.ai)msg('ガード草に激突！ 勢いを失って着地');
      }else{
        // While escaping the acute corner, stay slow and grounded instead of rebounding.
-       r.speed=Math.min(r.speed,r.ai?220:85);
+       r.speed=Math.min(r.speed,r.ai?220:(assistCfg?assistCfg.escapeSpeed:85));
        r.flight=r.ai?1:0;r.onGround=!r.ai;
      }
    }
@@ -1225,13 +1232,14 @@ function updateEffects(dt){for(const e of effects){if(globalTimeStop>0&&e.owner!
  }effects=effects.filter(e=>e.t>0)}
 function trackInfo(px,py){let best={d:1e9,qx:0,qy:0,i:0,t:0,branch:false};const scan=(pts,closed,isBranch)=>{let lim=closed?pts.length:pts.length-1;for(let i=0;i<lim;i++){let a=pts[i],b=pts[(i+1)%pts.length],vx=b.x-a.x,vy=b.y-a.y,l2=vx*vx+vy*vy||1,t=Math.max(0,Math.min(1,((px-a.x)*vx+(py-a.y)*vy)/l2)),qx=a.x+t*vx,qy=a.y+t*vy,d=Math.hypot(px-qx,py-qy);if(d<best.d)best={d,qx,qy,i,t,branch:isBranch}}};scan(path,!activeCourse.pointToPoint,false);for(const br of courseBranches)scan(br,false,true);return best}
 function routeLockedTrackInfo(r){
-  // Akagi has very close switchbacks, but the supplied 180-point centreline does not self-cross.
-  // For collision/recovery, still use route ORDER rather than the globally-nearest road so a racer
-  // cannot jump across to a physically close but non-adjacent leg (for example near the canal).
-  if(courseTheme!=='akagi'||!activeCourse.pointToPoint||!r)return trackInfo(r?.x??0,r?.y??0);
+  // Point-to-point touges use route ORDER for collision/recovery. This keeps nearby hairpins
+  // separate and prevents the forgiving assist from pulling the player onto a shortcut.
+  const orderedTheme=(courseTheme==='akina'||courseTheme==='myogi'||courseTheme==='shomaru'||courseTheme==='akagi');
+  if(!orderedTheme||!activeCourse.pointToPoint||!r)return trackInfo(r?.x??0,r?.y??0);
   const n=path.length,base=Math.max(0,Math.min(n-2,r.routeIndex||0));
   let best={d:1e9,qx:path[base].x,qy:path[base].y,i:base,t:0,branch:false};
-  for(let off=-3;off<=18;off++){
+  const backScan=courseTheme==='akagi'?3:10,forwardScan=courseTheme==='akagi'?18:72;
+  for(let off=-backScan;off<=forwardScan;off++){
     let i=base+off;if(i<0||i>=n-1)continue;
     let a=path[i],b=path[i+1],vx=b.x-a.x,vy=b.y-a.y,l2=vx*vx+vy*vy||1;
     let t=Math.max(0,Math.min(1,((r.x-a.x)*vx+(r.y-a.y)*vy)/l2));
@@ -1306,7 +1314,7 @@ function drawWorld(){
  // Every race corridor has a visible inner frame. Courses that were "open" are framed again
  // because losing the inside boundary makes the route unreadable and creates accidental cuts.
  if(courseTheme==='akagi'){
-   // Akagi v3.15: keep the supplied 180-point polyline exactly as-is.
+   // Akagi v3.16: keep the supplied 180-point polyline exactly as-is.
    // Widen only the playable strip; do not smooth/merge nearby switchbacks.
    ctx.strokeStyle=pal.grass;ctx.lineWidth=220;drawRoute(path,false);
    ctx.strokeStyle=pal.inner;ctx.lineWidth=190;drawRoute(path,false);

@@ -170,7 +170,7 @@ linear-gradient(135deg,#7fcf73,#59a967);overflow:hidden}
 /* TOUGE v3.00 map layout */
 .mapSpot.home{left:8%;top:12%}
 .mapSpot.practice{left:10%;top:68%}
-.mapSpot.akina{left:55%;top:15%}
+.mapSpot.akina{left:52%;top:14%}
 .mapSpot.usui{left:68%;top:62%}
 
 .mapSpot.usui{left:48%;top:54%;background:#315d52}.mapSpot.myogi{left:67%;top:43%;background:#25282d;border-color:#777}
@@ -179,5 +179,5 @@ linear-gradient(135deg,#7fcf73,#59a967);overflow:hidden}
 .mapSpot.shomaru{left:42%;top:31%;background:#6b553d;border-color:#c8ad83}
 @media(max-width:700px){.mapSpot.shomaru{left:38%;top:32%}}
 
-.mapSpot.akagi{left:58%;top:20%;background:#8a3434;border-color:#efb3b3}
-@media(max-width:700px){.mapSpot.akagi{left:58%;top:20%}}
+.mapSpot.akagi{left:76%;top:25%;background:#8a3434;border-color:#efb3b3}
+@media(max-width:700px){.mapSpot.akagi{left:73%;top:24%}.mapSpot.akina{left:48%;top:14%}}
