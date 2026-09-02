@@ -2,7 +2,7 @@
 
 
 // ===== v1.5 meta game / field map =====
-const VERSION='v3.23-IROHA-DIVIDER-AIR-HOLD';
+const VERSION='v3.24-DRIVETRAIN-SPECIES';
 const RACE_LAPS=1;
 
 const CHARACTER_DATA={
@@ -25,9 +25,9 @@ const CHARACTER_DATA={
  Saru:{jp:'マコさん',color:'#3188e6',wing:'special',species:'monkey'},
  Nakazato:{jp:'ナカザトさん',color:'#202329',wing:'special',species:'dog'},
  Keisuke:{jp:'ケイスケさん',color:'#f2d13d',wing:'special',species:'frog'},
- Akiyama:{jp:'アキヤマさん',color:'#f4f3ec',wing:'special',species:'dog'},
+ Akiyama:{jp:'アキヤマさん',color:'#f4f3ec',wing:'special',species:'monkey'},
  Ryosuke:{jp:'リョウスケさん',color:'#ffffff',wing:'special',species:'frog'},
- Kai:{jp:'カイさん',color:'#2468c9',wing:'cobalt',species:'frog'},
+ Kai:{jp:'カイさん',color:'#1859b8',wing:'cobalt',species:'monkey'},
  Kyoichi:{jp:'キョウイチさん',color:'#171a1f',wing:'special',species:'dog'}
 };
 const TOURNAMENT_ROSTER=['Gabriel','Raphael','Uriel','Lucifer','Lilith'];
@@ -1174,7 +1174,7 @@ function updateCheckpoint(r){
  }
  if((long0<=0&&long1>0)||(long0>=0&&long1<0)){const denom=long1-long0,u=Math.abs(denom)<1e-6?0:(-long0/denom),crossX=x0+(x1-x0)*u,crossY=y0+(y1-y0)*u,lateral=(crossX-p0.x)*nx+(crossY-p0.y)*ny,gateHalf=Math.max(520,courseHalfWidth+260);if(Math.abs(lateral)<=gateHalf){if(long0<=0&&long1>0){r.lap++;if(r.lap>RACE_LAPS){r.finished=true;r.speed=0;if(!finished){finished=true;msg((r===racers[controlledIndex]?'YOU WIN! ':'')+(CHARACTER_DATA[r.name]?.jp||r.name)+' ゴール！');setTimeout(()=>showRaceResult(r===racers[controlledIndex]),1300);}}else if(r===racers[controlledIndex])msg('LAP '+r.lap+' / '+RACE_LAPS);}else{const before=r.lap;r.lap=Math.max(1,r.lap-1);if(r===racers[controlledIndex]&&r.lap<before)msg('逆走でゴール通過：LAP -1 → '+r.lap+'/'+RACE_LAPS);}}}r.startLineLong=long1;
 }
-function startTongue(r){if(appState==='race'&&raceStartDelay>0)return;if(r.finished)return;if(r.name==='Inu'||r.name==='Saru'||r.name==='Nakazato'||r.name==='Akiyama'||r.name==='Kyoichi'){msg('犬と猿は舌を使えない！ 翼と旋回性能で曲がろう');return;}const TONGUE_ANCHOR_RANGE=330;let anchor=nearestAnchor(r,TONGUE_ANCHOR_RANGE);if(anchor){let cross=Math.sin(norm(Math.atan2(anchor.y-r.y,anchor.x-r.x)-r.face));r.tongue={kind:'anchor',target:anchor,started:performance.now(),side:cross>0?-1:1};msg('アンカーに舌！ 離すタイミングで脱出');return;}
+function startTongue(r){if(appState==='race'&&raceStartDelay>0)return;if(r.finished)return;if(r.name==='Inu'||r.name==='Saru'||r.name==='Nakazato'||r.name==='Akiyama'||r.name==='Kyoichi'||r.name==='Kai'){msg('犬と猿は舌を使えない！ 翼と旋回性能で曲がろう');return;}const TONGUE_ANCHOR_RANGE=330;let anchor=nearestAnchor(r,TONGUE_ANCHOR_RANGE);if(anchor){let cross=Math.sin(norm(Math.atan2(anchor.y-r.y,anchor.x-r.x)-r.face));r.tongue={kind:'anchor',target:anchor,started:performance.now(),side:cross>0?-1:1};msg('アンカーに舌！ 離すタイミングで脱出');return;}
  let other=racers[1-r.index],d=Math.hypot(other.x-r.x,other.y-r.y);if(d<((r.name==='Lilith'||r.name==='Beelzebub')?390:270)){if(other.highJump>0){msg('バーニングクライム！ 舌が届かない');return;}
  if(other.burningWing>0){r.hitSlow=.45;msg('熱い！ バーニングウィングで舌を弾かれた');return;}
  if(other.airBarrier>0){msg('エアバリア！ 舌を弾かれた');return;}r.tongue={kind:'rival',target:other,started:performance.now()};let behind=Math.cos(norm(r.face-other.face))>.35;if(!(other.name==='Uriel'&&behind))other.hitSlow=.55;tongueSlipstreamBoost(r);msg(other.name==='Uriel'&&behind?'舌ヒット！ ウリエルは減速しない':'舌ヒット！ スリップ加速！');return;}
@@ -1277,7 +1277,7 @@ function useA(r){if(appState==='race'&&raceStartDelay>0)return;if(r.name==='Taku
  if(r.customSkillA==='dash'&&r.name==='Michael'){r.skillCdA=2.6;r.speed=Math.min(maxSpeed+105,r.speed+105);r.boost=.45;msg('天使ダッシュ！');return;}
  r.skillCdA=1.35;let o=racers[1-r.index],d=Math.hypot(o.x-r.x,o.y-r.y);if(d<90){pushRival(o,r.face,78*(r.power||1));msg('パンチ！ 相手を横へ弾いた');}else msg('パンチ！');
 }
-function canDrift(r){return ['Michael','Takumi','Bunta','Inu','Saru','Nakazato','Keisuke','Akiyama'].includes(r.name);}
+function canDrift(r){return ['Michael','Takumi','Bunta','Inu','Saru','Nakazato','Keisuke','Akiyama','Kai'].includes(r.name);}
 function startTakumiDrift(r){
  if(!canDrift(r)||r.drifting||r.skillCdB>0)return;
  r.drifting=true;r.driftCharge=0;r.driftMoveFace=r.face;r.driftSide=0;r.driftFxClock=0;r.driftGhosts=[];r.skillCdB=.12;
@@ -1472,11 +1472,11 @@ function drawAnchorPole(x,y){
  ctx.fillStyle='#f7e27b';ctx.beginPath();ctx.arc(0,-53,8,0,Math.PI*2);ctx.fill();
  ctx.restore();
 }
-let currentWingSpecial=false,currentWingRed=false,currentWingBurning=false,currentWingTakumi=false,currentWingTakumiBlue=false,currentWingCobalt=false,currentWingFold=0;
+let currentWingSpecial=false,currentWingRed=false,currentWingBurning=false,currentWingTakumi=false,currentWingTakumiBlue=false,currentWingCobalt=false,currentWingDark=false,currentWingFold=0;
 function angelWing(x,y,side,scale=1,tilt=0){
  // One connected angel-wing silhouette. Broad at the shoulder, tapered into layered feather tips.
  ctx.save();ctx.translate(x,y);ctx.scale(side*scale*(1-.30*currentWingFold),scale*(1-.08*currentWingFold));ctx.rotate(tilt+side*.20*currentWingFold);
- ctx.fillStyle=currentWingBurning?'#d51f2f':(currentWingCobalt?'#2f78df':(currentWingRed?'#d74c57':(currentWingTakumi?(currentWingTakumiBlue?'#2e67d1':'#f7f5e9'):(currentWingSpecial?'#fff9d8':'#fffdf5'))));ctx.strokeStyle=currentWingBurning?'#78131d':(currentWingCobalt?'#123d85':(currentWingRed?'#7e2530':(currentWingTakumi?(currentWingTakumiBlue?'#123779':'#242424'):(currentWingSpecial?'#e4b94f':'#c9d9dc'))));ctx.lineWidth=2.2;ctx.lineJoin='round';
+ ctx.fillStyle=currentWingBurning?'#d51f2f':(currentWingDark?'#242832':(currentWingCobalt?'#2f78df':(currentWingRed?'#d74c57':(currentWingTakumi?(currentWingTakumiBlue?'#2e67d1':'#f7f5e9'):(currentWingSpecial?'#fff9d8':'#fffdf5')))));ctx.strokeStyle=currentWingBurning?'#78131d':(currentWingDark?'#090b0f':(currentWingCobalt?'#123d85':(currentWingRed?'#7e2530':(currentWingTakumi?(currentWingTakumiBlue?'#123779':'#242424'):(currentWingSpecial?'#e4b94f':'#c9d9dc')))));ctx.lineWidth=2.2;ctx.lineJoin='round';
  ctx.beginPath();
  ctx.moveTo(0,2);
  ctx.bezierCurveTo(12,-17,32,-27,55,-25);
@@ -1491,7 +1491,7 @@ function angelWing(x,y,side,scale=1,tilt=0){
  ctx.bezierCurveTo(8,31,3,18,0,2);
  ctx.closePath();ctx.fill();ctx.stroke();
  // restrained feather separators: keep the wing reading as one mass, not insect wings
- ctx.strokeStyle=currentWingBurning?'#ff5964':(currentWingCobalt?'#8fc0ff':(currentWingRed?'#f19a9f':(currentWingTakumi?'#88857e':(currentWingSpecial?'#fff0a6':'#e2ecee'))));ctx.lineWidth=1.8;
+ ctx.strokeStyle=currentWingBurning?'#ff5964':(currentWingDark?'#596171':(currentWingCobalt?'#8fc0ff':(currentWingRed?'#f19a9f':(currentWingTakumi?'#88857e':(currentWingSpecial?'#fff0a6':'#e2ecee')))));ctx.lineWidth=1.8;
  for(const pts of [[[9,3],[33,-13],[55,-16]],[[10,9],[34,1],[59,1]],[[10,15],[31,13],[55,18]],[[9,21],[25,25],[41,31]]]){
   ctx.beginPath();ctx.moveTo(...pts[0]);ctx.quadraticCurveTo(...pts[1],...pts[2]);ctx.stroke();
  }
@@ -1648,7 +1648,7 @@ function drawAnimalRacer(r,dir){
    ctx.fillStyle=pawCol;ctx.beginPath();ctx.ellipse(-14,43,9,6,.05,0,Math.PI*2);ctx.ellipse(14,43,9,6,-.05,0,Math.PI*2);ctx.fill();
    ctx.fillStyle=r.color;ctx.beginPath();ctx.roundRect(-19,-3,38,39,16);ctx.fill();ctx.beginPath();ctx.arc(0,-23,25,0,Math.PI*2);ctx.fill();
    if(dog){ctx.beginPath();ctx.moveTo(-17,-39);ctx.lineTo(-28,-58);ctx.lineTo(-5,-44);ctx.closePath();ctx.fill();ctx.beginPath();ctx.moveTo(17,-39);ctx.lineTo(28,-58);ctx.lineTo(5,-44);ctx.closePath();ctx.fill();ctx.beginPath();ctx.arc(0,34,8,0,Math.PI*2);ctx.fill();if(akiyama){ctx.fillStyle='#171717';ctx.beginPath();ctx.moveTo(-17,-39);ctx.lineTo(-27,-56);ctx.lineTo(-7,-44);ctx.closePath();ctx.moveTo(17,-39);ctx.lineTo(27,-56);ctx.lineTo(7,-44);ctx.closePath();ctx.fill();ctx.beginPath();ctx.ellipse(0,8,15,13,0,0,Math.PI*2);ctx.fill();}}
-   else{ctx.beginPath();ctx.arc(-24,-23,9,0,Math.PI*2);ctx.arc(24,-23,9,0,Math.PI*2);ctx.fill();ctx.strokeStyle=r.color;ctx.lineWidth=7;ctx.beginPath();ctx.arc(20,25,20,-1.25,1.55);ctx.stroke();}
+   else{ctx.fillStyle=akiyama?'#202020':r.color;ctx.beginPath();ctx.arc(-24,-23,9,0,Math.PI*2);ctx.arc(24,-23,9,0,Math.PI*2);ctx.fill();ctx.strokeStyle=akiyama?'#202020':r.color;ctx.lineWidth=7;ctx.beginPath();ctx.arc(20,25,20,-1.25,1.55);ctx.stroke();}
    ctx.restore();return;
  }
  if(side){
@@ -1659,7 +1659,7 @@ function drawAnimalRacer(r,dir){
    ctx.fillStyle=pawCol;ctx.beginPath();ctx.ellipse(-17,41,10,6,.05,0,Math.PI*2);ctx.ellipse(14,40,10,6,-.05,0,Math.PI*2);ctx.fill();
    ctx.fillStyle=r.color;ctx.beginPath();ctx.roundRect(-17,-2,35,38,15);ctx.fill();ctx.beginPath();ctx.ellipse(5,-22,25,23,0,0,Math.PI*2);ctx.fill();
    if(dog){ctx.beginPath();ctx.moveTo(2,-41);ctx.lineTo(6,-61);ctx.lineTo(18,-43);ctx.closePath();ctx.fill();if(akiyama){ctx.fillStyle='#171717';ctx.beginPath();ctx.moveTo(2,-41);ctx.lineTo(6,-60);ctx.lineTo(17,-43);ctx.closePath();ctx.fill();ctx.beginPath();ctx.ellipse(-9,7,10,18,.15,0,Math.PI*2);ctx.fill();ctx.fillStyle=r.color;}ctx.beginPath();ctx.ellipse(25,-18,15,12,0,0,Math.PI*2);ctx.fill();ctx.fillStyle=akiyama?'#deddd6':'#f0d2aa';ctx.beginPath();ctx.ellipse(26,-15,10,8,0,0,Math.PI*2);ctx.fill();ctx.fillStyle='#222';ctx.beginPath();ctx.arc(35,-18,3.5,0,Math.PI*2);ctx.fill();}
-   else{ctx.fillStyle='#e5b78d';ctx.beginPath();ctx.ellipse(18,-18,15,16,0,0,Math.PI*2);ctx.fill();ctx.fillStyle=r.color;ctx.beginPath();ctx.arc(-19,-22,9,0,Math.PI*2);ctx.fill();ctx.strokeStyle=r.color;ctx.lineWidth=7;ctx.beginPath();ctx.arc(21,23,19,-1.45,1.45);ctx.stroke();}
+   else{ctx.fillStyle=akiyama?'#252525':'#e5b78d';ctx.beginPath();ctx.ellipse(18,-18,15,16,0,0,Math.PI*2);ctx.fill();ctx.fillStyle=akiyama?'#202020':r.color;ctx.beginPath();ctx.arc(-19,-22,9,0,Math.PI*2);ctx.fill();ctx.strokeStyle=akiyama?'#202020':r.color;ctx.lineWidth=7;ctx.beginPath();ctx.arc(21,23,19,-1.45,1.45);ctx.stroke();}
    angelWing(-11,-6,-1,.92,-.03);
    ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(16,-30,7,0,Math.PI*2);ctx.fill();ctx.fillStyle='#1d1d1d';ctx.beginPath();ctx.arc(19,-30,3,0,Math.PI*2);ctx.fill();ctx.restore();return;
  }
@@ -1669,7 +1669,7 @@ function drawAnimalRacer(r,dir){
  ctx.fillStyle=pawCol;ctx.beginPath();ctx.ellipse(-13,42,9,6,0,0,Math.PI*2);ctx.ellipse(13,42,9,6,0,0,Math.PI*2);ctx.fill();
  ctx.fillStyle=r.color;ctx.beginPath();ctx.ellipse(0,5,20,29,0,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.arc(0,-22,25,0,Math.PI*2);ctx.fill();
  if(dog){ctx.beginPath();ctx.moveTo(-18,-38);ctx.lineTo(-28,-58);ctx.lineTo(-5,-43);ctx.closePath();ctx.fill();ctx.beginPath();ctx.moveTo(18,-38);ctx.lineTo(28,-58);ctx.lineTo(5,-43);ctx.closePath();ctx.fill();if(akiyama){ctx.fillStyle='#171717';ctx.beginPath();ctx.moveTo(-18,-38);ctx.lineTo(-27,-57);ctx.lineTo(-6,-43);ctx.closePath();ctx.moveTo(18,-38);ctx.lineTo(27,-57);ctx.lineTo(6,-43);ctx.closePath();ctx.fill();ctx.beginPath();ctx.ellipse(0,8,13,15,0,0,Math.PI*2);ctx.fill();}ctx.fillStyle=akiyama?'#deddd6':'#f0d2aa';ctx.beginPath();ctx.ellipse(0,-14,15,11,0,0,Math.PI*2);ctx.fill();ctx.fillStyle='#222';ctx.beginPath();ctx.arc(0,-18,4,0,Math.PI*2);ctx.fill();}
- else{ctx.fillStyle='#e5b78d';ctx.beginPath();ctx.ellipse(0,-18,18,17,0,0,Math.PI*2);ctx.fill();ctx.fillStyle=r.color;ctx.beginPath();ctx.arc(-24,-21,9,0,Math.PI*2);ctx.arc(24,-21,9,0,Math.PI*2);ctx.fill();ctx.strokeStyle=r.color;ctx.lineWidth=7;ctx.beginPath();ctx.arc(24,22,18,-1.4,1.4);ctx.stroke();}
+ else{ctx.fillStyle=akiyama?'#252525':'#e5b78d';ctx.beginPath();ctx.ellipse(0,-18,18,17,0,0,Math.PI*2);ctx.fill();ctx.fillStyle=akiyama?'#202020':r.color;ctx.beginPath();ctx.arc(-24,-21,9,0,Math.PI*2);ctx.arc(24,-21,9,0,Math.PI*2);ctx.fill();ctx.strokeStyle=akiyama?'#202020':r.color;ctx.lineWidth=7;ctx.beginPath();ctx.arc(24,22,18,-1.4,1.4);ctx.stroke();}
  ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(-8,-26,6,0,Math.PI*2);ctx.arc(8,-26,6,0,Math.PI*2);ctx.fill();ctx.fillStyle='#1d1d1d';ctx.beginPath();ctx.arc(-7,-26,2.7,0,Math.PI*2);ctx.arc(7,-26,2.7,0,Math.PI*2);ctx.fill();ctx.restore();
 }
 function drawRacer(r){
@@ -1739,7 +1739,7 @@ function drawRacer(r){
  // Glide: slight forward pitch / streamlined squash.
  if(r.flight===3){ctx.transform(1,0,-Math.sin(r.face)*.045,1,0,0);}
  if(canDrift(r)&&r.drifting){let slip=norm(r.face-(r.driftMoveFace||r.face));ctx.rotate(Math.max(-.22,Math.min(.22,slip*.22)));ctx.scale(1.03,.96);}
- currentWingSpecial=(r.name==='Michael'||r.name==='Inu'||r.name==='Saru'||r.name==='Keisuke'||r.name==='Ryosuke'||r.name==='Kyoichi');currentWingCobalt=r.name==='Kai';currentWingRed=r.name==='Kawazu';currentWingTakumi=(r.name==='Takumi'||r.name==='Bunta');currentWingTakumiBlue=!!r.takumiBlue||r.name==='Bunta';currentWingBurning=r.burningWing>0||r.highJump>0;currentWingFold=Math.min(1,(r.wingSnap||0)/.19);if(r.name==='Inu'||r.name==='Saru'||r.name==='Nakazato'||r.name==='Akiyama'||r.name==='Kyoichi')drawAnimalRacer(r,dir);else if(dir==='down')frogFront(r);else if(dir==='up')frogBack(r);else frogSide(r,dir==='left');currentWingBurning=false;currentWingTakumi=false;currentWingTakumiBlue=false;currentWingCobalt=false;currentWingFold=0;
+ currentWingSpecial=(r.name==='Michael'||r.name==='Inu'||r.name==='Saru'||r.name==='Keisuke'||r.name==='Ryosuke');currentWingDark=r.name==='Kyoichi';currentWingCobalt=r.name==='Kai';currentWingRed=r.name==='Kawazu';currentWingTakumi=(r.name==='Takumi'||r.name==='Bunta');currentWingTakumiBlue=!!r.takumiBlue||r.name==='Bunta';currentWingBurning=r.burningWing>0||r.highJump>0;currentWingFold=Math.min(1,(r.wingSnap||0)/.19);if(r.name==='Inu'||r.name==='Saru'||r.name==='Nakazato'||r.name==='Akiyama'||r.name==='Kyoichi'||r.name==='Kai')drawAnimalRacer(r,dir);else if(dir==='down')frogFront(r);else if(dir==='up')frogBack(r);else frogSide(r,dir==='left');currentWingBurning=false;currentWingTakumi=false;currentWingTakumiBlue=false;currentWingCobalt=false;currentWingDark=false;currentWingFold=0;
 if(r.name==='Kyoichi'){
  // White head towel: deliberately oversized so the black dog never reads as Nakazato at phone scale.
  ctx.save();ctx.fillStyle='#f5f5f0';ctx.strokeStyle='#bfc5c8';ctx.lineWidth=2.4;
