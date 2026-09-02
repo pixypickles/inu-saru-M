@@ -2,7 +2,7 @@
 
 
 // ===== v1.5 meta game / field map =====
-const VERSION='v3.32-DEFEAT-CHECK-PASSIVE-COPY';
+const VERSION='v3.33-GLIDE-SPEED-FIX';
 const RACE_LAPS=1;
 
 const CHARACTER_DATA={
@@ -854,12 +854,10 @@ function updateRacer(r,dt){
 r.takumiPassiveCd=Math.max(0,(r.takumiPassiveCd||0)-dt);r.dokkanTurbo=Math.max(0,(r.dokkanTurbo||0)-dt);r.dokkanTurboCd=Math.max(0,(r.dokkanTurboCd||0)-dt);r.dokkanPhase=(r.dokkanPhase||0)+dt;r.wingSnap=Math.max(0,(r.wingSnap||0)-dt);r.aiWallHitTimer=Math.max(0,(r.aiWallHitTimer||0)-dt);if(r.aiWallHitTimer<=0)r.aiWallHits=0;r.airBarrier=Math.max(0,(r.airBarrier||0)-dt);r.wallGrace=Math.max(0,(r.wallGrace||0)-dt);r.wallEscape=Math.max(0,(r.wallEscape||0)-dt);r.highJump=Math.max(0,(r.highJump||0)-dt);r.normalHighJump=Math.max(0,(r.normalHighJump||0)-dt);r.confuse=Math.max(0,(r.confuse||0)-dt);r.burningWing=Math.max(0,(r.burningWing||0)-dt);if(r.charging)r.charge=Math.min(1.8,(r.charge||0)+dt);if(r.finished)return;r.skillCdA=Math.max(0,r.skillCdA-dt);r.skillCdB=Math.max(0,r.skillCdB-dt);r.hitSlow=Math.max(0,r.hitSlow-dt);r.boost=Math.max(0,r.boost-dt);r.bump=Math.max(0,r.bump-dt);r.wing=Math.max(0,r.wing-dt);r.jumpAge+=dt;r.flapAge+=dt;r.landAge=Math.max(0,r.landAge-dt);
  const inp=desiredInput(r),want=Math.atan2(inp.y,inp.x),diff=norm(want-r.face);
  const michaelBonus=michaelSpeedBonus(r),michaelAccel=(r.name==='Michael'&&michaelHasPassive('Akiyama'))?1.05:1;
- // Only treat a deliberate near-180-degree reversal as air braking.
- // Comparing against the current facing angle made ordinary hairpin steering feel like a sudden speed loss.
- const lastDot=inp.manual?(inp.x*(r.lastManualPrevX??r.lastManualX)+inp.y*(r.lastManualPrevY??r.lastManualY)):1;
- if(!r.ai&&r.flight>0&&inp.manual&&lastDot<-.94){r.airReverseBrake=.18;r.speed=approach(r.speed,330,230*dt);}
+ // Smartphone steering can briefly flick across the opposite side while a finger is released.
+ // Do not convert that tiny accidental reversal into a speed penalty. Air steering now changes direction only.
  if(inp.manual){r.lastManualPrevX=inp.x;r.lastManualPrevY=inp.y;}
- r.airReverseBrake=Math.max(0,(r.airReverseBrake||0)-dt);
+ r.airReverseBrake=0;
  const hydroSeg=(courseTheme==='atami')?routeLockedTrackInfo(r).i:-1;
  const inHydro=r.flight===0&&hydroSeg>=19&&hydroSeg<=23;
  if(inHydro)r.hydroWet=.8;else r.hydroWet=Math.max(0,(r.hydroWet||0)-dt);
@@ -913,10 +911,13 @@ r.takumiPassiveCd=Math.max(0,(r.takumiPassiveCd||0)-dt);r.dokkanTurbo=Math.max(0
      const aiCruise=r.ai?(r.name==='Inu'?maxSpeed+95:r.name==='Plain'?600:(r.name==='Bunta'||r.name==='Takumi'||r.name==='Saru'||r.name==='Keisuke'||r.name==='Akiyama'||r.name==='Ryosuke'||r.name==='Kyoichi'||r.name==='Kai'||r.name==='Kawazu'?maxSpeed:615)):maxSpeed;
      r.speed=approach(r.speed,(r.name==='Kawazu'?maxSpeed+65:r.name==='Takumi'?maxSpeed+55:aiCruise)+michaelBonus,glideAccel*dt*michaelAccel);
    }else{
+     // Previously an expired glide silently dragged speed toward ~245 and then forced a landing.
+     // On a phone this felt like a random loss of power, especially when the player was not touching the stick.
+     // End the glide by stepping back to the flap phase instead; speed eases toward flap pace with no cliff-drop.
      r.glideGrace+=dt;
-     const tiredTarget=(r.ai&&r.name!=='Plain'&&r.name!=='Bunta'&&r.name!=='Kawazu'&&r.name!=='Takumi')?260:245;
-     r.speed=approach(r.speed,r.name==='Takumi'?280:tiredTarget,82*dt);
-     if(r.speed<300){r.flight=0;r.onGround=true;r.glideClock=0;r.glideExtendStock=false;r.glideExtendUsed=false;r.landAge=.28;}
+     r.flight=2;r.onGround=false;r.glideClock=0;r.glideExtendStock=false;r.glideExtendUsed=false;
+     r.speed=Math.max(r.speed,455+michaelBonus*.75);r.wing=Math.max(r.wing,.42);r.flapAge=0;
+     if(!r.ai)msg('滑空終了 → 羽ばたきへ');
    }
  }
  if(r.name==='Bunta'){
