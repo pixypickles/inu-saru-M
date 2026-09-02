@@ -178,3 +178,6 @@ linear-gradient(135deg,#7fcf73,#59a967);overflow:hidden}
 
 .mapSpot.shomaru{left:42%;top:31%;background:#6b553d;border-color:#c8ad83}
 @media(max-width:700px){.mapSpot.shomaru{left:38%;top:32%}}
+
+.mapSpot.akagi{left:58%;top:20%;background:#8a3434;border-color:#efb3b3}
+@media(max-width:700px){.mapSpot.akagi{left:58%;top:20%}}
