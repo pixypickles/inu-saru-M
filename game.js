@@ -2,7 +2,7 @@
 
 
 // ===== v1.5 meta game / field map =====
-const VERSION='v3.33-GLIDE-SPEED-FIX';
+const VERSION='v3.34-SHOMARU-AKAGI-FEEL';
 const RACE_LAPS=1;
 
 const CHARACTER_DATA={
@@ -1128,7 +1128,7 @@ r.takumiPassiveCd=Math.max(0,(r.takumiPassiveCd||0)-dt);r.dokkanTurbo=Math.max(0
    akina:{guide:.66,soft:2.15,hard:4.5,brake:48,wallSpeed:120,escapeSpeed:135},
    usui:{guide:.60,soft:2.65,hard:5.2,brake:55,wallSpeed:115,escapeSpeed:130},
    myogi:{guide:.62,soft:2.45,hard:4.9,brake:52,wallSpeed:118,escapeSpeed:132},
-   shomaru:{guide:.59,soft:2.8,hard:5.5,brake:58,wallSpeed:112,escapeSpeed:128},
+   shomaru:{guide:.50,soft:3.55,hard:6.9,brake:46,wallSpeed:124,escapeSpeed:139},
    akagi:{guide:.56,soft:3.6,hard:7.2,brake:75,wallSpeed:125,escapeSpeed:140},
    irohazaka:{guide:.54,soft:3.8,hard:7.6,brake:76,wallSpeed:122,escapeSpeed:136},
    atami:{guide:.56,soft:3.4,hard:6.8,brake:70,wallSpeed:124,escapeSpeed:138}
