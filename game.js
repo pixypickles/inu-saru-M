@@ -2,11 +2,11 @@
 
 
 // ===== v1.5 meta game / field map =====
-const VERSION='v3.28-ATAMI-HYDRO-JUMP';
+const VERSION='v3.29-KANATA-AFTER-RYOSUKE';
 const RACE_LAPS=1;
 
 const CHARACTER_DATA={
- Michael:{jp:'ミカエルさん',color:'#49a94f',wing:'special'},
+ Michael:{jp:'ミカエル・ベッケンバウアーさん',color:'#49a94f',wing:'special'},
  Gabriel:{jp:'ガブリエルさん',color:'#3188e6'},
  Plain:{jp:'もぶさん',color:'#78a83c'},
  Raphael:{jp:'ラファエルさん',color:'#e6c83e'},
@@ -29,7 +29,7 @@ const CHARACTER_DATA={
  Ryosuke:{jp:'リョウスケさん',color:'#ffffff',wing:'special',species:'frog'},
  Kai:{jp:'カイさん',color:'#1859b8',wing:'cobalt',species:'monkey'},
  Kyoichi:{jp:'キョウイチさん',color:'#171a1f',wing:'special',species:'dog'},
- Kanata:{jp:'カナタさん',color:'#d84a42',wing:'special',species:'monkey'}
+ Kanata:{jp:'カナタさん',color:'#d84a42',wing:'special',species:'frog'}
 };
 const TOURNAMENT_ROSTER=['Gabriel','Raphael','Uriel','Lucifer','Lilith'];
 function randomTournamentOpponent(exclude=[]){
@@ -98,6 +98,7 @@ function showField(){
 function updateFieldUi(){
   const n=CHARACTER_DATA[saveData.selectedCharacter]?.jp?.replace('さん','')||saveData.selectedCharacter;
   const el=document.querySelector('#fieldPlayer');if(el)el.textContent='操作：'+n;
+  const atami=document.querySelector('.mapSpot.atami');if(atami)atami.classList.toggle('hidden',!(saveData.defeatedRivals||[]).includes('Ryosuke'));
 }
 const MICHAEL_ORIGINAL_SKILLS=[['normalHighJump','ハイジャンプ'],['burningWing','バーニングウィング'],['highJump','バーニングクライム'],['timeLag','タイムラグ'],['timeStop','時間停止']];
 const RIVAL_COPY_SKILLS={
@@ -107,7 +108,8 @@ const RIVAL_COPY_SKILLS={
  Akiyama:[['dokkanTurbo','ドッカン・ターボ']],
  Kai:[['wallSkim','ヘアピン・スレスレ']],
  Kyoichi:[['cornerExitBoost','コーナー出口加速']],
- Ryosuke:[['fastTheory','公道最速理論']]
+ Ryosuke:[['fastTheory','公道最速理論']],
+ Kanata:[['kanataTrace','ライン・トレース']]
 };
 const LEARNABLE_SKILLS={
  Gabriel:[['waterBoost','水ブースト'],['waterLaser','水レーザー']],
@@ -133,7 +135,7 @@ function rebuildSkillSelects(){
    if(!opts.some(x=>x[0]===saveData.michaelSkillA))saveData.michaelSkillA='burningWing';
    if(!opts.some(x=>x[0]===saveData.michaelSkillB))saveData.michaelSkillB='driftFlight';
    a.disabled=false;b.disabled=false;a.innerHTML=opts.map(x=>'<option value="'+x[0]+'">'+x[1]+'</option>').join('');b.innerHTML=a.innerHTML;a.value=saveData.michaelSkillA;b.value=saveData.michaelSkillB;
-   document.querySelector('#skillSetupTitle').textContent='ミカエル コピー・スキル';document.querySelector('#skillSetupNote').textContent='倒したライバルの技をA/Bにセットできます。最初はバーニングウィング＋ドリフト飛行。';
+   document.querySelector('#skillSetupTitle').textContent='ミカエル・ベッケンバウアー コピー・スキル';document.querySelector('#skillSetupNote').textContent='倒したライバルの技をA/Bにセットできます。最初はバーニングウィング＋ドリフト飛行。';
  }
 }
 function learnFromOpponent(name){
@@ -156,7 +158,7 @@ function startLearningRace(name,place){
 }
 function showPlace(place){
  appState='place';currentPlace=place;hideAllScreens();document.querySelector('#fieldScreen')?.classList.remove('hidden');document.querySelector('#placePanel')?.classList.remove('hidden');
- const data={practice:['🎯 練習場','ジャンプ、バーニングウィング、ドリフト飛行を自由に練習できます。'],akina:['🍁 アキナ','黄色いカエルのケイスケさんが待つ一本道の峠。高速ドリフトと極限集中を使います。'],usui:['🌿 ウスイ','40000×40000ワールドの閉ループ峠。近接道路は別区間のまま保持します。'],myogi:['⛰️ ミョウギ','細長い折り返しと連続S字が続くポイント・トゥ・ポイント峠。ナカザトさんが待っています。'],shomaru:['🛣️ ショウマル','細かい切り返しと複合ヘアピンが続くポイント・トゥ・ポイント峠。タクミさんと同系色の犬・アキヤマさんが待っています。ドッカン・ターボとドリフトを使います。'],akagi:['🔴 アカギ','高密度180点トレースをそのまま折れ線で結ぶダウンヒル。アカギだけはスプラインで形を作り直さず、近接する折り返しも別道路のまま保持します。純白のカエル・リョウスケさんは「公道最速理論」と「ゼロ・ミス」を常時発動する最強ライバルです。'],irohazaka:['🌀 イロハザカ','連続ヘアピンが密集するポイント・トゥ・ポイント峠。第2・第3区間は折れ線をそのまま使い、近接道路を絶対に接続しません。コバルトブルーのカイさんは「ヘアピン・スレスレ」と「ジャンピングライン」、黒い犬のキョウイチさんは「コーナー出口加速」と「アンチラグ」を使います。'],atami:['🌊 アタミ','海沿い高速区間→ハイドロトラップ→市街地→山側ヒルクライム→本物のジャンプギャップ。P020〜P024は水が道路を横断し、P057→P058は道路そのものが途切れます。カナタさんはひとまず赤いFR猿として参戦。']}[place]||['峠','準備中のコースです。'];
+ const data={practice:['🎯 練習場','ジャンプ、バーニングウィング、ドリフト飛行を自由に練習できます。'],akina:['🍁 アキナ','黄色いカエルのケイスケさんが待つ一本道の峠。高速ドリフトと極限集中を使います。'],usui:['🌿 ウスイ','40000×40000ワールドの閉ループ峠。近接道路は別区間のまま保持します。'],myogi:['⛰️ ミョウギ','細長い折り返しと連続S字が続くポイント・トゥ・ポイント峠。ナカザトさんが待っています。'],shomaru:['🛣️ ショウマル','細かい切り返しと複合ヘアピンが続くポイント・トゥ・ポイント峠。タクミさんと同系色の犬・アキヤマさんが待っています。ドッカン・ターボとドリフトを使います。'],akagi:['🔴 アカギ','高密度180点トレースをそのまま折れ線で結ぶダウンヒル。アカギだけはスプラインで形を作り直さず、近接する折り返しも別道路のまま保持します。純白のカエル・リョウスケさんは「公道最速理論」と「ゼロ・ミス」を常時発動する最強ライバルです。'],irohazaka:['🌀 イロハザカ','連続ヘアピンが密集するポイント・トゥ・ポイント峠。第2・第3区間は折れ線をそのまま使い、近接道路を絶対に接続しません。コバルトブルーのカイさんは「ヘアピン・スレスレ」と「ジャンピングライン」、黒い犬のキョウイチさんは「コーナー出口加速」と「アンチラグ」を使います。'],atami:['🌊 アタミ','リョウスケさん撃破後に現れる海沿いショートコース。HYDRO TRAPと本物のJUMP STAGEを越え、赤い翼のカエル・カナタさんと勝負。カナタさんは「ライン・トレース」と「エア・リカバリー」を使います。']}[place]||['峠','準備中のコースです。'];
  document.querySelector('#placeTitle').textContent=data[0];document.querySelector('#placeDesc').textContent=data[1];const actions=document.querySelector('#placeActions');actions.innerHTML='';
  if(place==='practice'){const g=document.createElement('button');g.className='menuBtn';g.textContent='📖 操作説明を見る';g.onclick=()=>showTutorial('practice');actions.appendChild(g);for(const n of ['Inu','Saru']){const q=document.createElement('button');q.className='menuBtn';q.textContent=(CHARACTER_DATA[n]?.jp||n)+'と練習';q.onclick=()=>{tournament=null;currentPlace='practice';startRaceRound(n,true)};actions.appendChild(q);}}
  else if(place==='akina'){const o='Keisuke';const q=document.createElement('button');q.className='menuBtn';q.textContent=(CHARACTER_DATA[o]?.jp||o)+'とアキナバトル';q.onclick=()=>{tournament={place:'akina',round:0,courseIndex:0,opponents:[o]};startRaceRound(o,false)};actions.appendChild(q);}
@@ -165,7 +167,7 @@ function showPlace(place){
  else if(place==='shomaru'){const n='Akiyama';const q=document.createElement('button');q.className='menuBtn';q.textContent=(CHARACTER_DATA[n]?.jp||n)+'とショウマルバトル';q.onclick=()=>{tournament={place:'shomaru',round:0,courseIndex:0,opponents:[n]};startRaceRound(n,false)};actions.appendChild(q);}
  else if(place==='akagi'){const n='Ryosuke',need=['Keisuke','Saru','Nakazato','Akiyama','Kai','Kyoichi'],ready=need.every(x=>(saveData.defeatedRivals||[]).includes(x));const q=document.createElement('button');q.className='menuBtn';q.textContent=(CHARACTER_DATA[n]?.jp||n)+'とアカギダウンヒル'+(ready?'':' 🔒');q.onclick=()=>{if(!ready){msg('リョウスケさん「まだ早い。」\n先にほかのライバル全員を倒してこよう。');return;}tournament={place:'akagi',round:0,courseIndex:0,opponents:[n]};startRaceRound(n,false)};actions.appendChild(q);}
  else if(place==='irohazaka'){for(const n of ['Kai','Kyoichi']){const q=document.createElement('button');q.className='menuBtn';q.textContent=(CHARACTER_DATA[n]?.jp||n)+'とイロハザカバトル';q.onclick=()=>{tournament={place:'irohazaka',round:0,courseIndex:0,opponents:[n]};startRaceRound(n,false)};actions.appendChild(q);}}
- else if(place==='atami'){const n='Kanata';const q=document.createElement('button');q.className='menuBtn';q.textContent=(CHARACTER_DATA[n]?.jp||n)+'とアタミ・ショートバトル';q.onclick=()=>{tournament={place:'atami',round:0,courseIndex:0,opponents:[n]};startRaceRound(n,false)};actions.appendChild(q);}
+ else if(place==='atami'){const n='Kanata',ready=(saveData.defeatedRivals||[]).includes('Ryosuke');const q=document.createElement('button');q.className='menuBtn';q.textContent=(CHARACTER_DATA[n]?.jp||n)+'とアタミ・ショートバトル'+(ready?'':' 🔒');q.onclick=()=>{if(!ready){msg('まだこの海沿いコースは現れていない。\nまずリョウスケさんを倒そう。');return;}msg('カナタさん「勝負だ！ ミカエル・ベッケンバウアー！」');setTimeout(()=>{tournament={place:'atami',round:0,courseIndex:0,opponents:[n]};startRaceRound(n,false)},900)};actions.appendChild(q);}
 }
 
 function makeShootingCourse(place){
@@ -363,7 +365,7 @@ function startRaceRound(opponent,practice=false){
 }
 function showRaceResult(win){
  if(!tournament){msg(win?'練習終了！':'練習終了');setTimeout(()=>showPlace('practice'),550);return;}
- const back=tournament.place;msg(win?'勝利！':'敗北… もう一度挑戦できます。');if(win){saveData.wins=(saveData.wins||0)+1;saveData.tournamentWins=saveData.tournamentWins||{};saveData.tournamentWins[back]=(saveData.tournamentWins[back]||0)+1;let beaten=tournament.opponents?.[tournament.round]||tournament.opponents?.[0];saveData.defeatedRivals=saveData.defeatedRivals||[];if(beaten&&!saveData.defeatedRivals.includes(beaten)){saveData.defeatedRivals.push(beaten);let cp=RIVAL_COPY_SKILLS[beaten]?.[0];if(cp)msg('勝利！ ミカエルさんが「'+cp[1]+'」をコピーした！');}saveGame();}tournament=null;setTimeout(()=>showPlace(back),700);
+ const back=tournament.place;msg(win?'勝利！':'敗北… もう一度挑戦できます。');if(win){saveData.wins=(saveData.wins||0)+1;saveData.tournamentWins=saveData.tournamentWins||{};saveData.tournamentWins[back]=(saveData.tournamentWins[back]||0)+1;let beaten=tournament.opponents?.[tournament.round]||tournament.opponents?.[0];saveData.defeatedRivals=saveData.defeatedRivals||[];if(beaten&&!saveData.defeatedRivals.includes(beaten)){saveData.defeatedRivals.push(beaten);let cp=RIVAL_COPY_SKILLS[beaten]?.[0];if(cp)msg('勝利！ ミカエル・ベッケンバウアーさんが「'+cp[1]+'」をコピーした！');if(beaten==='Ryosuke')setTimeout(()=>msg('リョウスケさん撃破！\n新たな舞台「アタミ」が出現した！'),260);}saveGame();}tournament=null;setTimeout(()=>showPlace(back),700);
 }
 function showTutorial(returnTo='field'){
  tutorialReturn=returnTo;appState='tutorial';hideAllScreens();
@@ -706,7 +708,7 @@ rebuildCourseObjects();
 let controlledIndex=0, camera={x:0,y:0}, joy={id:null,x:0,y:0},keys={},tongueHeld=false,last=performance.now(),finished=false,raceStartDelay=0,irohaDivider=null,atamiHydro=null,atamiJump=null;
 const racers=[makeRacer('Michael','#49a94f',0,720,680),makeRacer('Gabriel','#3188e6',1,720,740)];
 let globalTimeStop=0,globalTimeLag=0;
-function makeRacer(name,color,index,x,y){return {name,color,index,x,y,vx:0,vy:0,face:0,speed:0,r:25,flight:0,glideClock:0,glideGrace:0,glideExtendStock:false,glideExtendUsed:false,onGround:true,tongue:null,cp:1,lap:1,finished:false,hitSlow:0,boost:0,bump:0,skillCdA:0,skillCdB:0,ai:index===1,wing:0,jumpAge:0,flapAge:0,landAge:0,airBarrier:0,airBoostUses:3,power:1,rockImmuneSlow:false,character:name,confuse:0,charge:0,charging:false,burningWing:0,highJump:0,highJumpTotal:0,highJumpDir:0,normalHighJump:0,burnWingUses:3,burnClimbUses:3,startLineLong:null,lapPrevX:null,lapPrevY:null,wallGrace:0,wallEscape:0,courseWalk:0,timeStopUsed:false,takumiCornering:false,takumiPassiveCd:0,aiPathIndex:0,routeIndex:0,aiWallHits:0,aiWallHitTimer:0,aiBend:0,aiAssist:0,wingSnap:0,drifting:false,driftCharge:0,driftMoveFace:0,driftSide:0,driftFxClock:0,driftGhosts:[],gutterPullX:0,gutterPullY:0,treeGrab:null,treeGrabCd:0,extremeFocus:0,extremeFocusCd:0,dokkanTurbo:0,dokkanTurboCd:0,dokkanPhase:0,ryosukeTongue:null,ryosukeTheory:0,lastManualX:Math.cos(0),lastManualY:Math.sin(0),airReverseBrake:0,kyoCornering:false,kyoExitBoost:0,kyoAntilag:0,kyoSkillCd:0,kaiWallSkim:0,kaiJumpLine:0,kaiSkillCd:0,hydroWet:0,hydroMsgCd:0,jumpFailCd:0};}
+function makeRacer(name,color,index,x,y){return {name,color,index,x,y,vx:0,vy:0,face:0,speed:0,r:25,flight:0,glideClock:0,glideGrace:0,glideExtendStock:false,glideExtendUsed:false,onGround:true,tongue:null,cp:1,lap:1,finished:false,hitSlow:0,boost:0,bump:0,skillCdA:0,skillCdB:0,ai:index===1,wing:0,jumpAge:0,flapAge:0,landAge:0,airBarrier:0,airBoostUses:3,power:1,rockImmuneSlow:false,character:name,confuse:0,charge:0,charging:false,burningWing:0,highJump:0,highJumpTotal:0,highJumpDir:0,normalHighJump:0,burnWingUses:3,burnClimbUses:3,startLineLong:null,lapPrevX:null,lapPrevY:null,wallGrace:0,wallEscape:0,courseWalk:0,timeStopUsed:false,takumiCornering:false,takumiPassiveCd:0,aiPathIndex:0,routeIndex:0,aiWallHits:0,aiWallHitTimer:0,aiBend:0,aiAssist:0,wingSnap:0,drifting:false,driftCharge:0,driftMoveFace:0,driftSide:0,driftFxClock:0,driftGhosts:[],gutterPullX:0,gutterPullY:0,treeGrab:null,treeGrabCd:0,extremeFocus:0,extremeFocusCd:0,dokkanTurbo:0,dokkanTurboCd:0,dokkanPhase:0,ryosukeTongue:null,ryosukeTheory:0,lastManualX:Math.cos(0),lastManualY:Math.sin(0),airReverseBrake:0,kyoCornering:false,kyoExitBoost:0,kyoAntilag:0,kyoSkillCd:0,kaiWallSkim:0,kaiJumpLine:0,kaiSkillCd:0,hydroWet:0,hydroMsgCd:0,jumpFailCd:0,kanataTrace:0,kanataSkillCd:0,kanataAirRecover:0};}
 const maxSpeed=585,groundSpeed=255,flapSpeed=405,glideAccel=690,turnGround=2.85,turnFast=1.05;
 function reset(opponentName='Plain'){
  globalTimeStop=0;globalTimeLag=0;
@@ -825,7 +827,7 @@ function desiredInput(r){if(!r.ai){let kx=(keys.ArrowRight||keys.d?1:0)-(keys.Ar
 function updateRacer(r,dt){
   if(globalTimeStop>0&&r!==racers[controlledIndex])return;
   r.tongueBoostFx=Math.max(0,(r.tongueBoostFx||0)-dt);
-  r.treeGrabCd=Math.max(0,(r.treeGrabCd||0)-dt);r.kyoSkillCd=Math.max(0,(r.kyoSkillCd||0)-dt);r.kyoExitBoost=Math.max(0,(r.kyoExitBoost||0)-dt);r.kyoAntilag=Math.max(0,(r.kyoAntilag||0)-dt);r.kaiWallSkim=Math.max(0,(r.kaiWallSkim||0)-dt);r.kaiJumpLine=Math.max(0,(r.kaiJumpLine||0)-dt);r.kaiSkillCd=Math.max(0,(r.kaiSkillCd||0)-dt);if(r.ryosukeTongue){r.ryosukeTongue.t-=dt;if(r.ryosukeTongue.t<=0)r.ryosukeTongue=null;}
+  r.treeGrabCd=Math.max(0,(r.treeGrabCd||0)-dt);r.kyoSkillCd=Math.max(0,(r.kyoSkillCd||0)-dt);r.kyoExitBoost=Math.max(0,(r.kyoExitBoost||0)-dt);r.kyoAntilag=Math.max(0,(r.kyoAntilag||0)-dt);r.kaiWallSkim=Math.max(0,(r.kaiWallSkim||0)-dt);r.kaiJumpLine=Math.max(0,(r.kaiJumpLine||0)-dt);r.kaiSkillCd=Math.max(0,(r.kaiSkillCd||0)-dt);r.kanataTrace=Math.max(0,(r.kanataTrace||0)-dt);r.kanataSkillCd=Math.max(0,(r.kanataSkillCd||0)-dt);r.kanataAirRecover=Math.max(0,(r.kanataAirRecover||0)-dt);if(r.ryosukeTongue){r.ryosukeTongue.t-=dt;if(r.ryosukeTongue.t<=0)r.ryosukeTongue=null;}
   r.extremeFocus=Math.max(0,(r.extremeFocus||0)-dt);r.extremeFocusCd=Math.max(0,(r.extremeFocusCd||0)-dt);
   r.tongueBoostTimer=Math.max(0,(r.tongueBoostTimer||0)-dt);
   if(r.tongueBoostTimer>0)r.speed=Math.min(maxSpeed+130,r.speed+360*dt);
@@ -837,7 +839,7 @@ r.takumiPassiveCd=Math.max(0,(r.takumiPassiveCd||0)-dt);r.dokkanTurbo=Math.max(0
  const inHydro=r.flight===0&&hydroSeg>=19&&hydroSeg<=23;
  if(inHydro)r.hydroWet=.8;else r.hydroWet=Math.max(0,(r.hydroWet||0)-dt);
  r.hydroMsgCd=Math.max(0,(r.hydroMsgCd||0)-dt);r.jumpFailCd=Math.max(0,(r.jumpFailCd||0)-dt);
- const wetSteer=r.hydroWet>0?.82:1;
+ const wetSteer=r.hydroWet>0?(r.name==='Kanata'?.93:.82):1;
  const ratio=Math.min(1,r.speed/maxSpeed),aiTurn=r.ai?((r.name==='Bunta'?2.25:(r.name==='Takumi'||r.name==='Inu'||r.name==='Saru'||r.name==='Nakazato'||r.name==='Keisuke'||r.name==='Akiyama'||r.name==='Ryosuke'||r.name==='Kyoichi'||r.name==='Kai')?1.72:1.28)+Math.min(r.name==='Bunta'?1.05:(r.name==='Takumi'||r.name==='Inu'||r.name==='Saru'||r.name==='Nakazato'||r.name==='Keisuke'||r.name==='Akiyama'||r.name==='Ryosuke'||r.name==='Kyoichi'||r.name==='Kai')?.82:.55,(r.aiBend||0)*(r.name==='Bunta'?.72:(r.name==='Takumi'||r.name==='Inu'||r.name==='Saru'||r.name==='Nakazato'||r.name==='Keisuke'||r.name==='Akiyama'||r.name==='Ryosuke'||r.name==='Kyoichi'||r.name==='Kai')?.58:.42))):1,driftTurn=(canDrift(r)&&r.drifting)?2.15:1,turn=(turnGround*(1-ratio)+turnFast*ratio)*dt*(r.name==='Raphael'?1.22:1)*(r.highJump>0?.28:1)*aiTurn*driftTurn*wetSteer;
  // Saru special: on Usui, grab a tree on the inside of a sharp corner and swing around it.
  if(r.ai&&r.name==='Saru'&&courseTheme==='usui'&&!r.treeGrab&&r.treeGrabCd<=0&&(r.aiBend||0)>.42){
@@ -916,7 +918,7 @@ r.takumiPassiveCd=Math.max(0,(r.takumiPassiveCd||0)-dt);r.dokkanTurbo=Math.max(0
  }
  if(r.bump>0)r.speed=Math.min(r.speed,r.name==='Bunta'?430:360);
  if(r.hydroWet>0){
-   const kmh=r.speed*.56,sev=kmh<80?.04:kmh<130?.12:kmh<170?.23:.34;
+   const kmh=r.speed*.56,baseSev=kmh<80?.04:kmh<130?.12:kmh<170?.23:.34,sev=r.name==='Kanata'?baseSev*.48:baseSev;
    r.speed=Math.max(180,r.speed*(1-dt*(.10+sev)));
    if(inHydro&&kmh>80){r.face=norm(r.face+Math.sin(performance.now()/95+r.index*2.1)*sev*.012);if(!r.ai&&r.hydroMsgCd<=0){msg(kmh>=170?'HYDRO TRAP！ 強いハイドロプレーニング！':'HYDRO TRAP！ グリップ低下');r.hydroMsgCd=1.4;}}
  }
@@ -930,6 +932,12 @@ r.takumiPassiveCd=Math.max(0,(r.takumiPassiveCd||0)-dt);r.dokkanTurbo=Math.max(0
      if(bend>.95)r.speed=Math.min(r.speed,545);
      else if(bend>.62)r.speed=Math.min(r.speed,605);
      else if(bend>.38)r.speed=Math.min(r.speed,665);
+   }else if(r.name==='Kanata'){
+     // Line Trace + Air Recovery: protagonist-grade precision, especially through Atami's gimmick sectors.
+     const target=bend>.98?515:bend>.70?565:bend>.42?625:705;
+     r.speed=approach(r.speed,target,(r.kanataTrace>0?700:500)*dt);
+     if(r.kanataTrace>0){r.wallGrace=Math.max(r.wallGrace,.75);let ti=routeLockedTrackInfo(r);if(ti.d>courseHalfWidth*.56){r.x+=(ti.qx-r.x)*Math.min(1,dt*3.8);r.y+=(ti.qy-r.y)*Math.min(1,dt*3.8);}}
+     if(courseTheme==='atami'&&r.flight>0){r.kanataAirRecover=.35;r.speed=Math.max(r.speed,545);r.wallGrace=Math.max(r.wallGrace,.55);}
    }else if(r.name==='Ryosuke'){
      // 公道最速理論 + ゼロ・ミス: long look-ahead, near-perfect line, very high minimum corner speed.
      const target=bend>.98?585:bend>.70?625:bend>.42?670:735;
@@ -1187,6 +1195,12 @@ function aiSkills(r,dt){if(r.name==='Ryosuke'){let bend=r.aiBend||0,seg=aiForwar
  if(r.kyoCornering&&bend<.20&&r.kyoSkillCd<=0){r.kyoCornering=false;r.kyoExitBoost=.88;r.kyoAntilag=1.35;r.kyoSkillCd=1.25;r.boost=Math.max(r.boost,.28);r.speed=Math.max(r.speed,575);}
  // Anti-lag also catches unusually deep speed drops without becoming a constant turbo.
  if(bend<.34&&r.speed<430&&r.kyoAntilag<=0&&r.kyoSkillCd<=0){r.kyoAntilag=.72;r.kyoSkillCd=.95;}
+ return;}if(r.name==='Kanata'){
+ let bend=r.aiBend||0,ti=routeLockedTrackInfo(r);
+ // Line Trace: activates through medium/tight corners and gently holds the intended route.
+ if(bend>.38&&r.kanataSkillCd<=0){r.kanataTrace=1.05;r.kanataSkillCd=1.55;r.wallGrace=Math.max(r.wallGrace,.85);r.speed=Math.max(r.speed,520);}
+ // Air Recovery: Atami jump stage gets a stable approach / landing rather than a random launch.
+ if(courseTheme==='atami'&&ti.i>=54&&ti.i<=58){r.kanataAirRecover=.55;r.wallGrace=Math.max(r.wallGrace,.75);if(r.flight>0)r.speed=Math.max(r.speed,555);}
  return;}if(r.name==='Kai'){
  let bend=r.aiBend||0,ti=trackInfo(r.x,r.y);
  // Hairpin Skim: deliberately uses the last sliver of road without paying the normal wall penalty.
@@ -1222,7 +1236,7 @@ function updateCheckpoint(r){
  }
  if((long0<=0&&long1>0)||(long0>=0&&long1<0)){const denom=long1-long0,u=Math.abs(denom)<1e-6?0:(-long0/denom),crossX=x0+(x1-x0)*u,crossY=y0+(y1-y0)*u,lateral=(crossX-p0.x)*nx+(crossY-p0.y)*ny,gateHalf=Math.max(520,courseHalfWidth+260);if(Math.abs(lateral)<=gateHalf){if(long0<=0&&long1>0){r.lap++;if(r.lap>RACE_LAPS){r.finished=true;r.speed=0;if(!finished){finished=true;msg((r===racers[controlledIndex]?'YOU WIN! ':'')+(CHARACTER_DATA[r.name]?.jp||r.name)+' ゴール！');setTimeout(()=>showRaceResult(r===racers[controlledIndex]),1300);}}else if(r===racers[controlledIndex])msg('LAP '+r.lap+' / '+RACE_LAPS);}else{const before=r.lap;r.lap=Math.max(1,r.lap-1);if(r===racers[controlledIndex]&&r.lap<before)msg('逆走でゴール通過：LAP -1 → '+r.lap+'/'+RACE_LAPS);}}}r.startLineLong=long1;
 }
-function startTongue(r){if(appState==='race'&&raceStartDelay>0)return;if(r.finished)return;if(r.name==='Inu'||r.name==='Saru'||r.name==='Nakazato'||r.name==='Akiyama'||r.name==='Kyoichi'||r.name==='Kai'||r.name==='Kanata'){msg('犬と猿は舌を使えない！ 翼と旋回性能で曲がろう');return;}const TONGUE_ANCHOR_RANGE=330;let anchor=nearestAnchor(r,TONGUE_ANCHOR_RANGE);if(anchor){let cross=Math.sin(norm(Math.atan2(anchor.y-r.y,anchor.x-r.x)-r.face));r.tongue={kind:'anchor',target:anchor,started:performance.now(),side:cross>0?-1:1};msg('アンカーに舌！ 離すタイミングで脱出');return;}
+function startTongue(r){if(appState==='race'&&raceStartDelay>0)return;if(r.finished)return;if(r.name==='Inu'||r.name==='Saru'||r.name==='Nakazato'||r.name==='Akiyama'||r.name==='Kyoichi'||r.name==='Kai'){msg('犬と猿は舌を使えない！ 翼と旋回性能で曲がろう');return;}const TONGUE_ANCHOR_RANGE=330;let anchor=nearestAnchor(r,TONGUE_ANCHOR_RANGE);if(anchor){let cross=Math.sin(norm(Math.atan2(anchor.y-r.y,anchor.x-r.x)-r.face));r.tongue={kind:'anchor',target:anchor,started:performance.now(),side:cross>0?-1:1};msg('アンカーに舌！ 離すタイミングで脱出');return;}
  let other=racers[1-r.index],d=Math.hypot(other.x-r.x,other.y-r.y);if(d<((r.name==='Lilith'||r.name==='Beelzebub')?390:270)){if(other.highJump>0){msg('バーニングクライム！ 舌が届かない');return;}
  if(other.burningWing>0){r.hitSlow=.45;msg('熱い！ バーニングウィングで舌を弾かれた');return;}
  if(other.airBarrier>0){msg('エアバリア！ 舌を弾かれた');return;}r.tongue={kind:'rival',target:other,started:performance.now()};let behind=Math.cos(norm(r.face-other.face))>.35;if(!(other.name==='Uriel'&&behind))other.hitSlow=.55;tongueSlipstreamBoost(r);msg(other.name==='Uriel'&&behind?'舌ヒット！ ウリエルは減速しない':'舌ヒット！ スリップ加速！');return;}
@@ -1261,6 +1275,7 @@ function useMichaelSkill(r,id,slot){
  if(id==='wallSkim'){r[cdKey]=3.0;r.kaiWallSkim=1.8;r.wallGrace=Math.max(r.wallGrace,1.9);r.speed=Math.max(r.speed,510);msg('コピー：ヘアピン・スレスレ！');return true;}
  if(id==='cornerExitBoost'){r[cdKey]=2.5;r.speed=Math.min(maxSpeed+165,r.speed+175);r.boost=.8;msg('コピー：コーナー出口加速！');return true;}
  if(id==='fastTheory'){r[cdKey]=5.0;r.ryosukeTheory=2.5;r.wallGrace=Math.max(r.wallGrace,2.5);r.speed=Math.max(r.speed,535);msg('コピー：公道最速理論！');return true;}
+ if(id==='kanataTrace'){r[cdKey]=3.2;r.kanataTrace=2.2;r.wallGrace=Math.max(r.wallGrace,2.0);r.speed=Math.max(r.speed,535);msg('コピー：ライン・トレース！ コースを読んで最短ライン！');return true;}
  return false;
 }
 function useA(r){if(appState==='race'&&raceStartDelay>0)return;if(r.name==='Takumi'||r.name==='Bunta'){if(r.skillCdA>0)return;
@@ -1799,7 +1814,7 @@ function drawRacer(r){
  // Glide: slight forward pitch / streamlined squash.
  if(r.flight===3){ctx.transform(1,0,-Math.sin(r.face)*.045,1,0,0);}
  if(canDrift(r)&&r.drifting){let slip=norm(r.face-(r.driftMoveFace||r.face));ctx.rotate(Math.max(-.22,Math.min(.22,slip*.22)));ctx.scale(1.03,.96);}
- currentWingSpecial=(r.name==='Keisuke'||r.name==='Ryosuke'||r.name==='Inu');currentWingTint=r.name==='Michael'?{fill:'#c9efc9',stroke:'#79b879',detail:'#efffef'}:r.name==='Saru'?{fill:'#cceeff',stroke:'#76b9d6',detail:'#effaff'}:r.name==='Nakazato'?{fill:'#c8ccd2',stroke:'#777d86',detail:'#edf0f3'}:r.name==='Kyoichi'?{fill:'#555b66',stroke:'#20242b',detail:'#929aa6'}:r.name==='Kanata'?{fill:'#f3b8b3',stroke:'#b85d57',detail:'#fff0ee'}:null;currentWingDark=false;currentWingCobalt=r.name==='Kai';currentWingRed=r.name==='Kawazu';currentWingTakumi=(r.name==='Takumi'||r.name==='Bunta');currentWingTakumiBlue=!!r.takumiBlue||r.name==='Bunta';currentWingBurning=r.burningWing>0||r.highJump>0;currentWingFold=Math.min(1,(r.wingSnap||0)/.19);if(r.name==='Inu'||r.name==='Saru'||r.name==='Nakazato'||r.name==='Akiyama'||r.name==='Kyoichi'||r.name==='Kai'||r.name==='Kanata')drawAnimalRacer(r,dir);else if(dir==='down')frogFront(r);else if(dir==='up')frogBack(r);else frogSide(r,dir==='left');currentWingBurning=false;currentWingTakumi=false;currentWingTakumiBlue=false;currentWingCobalt=false;currentWingDark=false;currentWingTint=null;currentWingFold=0;
+ currentWingSpecial=(r.name==='Keisuke'||r.name==='Ryosuke'||r.name==='Inu');currentWingTint=r.name==='Michael'?{fill:'#c9efc9',stroke:'#79b879',detail:'#efffef'}:r.name==='Saru'?{fill:'#cceeff',stroke:'#76b9d6',detail:'#effaff'}:r.name==='Nakazato'?{fill:'#c8ccd2',stroke:'#777d86',detail:'#edf0f3'}:r.name==='Kyoichi'?{fill:'#555b66',stroke:'#20242b',detail:'#929aa6'}:r.name==='Kanata'?{fill:'#f3b8b3',stroke:'#b85d57',detail:'#fff0ee'}:null;currentWingDark=false;currentWingCobalt=r.name==='Kai';currentWingRed=r.name==='Kawazu';currentWingTakumi=(r.name==='Takumi'||r.name==='Bunta');currentWingTakumiBlue=!!r.takumiBlue||r.name==='Bunta';currentWingBurning=r.burningWing>0||r.highJump>0;currentWingFold=Math.min(1,(r.wingSnap||0)/.19);if(r.name==='Inu'||r.name==='Saru'||r.name==='Nakazato'||r.name==='Akiyama'||r.name==='Kyoichi'||r.name==='Kai')drawAnimalRacer(r,dir);else if(dir==='down')frogFront(r);else if(dir==='up')frogBack(r);else frogSide(r,dir==='left');currentWingBurning=false;currentWingTakumi=false;currentWingTakumiBlue=false;currentWingCobalt=false;currentWingDark=false;currentWingTint=null;currentWingFold=0;
 if(r.name==='Kyoichi'){
  // White head towel: deliberately oversized so the black dog never reads as Nakazato at phone scale.
  ctx.save();ctx.fillStyle='#f5f5f0';ctx.strokeStyle='#bfc5c8';ctx.lineWidth=2.4;
