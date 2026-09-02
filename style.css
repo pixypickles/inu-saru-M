@@ -172,3 +172,6 @@ linear-gradient(135deg,#7fcf73,#59a967);overflow:hidden}
 .mapSpot.practice{left:10%;top:68%}
 .mapSpot.akina{left:55%;top:15%}
 .mapSpot.usui{left:68%;top:62%}
+
+.mapSpot.usui{left:48%;top:54%;background:#315d52}.mapSpot.myogi{left:67%;top:43%;background:#25282d;border-color:#777}
+@media(max-width:700px){.mapSpot.usui{left:45%;top:55%}.mapSpot.myogi{left:68%;top:43%}}
