@@ -181,3 +181,6 @@ linear-gradient(135deg,#7fcf73,#59a967);overflow:hidden}
 
 .mapSpot.akagi{left:76%;top:25%;background:#8a3434;border-color:#efb3b3}
 @media(max-width:700px){.mapSpot.akagi{left:73%;top:24%}.mapSpot.akina{left:48%;top:14%}}
+
+.mapSpot.irohazaka{left:74%;top:52%;background:#584482;border-color:#c9b8f2}
+@media(max-width:700px){.mapSpot.irohazaka{left:72%;top:53%}}
