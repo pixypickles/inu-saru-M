@@ -2,11 +2,11 @@
 
 
 // ===== v1.5 meta game / field map =====
-const VERSION='v3.29-KANATA-AFTER-RYOSUKE';
+const VERSION='v3.30-MICHAEL-NAME-GAG';
 const RACE_LAPS=1;
 
 const CHARACTER_DATA={
- Michael:{jp:'ミカエル・ベッケンバウアーさん',color:'#49a94f',wing:'special'},
+ Michael:{jp:'ミカエルさん',color:'#49a94f',wing:'special'},
  Gabriel:{jp:'ガブリエルさん',color:'#3188e6'},
  Plain:{jp:'もぶさん',color:'#78a83c'},
  Raphael:{jp:'ラファエルさん',color:'#e6c83e'},
@@ -135,7 +135,7 @@ function rebuildSkillSelects(){
    if(!opts.some(x=>x[0]===saveData.michaelSkillA))saveData.michaelSkillA='burningWing';
    if(!opts.some(x=>x[0]===saveData.michaelSkillB))saveData.michaelSkillB='driftFlight';
    a.disabled=false;b.disabled=false;a.innerHTML=opts.map(x=>'<option value="'+x[0]+'">'+x[1]+'</option>').join('');b.innerHTML=a.innerHTML;a.value=saveData.michaelSkillA;b.value=saveData.michaelSkillB;
-   document.querySelector('#skillSetupTitle').textContent='ミカエル・ベッケンバウアー コピー・スキル';document.querySelector('#skillSetupNote').textContent='倒したライバルの技をA/Bにセットできます。最初はバーニングウィング＋ドリフト飛行。';
+   document.querySelector('#skillSetupTitle').textContent=((saveData.defeatedRivals||[]).includes('Ryosuke')?'ミカエル・ベッケンバウアー':'ミカエル')+' コピー・スキル';document.querySelector('#skillSetupNote').textContent='倒したライバルの技をA/Bにセットできます。最初はバーニングウィング＋ドリフト飛行。';
  }
 }
 function learnFromOpponent(name){
@@ -365,7 +365,7 @@ function startRaceRound(opponent,practice=false){
 }
 function showRaceResult(win){
  if(!tournament){msg(win?'練習終了！':'練習終了');setTimeout(()=>showPlace('practice'),550);return;}
- const back=tournament.place;msg(win?'勝利！':'敗北… もう一度挑戦できます。');if(win){saveData.wins=(saveData.wins||0)+1;saveData.tournamentWins=saveData.tournamentWins||{};saveData.tournamentWins[back]=(saveData.tournamentWins[back]||0)+1;let beaten=tournament.opponents?.[tournament.round]||tournament.opponents?.[0];saveData.defeatedRivals=saveData.defeatedRivals||[];if(beaten&&!saveData.defeatedRivals.includes(beaten)){saveData.defeatedRivals.push(beaten);let cp=RIVAL_COPY_SKILLS[beaten]?.[0];if(cp)msg('勝利！ ミカエル・ベッケンバウアーさんが「'+cp[1]+'」をコピーした！');if(beaten==='Ryosuke')setTimeout(()=>msg('リョウスケさん撃破！\n新たな舞台「アタミ」が出現した！'),260);}saveGame();}tournament=null;setTimeout(()=>showPlace(back),700);
+ const back=tournament.place;msg(win?'勝利！':'敗北… もう一度挑戦できます。');if(win){saveData.wins=(saveData.wins||0)+1;saveData.tournamentWins=saveData.tournamentWins||{};saveData.tournamentWins[back]=(saveData.tournamentWins[back]||0)+1;let beaten=tournament.opponents?.[tournament.round]||tournament.opponents?.[0];saveData.defeatedRivals=saveData.defeatedRivals||[];if(beaten&&!saveData.defeatedRivals.includes(beaten)){saveData.defeatedRivals.push(beaten);let cp=RIVAL_COPY_SKILLS[beaten]?.[0];if(cp)msg('勝利！ ミカエルさんが「'+cp[1]+'」をコピーした！');if(beaten==='Ryosuke')setTimeout(()=>msg('リョウスケさん撃破！\n新たな舞台「アタミ」が出現した！'),260);}saveGame();}tournament=null;setTimeout(()=>showPlace(back),700);
 }
 function showTutorial(returnTo='field'){
  tutorialReturn=returnTo;appState='tutorial';hideAllScreens();
