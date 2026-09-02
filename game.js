@@ -2,7 +2,7 @@
 
 
 // ===== v1.5 meta game / field map =====
-const VERSION='v3.10-AKAGI-SEPARATED-ROADS';
+const VERSION='v3.11-AKAGI-SEPARATED-ROADS';
 const RACE_LAPS=1;
 
 const CHARACTER_DATA={
@@ -455,7 +455,7 @@ const COURSE_SETS={
  ]}],
 
  myogi:[{name:'妙義・峠',theme:'myogi',pointToPoint:true,halfWidth:200,worldOverride:{w:40000,h:40000},originBottomLeft:true,courseDraft:true,spline:'centripetal',splineAlpha:.5,splineTension:.24,splineSteps:24,extraAnchors:[],path:[[1800,18580],[1930,19360],[2450,20400],[2970,21440],[3360,21960],[4010,21960],[4790,21830],[5700,21830],[6350,21960],[6610,22480],[6610,23260],[6532,24040],[6740,24560],[7260,25080],[7780,25652],[8040,26250],[7910,26770],[7390,27290],[6610,27810],[5960,28200],[5700,28590],[5960,28850],[6480,28668],[7260,28148],[8040,27550],[8820,26900],[9340,26250],[9730,26120],[10120,26328],[10250,26770],[10068,27160],[9340,27810],[8820,28330],[9080,28772],[9600,28590],[10380,27940],[11160,27290],[11940,27030],[12720,27030],[13500,27030],[14020,26770],[14540,26250],[15060,25860],[15580,25600],[16100,25340],[16360,24820],[16100,24040],[16100,23260],[16360,22480],[16880,21960],[17530,21960],[18180,22350],[18830,23000],[19350,23520],[20000,23780],[20650,23780],[21170,23520],[21300,23130],[21040,22740],[20520,22220],[20000,21700],[19480,21050],[18830,20400],[18180,19750],[17660,19230],[17140,18840],[16880,18450],[17140,18190],[17660,18242],[18180,18580],[18700,18970],[19350,19100],[19870,19360],[20520,19880],[21040,20140],[21560,20010],[22080,19620],[22600,18970],[22990,18320],[23250,17540],[23250,16760],[23250,15980],[22860,15460],[22210,15408],[21690,15590],[21170,15460],[20780,15070],[20780,14550],[21040,14160],[21300,13900],[21690,13640],[22080,13250],[22600,13120],[23120,13250],[23510,13640],[23770,14030],[24160,14030],[24550,13770],[24758,13250],[24810,12600],[24888,11820],[25200,11300],[25590,11170],[25928,11430],[25980,12080],[25980,12730],[26240,13120],[26630,12990],[26890,12470],[26968,11820],[27280,11508],[27670,11690],[27800,12210],[27748,12860],[27930,13380],[28450,13432],[28970,13250],[29360,12860],[29620,12470],[30140,12340],[30660,12210],[31180,12210],[31700,12080],[32220,11820],[32740,11430],[33260,11300],[33780,11300],[34300,11560],[34690,11950],[35080,12340],[35600,12600],[35990,12340],[36120,12470],[36510,13380],[36900,14290],[36510,14940],[36120,15460],[35990,16240],[36250,17020],[36640,17800],[36510,18450],[36120,18970],[35990,19620],[36380,20400],[36770,21050],[37030,21700],[36640,22090],[35860,21960],[34950,21570],[34040,21180],[33130,20790],[32480,20400],[31960,20530],[32090,21050],[32480,21570],[33000,22090],[33520,22610],[33780,23260],[33832,24300],[33650,25340],[33260,26120],[32740,26510],[32350,26380],[31960,25860],[31570,25210],[31180,24820],[30660,24820],[30140,25080],[29620,25600],[29100,26250],[28580,26900],[28060,27390],[27540,27780],[28320,28720]]}],
- akagi:[{name:'赤城・ダウンヒル',theme:'akagi',pointToPoint:true,halfWidth:160,worldOverride:{w:40000,h:40000},originBottomLeft:true,courseDraft:true,spline:'centripetal',splineAlpha:.5,splineTension:.12,splineSteps:24,extraAnchors:[],path:[[33900,36700],[33400,35700],[32600,34700],[31700,33750],[30750,32750],[29850,31750],[29200,30750],[28900,29750],[29000,28900],[29500,28300],[30200,28000],[30650,27400],[30850,26500],[30600,25800],[30150,25500],[29800,25850],[29850,26600],[29500,27500],[29000,28200],[29400,28900],[30400,29150],[31600,29150],[32600,29400],[33400,30100],[34000,30400],[34400,30200],[34500,29700],[34100,29300],[33400,29100],[32900,28600],[33200,28200],[33900,28000],[34200,27600],[34000,27200],[33200,27300],[32500,27500],[32100,27100],[32500,26800],[33300,26600],[33800,26100],[33700,25600],[33200,25400],[32700,25900],[32600,26600],[32300,26900],[32000,26500],[32300,25700],[32500,24700],[32400,23600],[32300,22500],[32500,21600],[32400,20700],[32350,19800],[32600,19300],[33300,19100],[34000,19200],[34400,18900],[34100,18400],[33100,18100],[31800,18150],[30900,17700],[30400,17000],[30200,16200],[29600,15500],[28900,14900],[28500,14300],[28200,13600],[27700,13000],[27200,12400],[26700,12700],[26600,13600],[26600,14600],[26300,15100],[25800,15100],[25500,14600],[25300,13700],[25000,13000],[24600,12600],[24300,12900],[24500,13800],[24900,14700],[24400,15100],[23600,14800],[22900,14300],[22100,13700],[21400,13200],[20700,12900],[19800,12900],[19300,12700],[19100,12200],[19300,11600],[19900,11900],[20300,12600],[20700,13300],[20100,13600],[19300,13000],[18600,12200],[17900,11400],[17100,10500],[16600,10100],[16300,10500],[16300,11600],[16000,12100],[15500,12200],[15100,11700],[15400,11000],[15000,10200],[14300,9500],[13500,8900],[12800,8200],[12000,7300],[11200,6600],[10400,6000],[9700,5200],[9000,4700],[8300,4900],[7900,5600],[7500,5500],[7200,4700],[6700,4000],[6100,4300],[5900,5200],[5500,5500],[5200,5000],[4800,4200],[4500,3300],[4100,2700],[3600,2800],[3400,3500],[3700,4300],[4300,4700],[4500,4100]]}],
+ akagi:[{name:'赤城・ダウンヒル',theme:'akagi',pointToPoint:true,halfWidth:160,worldOverride:{w:40000,h:40000},originBottomLeft:true,courseDraft:true,spline:'centripetal',splineAlpha:.5,splineTension:.08,splineSteps:24,extraAnchors:[],path:[[33900,36700],[33400,35700],[32600,34700],[31700,33750],[30750,32750],[29850,31750],[29200,30750],[28900,29750],[29000,28900],[29500,28300],[30200,28000],[30650,27400],[30850,26500],[30600,25800],[30150,25500],[29800,25850],[29850,26600],[29500,27500],[29500,27500],[28000,28200],[30000,29600],[31600,29150],[32600,29400],[33400,30100],[34000,30400],[34400,30200],[34500,29700],[34100,29300],[33400,29100],[32900,28600],[33200,28200],[33900,28000],[34200,27600],[34000,27200],[33200,27300],[32500,27500],[32100,27100],[32500,26800],[33300,26600],[33800,26100],[33700,25600],[33200,25400],[32700,25900],[32600,26600],[32300,26900],[32000,26500],[32300,25700],[32500,24700],[32400,23600],[32300,22500],[32500,21600],[32400,20700],[32350,19800],[32600,19300],[33300,19100],[34000,19200],[34400,18900],[34100,18400],[33100,18100],[31800,18150],[30900,17700],[30400,17000],[30200,16200],[29600,15500],[28900,14900],[28500,14300],[28200,13600],[27700,13000],[27200,12400],[26700,12700],[26600,13600],[26600,14600],[26300,15100],[25800,15100],[25500,14600],[25300,13700],[25000,13000],[24600,12600],[24300,12900],[24500,13800],[24900,14700],[24400,15100],[23600,14800],[22900,14300],[22100,13700],[21400,13200],[20700,12900],[19800,12900],[19300,12700],[19100,12200],[19300,11600],[19900,11900],[20000,11800],[21800,13600],[20100,13600],[19300,13000],[18600,12200],[17900,11400],[17100,10500],[16600,10100],[16300,10500],[16300,11600],[16000,12100],[15500,12200],[15100,11700],[15400,11000],[15000,10200],[14300,9500],[13500,8900],[12800,8200],[12000,7300],[11200,6600],[10400,6000],[9700,5200],[9000,4700],[8300,4900],[7900,5600],[7500,5500],[7200,4700],[6700,4000],[6100,4300],[5900,5200],[5500,5500],[5200,5000],[4800,4200],[4500,3300],[4100,2700],[3600,2800],[3400,3500],[3700,4300],[4300,4700],[4500,4100]]}],
  shomaru:[{name:'正丸・峠',theme:'shomaru',pointToPoint:true,halfWidth:200,worldOverride:{w:40000,h:40000},originBottomLeft:true,courseDraft:true,spline:'centripetal',splineAlpha:.5,splineTension:.22,splineSteps:24,extraAnchors:[],path:[
 [5152,4953],[5715,6242],[6301,7063],[6980,7344],[8902,7227],[8855,8234],[8527,8867],[8621,9195],[9184,9711],[9301,10086],[9137,10438],[8527,10695],[8410,11047],[9301,12148],[9465,12898],[9980,13273],[10121,13930],[10355,14023],[11199,13859],[11691,14094],[11762,14750],[11457,15664],[12113,16555],[11973,16977],[12113,17258],[13426,17703],[13801,18711],[14410,18992],[14855,19719],[15137,19836],[15887,19531],[17363,18289],[17691,18617],[17785,19367],[19168,19297],[18980,20656],[19074,21406],[18816,22133],[19004,23422],[19590,23844],[19801,24406],[20340,24078],[20996,24852],[21395,25109],[21465,25391],[21254,26469],[22098,26727],[23527,25180],[24348,24828],[24840,23469],[25496,23188],[25613,22438],[25895,22180],[26879,22344],[27254,22859],[28098,22930],[28777,23328],[29246,23258],[30043,22859],[30254,22977],[30371,23469],[30863,23844],[31473,23844],[31613,23516],[31848,23211],[32176,22930],[32270,22297],[32645,21969],[33910,21992],[34238,22484],[34285,24219],[33582,25156],[33535,26492],[32949,26961],[32434,27734],[31777,27898],[30910,28812],[31051,29211],[32199,30078],[32387,30430],[32293,31461],[31707,32398],[31660,33125],[31871,33242],[32855,33195],[33652,33664],[33723,34156],[34074,34438],[34121,34859],[34004,35234],[33723,35258]]}],
  usui:[{name:'ウスイ・峠周回',theme:'usui',pointToPoint:false,halfWidth:220,worldOverride:{w:40000,h:40000},originBottomLeft:true,courseDraft:true,spline:'centripetal',splineAlpha:.5,splineTension:.30,splineSteps:24,extraAnchors:[],path:[
@@ -621,7 +621,7 @@ rebuildCourseObjects();
 let controlledIndex=0, camera={x:0,y:0}, joy={id:null,x:0,y:0},keys={},tongueHeld=false,last=performance.now(),finished=false,raceStartDelay=0;
 const racers=[makeRacer('Michael','#49a94f',0,720,680),makeRacer('Gabriel','#3188e6',1,720,740)];
 let globalTimeStop=0,globalTimeLag=0;
-function makeRacer(name,color,index,x,y){return {name,color,index,x,y,vx:0,vy:0,face:0,speed:0,r:25,flight:0,glideClock:0,glideGrace:0,glideExtendStock:false,glideExtendUsed:false,onGround:true,tongue:null,cp:1,lap:1,finished:false,hitSlow:0,boost:0,bump:0,skillCdA:0,skillCdB:0,ai:index===1,wing:0,jumpAge:0,flapAge:0,landAge:0,airBarrier:0,airBoostUses:3,power:1,rockImmuneSlow:false,character:name,confuse:0,charge:0,charging:false,burningWing:0,highJump:0,highJumpTotal:0,highJumpDir:0,normalHighJump:0,burnWingUses:3,burnClimbUses:3,startLineLong:null,lapPrevX:null,lapPrevY:null,wallGrace:0,wallEscape:0,courseWalk:0,timeStopUsed:false,takumiCornering:false,takumiPassiveCd:0,aiPathIndex:0,aiWallHits:0,aiWallHitTimer:0,aiBend:0,aiAssist:0,wingSnap:0,drifting:false,driftCharge:0,driftMoveFace:0,driftSide:0,driftFxClock:0,driftGhosts:[],gutterPullX:0,gutterPullY:0,treeGrab:null,treeGrabCd:0,extremeFocus:0,extremeFocusCd:0,dokkanTurbo:0,dokkanTurboCd:0,dokkanPhase:0,ryosukeTongue:null,ryosukeTheory:0};}
+function makeRacer(name,color,index,x,y){return {name,color,index,x,y,vx:0,vy:0,face:0,speed:0,r:25,flight:0,glideClock:0,glideGrace:0,glideExtendStock:false,glideExtendUsed:false,onGround:true,tongue:null,cp:1,lap:1,finished:false,hitSlow:0,boost:0,bump:0,skillCdA:0,skillCdB:0,ai:index===1,wing:0,jumpAge:0,flapAge:0,landAge:0,airBarrier:0,airBoostUses:3,power:1,rockImmuneSlow:false,character:name,confuse:0,charge:0,charging:false,burningWing:0,highJump:0,highJumpTotal:0,highJumpDir:0,normalHighJump:0,burnWingUses:3,burnClimbUses:3,startLineLong:null,lapPrevX:null,lapPrevY:null,wallGrace:0,wallEscape:0,courseWalk:0,timeStopUsed:false,takumiCornering:false,takumiPassiveCd:0,aiPathIndex:0,routeIndex:0,aiWallHits:0,aiWallHitTimer:0,aiBend:0,aiAssist:0,wingSnap:0,drifting:false,driftCharge:0,driftMoveFace:0,driftSide:0,driftFxClock:0,driftGhosts:[],gutterPullX:0,gutterPullY:0,treeGrab:null,treeGrabCd:0,extremeFocus:0,extremeFocusCd:0,dokkanTurbo:0,dokkanTurboCd:0,dokkanPhase:0,ryosukeTongue:null,ryosukeTheory:0};}
 const maxSpeed=585,groundSpeed=255,flapSpeed=405,glideAccel=690,turnGround=2.85,turnFast=1.05;
 function reset(opponentName='Plain'){
  globalTimeStop=0;globalTimeLag=0;
@@ -644,7 +644,7 @@ function reset(opponentName='Plain'){
  // the road tangent rather than the gate's averaged tangent.
  for(const r of racers){
    r.startLineLong=(r.x-gate.p0.x)*gate.tx+(r.y-gate.p0.y)*gate.ty;
-   r.aiPathIndex=0;
+   r.aiPathIndex=0;r.routeIndex=0;
  }
  racers[0].lapPrevX=racers[0].x;racers[0].lapPrevY=racers[0].y;racers[1].lapPrevX=racers[1].x;racers[1].lapPrevY=racers[1].y;
  if(playerName==='Uriel')racers[0].power=1.2;if(opponentName==='Uriel')racers[1].power=1.2;
@@ -950,20 +950,20 @@ r.takumiPassiveCd=Math.max(0,(r.takumiPassiveCd||0)-dt);r.dokkanTurbo=Math.max(0
  }
  // After a wall hit, bias a few frames toward the course center so acute V-corners cannot trap the racer.
  if(r.wallEscape>0&&r.highJump<=0){
-   let pre=trackInfo(r.x,r.y),dx=pre.qx-r.x,dy=pre.qy-r.y,d=Math.hypot(dx,dy)||1,pull=Math.min(d,310*dt);
+   let pre=routeLockedTrackInfo(r),dx=pre.qx-r.x,dy=pre.qy-r.y,d=Math.hypot(dx,dy)||1,pull=Math.min(d,310*dt);
    r.x+=dx/d*pull;r.y+=dy/d*pull;
  }
  // Guard-grass wall.
- let hit=trackInfo(r.x,r.y);
+ let hit=routeLockedTrackInfo(r);
  // Keisuke / Extreme Focus: during the short focus window he reads the wall edge
  // and corrects his line before impact instead of bouncing off the guard.
- if(r.name==='Keisuke'&&r.extremeFocus>0&&hit.d>courseHalfWidth*.62){let rs=aiForwardSegment(r),dx=rs.qx-r.x,dy=rs.qy-r.y,d=Math.hypot(dx,dy)||1,pull=Math.min(d,560*dt);r.x+=dx/d*pull;r.y+=dy/d*pull;r.wallGrace=Math.max(r.wallGrace,.35);hit=trackInfo(r.x,r.y);}
+ if(r.name==='Keisuke'&&r.extremeFocus>0&&hit.d>courseHalfWidth*.62){let rs=aiForwardSegment(r),dx=rs.qx-r.x,dy=rs.qy-r.y,d=Math.hypot(dx,dy)||1,pull=Math.min(d,560*dt);r.x+=dx/d*pull;r.y+=dy/d*pull;r.wallGrace=Math.max(r.wallGrace,.35);hit=routeLockedTrackInfo(r);}
 
  if(r.ai&&(r.name==='Bunta'||r.name==='Takumi'||r.name==='Inu'||r.name==='Saru'||r.name==='Nakazato'||r.name==='Keisuke'||r.name==='Akiyama')&&hit.d>courseHalfWidth*(r.name==='Bunta'?.62:.72)){
    let rs=aiForwardSegment(r),dx=rs.qx-r.x,dy=rs.qy-r.y,d=Math.hypot(dx,dy)||1;
    const safeFactor=r.name==='Bunta'?.48:.58;
    let keep=Math.min(d,Math.max(0,hit.d-courseHalfWidth*safeFactor));
-   r.x+=dx/d*keep;r.y+=dy/d*keep;hit=trackInfo(r.x,r.y);r.wallGrace=.3;
+   r.x+=dx/d*keep;r.y+=dy/d*keep;hit=routeLockedTrackInfo(r);r.wallGrace=.3;
  }
  if(r.courseWalk>0){
    r.courseWalk-=dt;let a=Math.atan2(hit.qy-r.y,hit.qx-r.x);r.face=a;r.flight=0;r.onGround=true;r.speed=105;
@@ -1209,6 +1209,29 @@ function updateEffects(dt){for(const e of effects){if(globalTimeStop>0&&e.owner!
  if(e.kind==='poisonMist'){let o=racers[1-e.owner.index];if(Math.hypot(o.x-e.x,o.y-e.y)<70){if(o.highJump>0)continue;if(o.airBarrier>0)continue;forceFall(o);e.t=0;if(e.owner===racers[controlledIndex])msg('毒霧ヒット！ 相手が落下！');}}
  }effects=effects.filter(e=>e.t>0)}
 function trackInfo(px,py){let best={d:1e9,qx:0,qy:0,i:0,t:0,branch:false};const scan=(pts,closed,isBranch)=>{let lim=closed?pts.length:pts.length-1;for(let i=0;i<lim;i++){let a=pts[i],b=pts[(i+1)%pts.length],vx=b.x-a.x,vy=b.y-a.y,l2=vx*vx+vy*vy||1,t=Math.max(0,Math.min(1,((px-a.x)*vx+(py-a.y)*vy)/l2)),qx=a.x+t*vx,qy=a.y+t*vy,d=Math.hypot(px-qx,py-qy);if(d<best.d)best={d,qx,qy,i,t,branch:isBranch}}};scan(path,!activeCourse.pointToPoint,false);for(const br of courseBranches)scan(br,false,true);return best}
+function routeLockedTrackInfo(r){
+  // Akagi has very close switchbacks and two places where the supplied draft centreline
+  // geometrically crosses itself. For collision/recovery, use route ORDER rather than the
+  // globally-nearest road. This prevents a racer from changing to a non-adjacent leg at a crossing.
+  if(courseTheme!=='akagi'||!activeCourse.pointToPoint||!r)return trackInfo(r?.x??0,r?.y??0);
+  const n=path.length,base=Math.max(0,Math.min(n-2,r.routeIndex||0));
+  let best={d:1e9,qx:path[base].x,qy:path[base].y,i:base,t:0,branch:false};
+  for(let off=-3;off<=18;off++){
+    let i=base+off;if(i<0||i>=n-1)continue;
+    let a=path[i],b=path[i+1],vx=b.x-a.x,vy=b.y-a.y,l2=vx*vx+vy*vy||1;
+    let t=Math.max(0,Math.min(1,((r.x-a.x)*vx+(r.y-a.y)*vy)/l2));
+    let qx=a.x+t*vx,qy=a.y+t*vy,d=Math.hypot(r.x-qx,r.y-qy);
+    // Prefer forward progress on near-ties, but never jump many route legs merely because
+    // another switchback happens to be physically close.
+    let score=d-Math.max(0,off)*1.2;
+    if(score<best.d)best={d:score,rawD:d,qx,qy,i,t,branch:false};
+  }
+  if(best.rawD==null)best.rawD=best.d;
+  // Allow normal forward progress and at most a tiny rollback for recovery.
+  if(best.i>=base-1)r.routeIndex=Math.max(0,Math.max(base-1,best.i));
+  best.d=best.rawD;
+  return best;
+}
 function trackDistance(px,py){return trackInfo(px,py).d}
 function draw(){
  let me=racers[controlledIndex],timeFx=globalTimeStop>0?'stop':(globalTimeLag>0?'lag':'');
