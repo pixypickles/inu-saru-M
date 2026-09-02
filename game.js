@@ -2,7 +2,7 @@
 
 
 // ===== v1.5 meta game / field map =====
-const VERSION='v3.24-DRIVETRAIN-SPECIES';
+const VERSION='v3.25-AKINA-FIRST-TREE-UP';
 const RACE_LAPS=1;
 
 const CHARACTER_DATA={
@@ -562,6 +562,11 @@ function rebuildCourseObjects(){
        }
      }
    }
+ }
+ // Akina: move only the first generated corner tree a little farther up on screen.
+ // Keep the road geometry and every later tongue anchor unchanged.
+ if(courseTheme==='akina'&&anchors.length&&anchors[0].kind==='tree'){
+   anchors[0].y-=520;
  }
  if(activeCourse.extraAnchors)for(const [x,y] of activeCourse.extraAnchors)anchors.push({x,y,manual:true});
  lilies=[];
