@@ -175,3 +175,6 @@ linear-gradient(135deg,#7fcf73,#59a967);overflow:hidden}
 
 .mapSpot.usui{left:48%;top:54%;background:#315d52}.mapSpot.myogi{left:67%;top:43%;background:#25282d;border-color:#777}
 @media(max-width:700px){.mapSpot.usui{left:45%;top:55%}.mapSpot.myogi{left:68%;top:43%}}
+
+.mapSpot.shomaru{left:42%;top:31%;background:#6b553d;border-color:#c8ad83}
+@media(max-width:700px){.mapSpot.shomaru{left:38%;top:32%}}
