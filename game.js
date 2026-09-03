@@ -2,7 +2,7 @@
 
 
 // ===== v1.5 meta game / field map =====
-const VERSION='v3.38-NAKAZATO-BALANCE';
+const VERSION='v3.40-MYOGI-ROUTE-LOCK';
 const RACE_LAPS=1;
 
 const CHARACTER_DATA={
@@ -719,7 +719,7 @@ function selectCourse(place,round=0){
  atamiHydro=null;atamiJump=null;
  if(courseTheme==='atami'&&control.length>=60){
    const h0=control[20],h1=control[22],mx=(h0.x+h1.x)/2,my=(h0.y+h1.y)/2,dx=h1.x-h0.x,dy=h1.y-h0.y,len=Math.hypot(dx,dy)||1,nx=-dy/len,ny=dx/len;
-   atamiHydro={x:mx,y:my,nx,ny,tx:dx/len,ty:dy/len,width:courseHalfWidth*2+80,length:980};
+   atamiHydro={x:mx,y:my,nx,ny,tx:dx/len,ty:dy/len,width:1180,length:1900};
    atamiJump={takeoff:control[56],landing:control[57],ramp:control[55],gapSeg:56};
  }
  rebuildCourseObjects();
@@ -1151,8 +1151,8 @@ r.takumiPassiveCd=Math.max(0,(r.takumiPassiveCd||0)-dt);r.dokkanTurbo=Math.max(0
    if(myogiRecover){
      const i=Math.max(0,Math.min(path.length-2,pre.i||0)),a=path[i],b=path[i+1];
      const tangent=Math.atan2(b.y-a.y,b.x-a.x);
-     r.face=lerpAngle(r.face,tangent,Math.min(1,dt*10.5));
-     r.speed=Math.min(r.speed,142);
+     r.face=lerpAngle(r.face,tangent,Math.min(1,dt*3.2));
+     r.speed=Math.min(r.speed,150);
    }
  }
  // Touge driving assist: keep the forgiving Akagi feel while preserving each course's character.
@@ -1227,8 +1227,8 @@ r.takumiPassiveCd=Math.max(0,(r.takumiPassiveCd||0)-dt);r.dokkanTurbo=Math.max(0
        r.x=hit.qx+nx*safeD;r.y=hit.qy+ny*safeD;
        if(myogiRecover){
          const i=Math.max(0,Math.min(path.length-2,hit.i||0)),a=path[i],b=path[i+1];
-         r.face=lerpAngle(r.face,Math.atan2(b.y-a.y,b.x-a.x),.92);
-         r.wallEscape=.72;
+         r.face=lerpAngle(r.face,Math.atan2(b.y-a.y,b.x-a.x),.52);
+         r.wallEscape=.42;
        }else{
          r.face=lerpAngle(r.face,toLook,.80);
          r.wallEscape=.42;
@@ -1477,7 +1477,12 @@ function routeLockedTrackInfo(r){
   if(!orderedTheme||!activeCourse.pointToPoint||!r)return trackInfo(r?.x??0,r?.y??0);
   const n=path.length,base=Math.max(0,Math.min(n-2,r.routeIndex||0));
   let best={d:1e9,qx:path[base].x,qy:path[base].y,i:base,t:0,branch:false};
-  const backScan=(courseTheme==='akagi'||courseTheme==='irohazaka'||courseTheme==='atami')?3:10,forwardScan=(courseTheme==='akagi'||courseTheme==='irohazaka'||courseTheme==='atami')?20:72;
+  // Myogi's late switchbacks pass physically close to later route legs. Scanning too far
+  // ahead can make the assist lock onto a different hairpin and feel like the steering
+  // suddenly changes near the end of the course. Keep Myogi tightly route-ordered.
+  const tightRoute=(courseTheme==='akagi'||courseTheme==='irohazaka'||courseTheme==='atami');
+  const backScan=courseTheme==='myogi'?4:(tightRoute?3:10);
+  const forwardScan=courseTheme==='myogi'?18:(tightRoute?20:72);
   for(let off=-backScan;off<=forwardScan;off++){
     let i=base+off;if(i<0||i>=n-1)continue;
     let a=path[i],b=path[i+1],vx=b.x-a.x,vy=b.y-a.y,l2=vx*vx+vy*vy||1;
@@ -1485,7 +1490,9 @@ function routeLockedTrackInfo(r){
     let qx=a.x+t*vx,qy=a.y+t*vy,d=Math.hypot(r.x-qx,r.y-qy);
     // Prefer forward progress on near-ties, but never jump many route legs merely because
     // another switchback happens to be physically close.
-    let score=d-Math.max(0,off)*1.2;
+    // On Myogi, distance must dominate the score; only a tiny forward bias is allowed.
+    // This prevents a nearby later switchback from winning merely because it is farther ahead.
+    let score=d-Math.max(0,off)*(courseTheme==='myogi'?.18:1.2);
     if(score<best.d)best={d:score,rawD:d,qx,qy,i,t,branch:false};
   }
   if(best.rawD==null)best.rawD=best.d;
@@ -1559,8 +1566,27 @@ function drawWorld(){
  }else if(courseTheme==='atami'){
    // Atami: ordered polyline only. P057->P058 is deliberately not rendered as road.
    for(const road of [false,true]){for(let i=0;i<path.length-1;i++){if(i===56)continue;ctx.strokeStyle=road?pal.inner:pal.grass;ctx.lineWidth=road?220:270;ctx.beginPath();ctx.moveTo(path[i].x,path[i].y);ctx.lineTo(path[i+1].x,path[i+1].y);ctx.stroke();}}
-   if(atamiHydro){ctx.save();ctx.translate(atamiHydro.x,atamiHydro.y);ctx.rotate(Math.atan2(atamiHydro.ny,atamiHydro.nx));ctx.fillStyle='rgba(176,239,255,.58)';ctx.fillRect(-atamiHydro.length/2,-atamiHydro.width/2,atamiHydro.length,atamiHydro.width);ctx.strokeStyle='rgba(235,255,255,.78)';ctx.lineWidth=18;for(let x=-430;x<=430;x+=95){ctx.beginPath();ctx.moveTo(x,-atamiHydro.width*.48);ctx.lineTo(x+55,atamiHydro.width*.48);ctx.stroke();}ctx.restore();}
-   if(atamiJump){ctx.save();const a=atamiJump.takeoff,b=atamiJump.landing,ang=Math.atan2(b.y-a.y,b.x-a.x);ctx.strokeStyle='#d8f5ff';ctx.lineWidth=16;ctx.setLineDash([26,20]);ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke();ctx.setLineDash([]);ctx.fillStyle='rgba(235,248,255,.92)';ctx.font='bold 72px sans-serif';ctx.textAlign='center';ctx.fillText('↗ JUMP',a.x-80,a.y-95);ctx.fillText('LAND',b.x+70,b.y+105);ctx.restore();}
+   // Atami scenery: make each sector readable without changing the supplied road topology.
+   const atamiTree=(x,y,sc=1)=>{ctx.save();ctx.translate(x,y);ctx.fillStyle='#76502f';ctx.fillRect(-16*sc,0,32*sc,105*sc);ctx.fillStyle='#176b36';ctx.beginPath();ctx.arc(0,-10*sc,70*sc,0,Math.PI*2);ctx.fill();ctx.fillStyle='#29914b';ctx.beginPath();ctx.arc(-25*sc,-35*sc,35*sc,0,Math.PI*2);ctx.fill();ctx.restore();};
+   const atamiHouse=(x,y,sc=1)=>{ctx.save();ctx.translate(x,y);ctx.fillStyle='#ddd6c9';ctx.fillRect(-55*sc,-38*sc,110*sc,76*sc);ctx.fillStyle='#6d5548';ctx.beginPath();ctx.moveTo(-68*sc,-38*sc);ctx.lineTo(0,-82*sc);ctx.lineTo(68*sc,-38*sc);ctx.closePath();ctx.fill();ctx.fillStyle='#87b7c8';ctx.fillRect(-35*sc,-18*sc,24*sc,25*sc);ctx.fillRect(12*sc,-18*sc,24*sc,25*sc);ctx.restore();};
+   // Seaside: sparse palms/trees on the inland side.
+   for(const [i,side] of [[3,1],[7,1],[11,-1],[15,1],[18,-1]]){const a=path[i],b=path[Math.min(path.length-1,i+1)],dx=b.x-a.x,dy=b.y-a.y,l=Math.hypot(dx,dy)||1;atamiTree(a.x-dy/l*side*520,a.y+dx/l*side*520,.85);}
+   // City sector: a handful of simple houses outside the road.
+   for(const [i,side] of [[25,1],[28,-1],[31,1],[34,-1],[37,1],[39,-1]]){const a=path[i],b=path[Math.min(path.length-1,i+1)],dx=b.x-a.x,dy=b.y-a.y,l=Math.hypot(dx,dy)||1;atamiHouse(a.x-dy/l*side*480,a.y+dx/l*side*480,.9);}
+   // Hill climb: denser mountain trees.
+   for(const [i,side] of [[41,1],[43,-1],[46,1],[48,-1],[50,1],[52,-1],[54,1]]){const a=path[i],b=path[Math.min(path.length-1,i+1)],dx=b.x-a.x,dy=b.y-a.y,l=Math.hypot(dx,dy)||1;atamiTree(a.x-dy/l*side*430,a.y+dx/l*side*430,1.05);}
+   if(atamiHydro){ctx.save();ctx.translate(atamiHydro.x,atamiHydro.y);ctx.rotate(Math.atan2(atamiHydro.ny,atamiHydro.nx));
+     // A visible mountain stream/waterfall crosses a much wider stretch of asphalt.
+     ctx.fillStyle='rgba(92,190,222,.34)';ctx.fillRect(-atamiHydro.length*.82,-atamiHydro.width*.56,atamiHydro.length*1.64,atamiHydro.width*1.12);
+     ctx.fillStyle='rgba(176,239,255,.68)';ctx.fillRect(-atamiHydro.length/2,-atamiHydro.width/2,atamiHydro.length,atamiHydro.width);
+     ctx.strokeStyle='rgba(235,255,255,.82)';ctx.lineWidth=18;for(let x=-850;x<=850;x+=110){ctx.beginPath();ctx.moveTo(x,-atamiHydro.width*.48);ctx.lineTo(x+70,atamiHydro.width*.48);ctx.stroke();}
+     // waterfall/source on one side, runoff toward the sea on the other.
+     ctx.strokeStyle='rgba(205,247,255,.92)';ctx.lineWidth=120;ctx.beginPath();ctx.moveTo(-atamiHydro.length*.95,0);ctx.lineTo(-atamiHydro.length*.52,0);ctx.stroke();
+     ctx.fillStyle='rgba(238,255,255,.9)';ctx.font='bold 64px sans-serif';ctx.textAlign='center';ctx.fillText('HYDRO TRAP',0,-atamiHydro.width*.62);ctx.restore();}
+   if(atamiJump){ctx.save();const a=atamiJump.takeoff,b=atamiJump.landing,ang=Math.atan2(b.y-a.y,b.x-a.x),dx=b.x-a.x,dy=b.y-a.y,l=Math.hypot(dx,dy)||1,nx=-dy/l,ny=dx/l;
+     // Draw a waterfall/valley beneath the real road gap.
+     const mx=(a.x+b.x)/2,my=(a.y+b.y)/2;ctx.strokeStyle='rgba(185,239,255,.78)';ctx.lineWidth=180;ctx.beginPath();ctx.moveTo(mx+nx*650,my+ny*650);ctx.lineTo(mx-nx*650,my-ny*650);ctx.stroke();ctx.strokeStyle='rgba(240,255,255,.88)';ctx.lineWidth=32;for(let q=-2;q<=2;q++){ctx.beginPath();ctx.moveTo(mx+nx*650+q*55,my+ny*650);ctx.lineTo(mx-nx*650+q*55,my-ny*650);ctx.stroke();}
+     ctx.strokeStyle='#d8f5ff';ctx.lineWidth=16;ctx.setLineDash([26,20]);ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke();ctx.setLineDash([]);ctx.fillStyle='rgba(235,248,255,.92)';ctx.font='bold 72px sans-serif';ctx.textAlign='center';ctx.fillText('↗ JUMP',a.x-80,a.y-95);ctx.fillText('LAND',b.x+70,b.y+105);ctx.restore();}
  }else if(courseTheme==='irohazaka'){
    // Irohazaka uses variable width: comfortable normal sections, narrower dense switchbacks.
    // Draw each ordered strip independently so nearby hairpins never weld into intersections.
