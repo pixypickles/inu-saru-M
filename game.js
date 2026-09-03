@@ -2,7 +2,7 @@
 
 
 // ===== v1.5 meta game / field map =====
-const VERSION='v3.45-PRACTICE-SARU-LABEL';
+const VERSION='v3.46-OPENING-SKIP';
 const RACE_LAPS=1;
 
 const CHARACTER_DATA={
@@ -435,7 +435,8 @@ function setupMetaUi(){
   document.querySelector('#continueBtn')?.addEventListener('click',()=>{loadSave();showField();});
   document.querySelector('#newBtn')?.addEventListener('click',()=>{
     saveData={started:true,selectedCharacter:'Michael',michaelSkillA:'burningWing',michaelSkillB:'driftFlight',kawazuSkillA:'burningWing',kawazuSkillB:'highJump',unlockedSkills:['punch','bubble'],encountered:['Plain'],wins:0,arenaWins:0,tournamentWins:{},defeatedRivals:[],masterUnlocked:false,kawazuUnlocked:false,takumiUnlocked:true,timeLagUnlocked:false,timeStopUnlocked:false};
-    saveGame();playStory('opening');
+    // Touge version starts directly on the field; the old Kawazu opening is no longer used.
+    saveGame();showField();
   });
   document.querySelector('#saveBtn')?.addEventListener('click',saveGame);
   document.querySelectorAll('.mapSpot').forEach(b=>b.addEventListener('click',()=>{
