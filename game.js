@@ -2,7 +2,7 @@
 
 
 // ===== v1.5 meta game / field map =====
-const VERSION='v3.36-DOKKAN-COPY-FIX';
+const VERSION='v3.37-MYOGI-WALL-RECOVERY';
 const RACE_LAPS=1;
 
 const CHARACTER_DATA={
@@ -1129,14 +1129,26 @@ r.takumiPassiveCd=Math.max(0,(r.takumiPassiveCd||0)-dt);r.dokkanTurbo=Math.max(0
  }
  // After a wall hit, bias a few frames toward the course center so acute V-corners cannot trap the racer.
  if(r.wallEscape>0&&r.highJump<=0){
-   let pre=routeLockedTrackInfo(r),dx=pre.qx-r.x,dy=pre.qy-r.y,d=Math.hypot(dx,dy)||1,pull=Math.min(d,310*dt);
+   let pre=routeLockedTrackInfo(r),dx=pre.qx-r.x,dy=pre.qy-r.y,d=Math.hypot(dx,dy)||1;
+   // Myogi has a wide corridor and many S-bends. After one wall hit, the old
+   // recovery could carry the player across the full road and into the opposite wall.
+   // Pull back toward the centre more firmly and align with the ordered road tangent
+   // for a short moment, while still allowing steering input to take over naturally.
+   const myogiRecover=courseTheme==='myogi'&&!r.ai;
+   let pull=Math.min(d,(myogiRecover?620:310)*dt);
    r.x+=dx/d*pull;r.y+=dy/d*pull;
+   if(myogiRecover){
+     const i=Math.max(0,Math.min(path.length-2,pre.i||0)),a=path[i],b=path[i+1];
+     const tangent=Math.atan2(b.y-a.y,b.x-a.x);
+     r.face=lerpAngle(r.face,tangent,Math.min(1,dt*10.5));
+     r.speed=Math.min(r.speed,142);
+   }
  }
  // Touge driving assist: keep the forgiving Akagi feel while preserving each course's character.
  const assistCfg={
    akina:{guide:.66,soft:2.15,hard:4.5,brake:48,wallSpeed:120,escapeSpeed:135},
    usui:{guide:.60,soft:2.65,hard:5.2,brake:55,wallSpeed:115,escapeSpeed:130},
-   myogi:{guide:.62,soft:2.45,hard:4.9,brake:52,wallSpeed:118,escapeSpeed:132},
+   myogi:{guide:.52,soft:3.45,hard:6.8,brake:44,wallSpeed:122,escapeSpeed:136},
    shomaru:{guide:.50,soft:3.55,hard:6.9,brake:46,wallSpeed:124,escapeSpeed:139},
    akagi:{guide:.56,soft:3.6,hard:7.2,brake:75,wallSpeed:125,escapeSpeed:140},
    irohazaka:{guide:.54,soft:3.8,hard:7.6,brake:76,wallSpeed:122,escapeSpeed:136},
@@ -1199,10 +1211,17 @@ r.takumiPassiveCd=Math.max(0,(r.takumiPassiveCd||0)-dt);r.dokkanTurbo=Math.max(0
      }else{
        // Move only from the penetrated wall edge to a safe position inside the corridor.
        let nx=(r.x-hit.qx)/(hit.d||1),ny=(r.y-hit.qy)/(hit.d||1);
-       const safeD=Math.max(24,localCourseHalfWidth(hit.i)*.58);
+       const myogiRecover=courseTheme==='myogi';
+       const safeD=Math.max(24,localCourseHalfWidth(hit.i)*(myogiRecover?.38:.58));
        r.x=hit.qx+nx*safeD;r.y=hit.qy+ny*safeD;
-       r.face=lerpAngle(r.face,toLook,.80);
-       r.wallEscape=.42;
+       if(myogiRecover){
+         const i=Math.max(0,Math.min(path.length-2,hit.i||0)),a=path[i],b=path[i+1];
+         r.face=lerpAngle(r.face,Math.atan2(b.y-a.y,b.x-a.x),.92);
+         r.wallEscape=.72;
+       }else{
+         r.face=lerpAngle(r.face,toLook,.80);
+         r.wallEscape=.42;
+       }
      }
      if(r.wallGrace<=0){
        // A hard wall hit kills the airborne momentum. These frogs settle to the ground once speed is lost.
