@@ -10,7 +10,7 @@
       <div class="titleFrog">🐸🪽</div>
       <h1>いぬさるM</h1>
       <div class="titleSub">天使カエル・峠レース</div>
-      <div class="titleVersion">TOUGE Prototype v3.46</div>
+      <div class="titleVersion">TOUGE Prototype v3.47</div>
       <button id="continueBtn" class="menuBtn">続きから</button>
       <button id="newBtn" class="menuBtn">はじめから</button>
       <div class="titleHint">ホームで交代して、アキナ・ウスイへ</div>
@@ -29,19 +29,21 @@
   </section>
 
 
-  <section id="tutorialScreen" class="screenLayer hidden">
+  <section id="tutorialScreen" class="screenLayer panelLayer hidden">
     <div class="panelCard tutorialCard">
-      <h2>🐸 飛び方・加速の基本</h2>
+      <h2>🐸 飛び方・操作の基本</h2>
       <div class="tutorialGrid">
-        <div class="homeBox"><b>① ジャンプ</b><p>地上からジャンプ。まだ低速なので、ここで進みたい方向を作ります。</p></div>
-        <div class="homeBox"><b>② もう一度ジャンプ</b><p>翼を羽ばたかせて加速。空中では速度が上がるほど慣性が強くなります。</p></div>
-        <div class="homeBox"><b>③ 3回目で滑空</b><p>最高速へ。しばらく滑空したあと、タイミングよくジャンプを押すと最高速を維持できます。</p></div>
-        <div class="homeBox"><b>🌳 舌ターン</b><p>コーナー内側の木へ舌を伸ばして長押し。木を中心に回り込み、出口へ向いたところで離します。</p></div>
-        <div class="homeBox"><b>💥 壁に激突すると</b><p>飛行の勢いを失って地上へ着地します。もう一度ジャンプから加速を作り直します。</p></div>
-        <div class="homeBox"><b>✂️ ショートカット</b><p>通れるなら正規の攻略です。バーニングクライムなどで飛び越せる地形は遠慮なく使えます。</p></div>
+        <div class="homeBox"><b>① ジャンプ</b><p>地上からジャンプ。左スティックで進みたい方向を決めます。</p></div>
+        <div class="homeBox"><b>② もう一度ジャンプ</b><p>翼を羽ばたかせて加速。空中では指を離しても最後に入れた方向を保ちます。</p></div>
+        <div class="homeBox"><b>③ 3回目で滑空</b><p>最高速域へ。滑空中にジャンプを押すと延長を1回ストックし、時間切れで自動消費します。</p></div>
+        <div class="homeBox"><b>🌳 舌アンカー（カエル）</b><p>舌ボタンを長押しして内側の木をつかみます。犬・猿は舌を使いません。</p></div>
+        <div class="homeBox"><b>🅰️ / 🅱️ セットスキル</b><p>ホームでA/Bへセットした技をボタンで発動します。習得済みパッシブは自動発動です。</p></div>
+        <div class="homeBox"><b>🪽 ドリフト飛行</b><p>セット中はボタン操作で姿勢を崩しすぎずに旋回。ヘアピンや切り返しで使います。</p></div>
+        <div class="homeBox"><b>💥 壁に当たったら</b><p>速度は落ちますが、峠では道路へ戻す補助が入ります。慌てて反対へ大きく切り返さないのがコツです。</p></div>
+        <div class="homeBox"><b>🌊 HYDRO / JUMP</b><p>アタミの水膜は高速ほど滑りやすくなります。ジャンプステージは踏切から本当に飛び越えてください。</p></div>
       </div>
-      <p class="panelNote">基本は「ジャンプ → 羽ばたき → 滑空 → 維持」。高速中は急には曲がれないので、木・スキル・減速を使ってラインを作ります。</p>
-      <button id="tutorialClose" class="menuBtn">わかった！</button>
+      <p class="panelNote">基本は「ジャンプ → 羽ばたき → 滑空」。左スティックは空中で押し続けなくても方向を保持します。ライバルからコピーした技はホームでA/Bへセットできます。</p>
+      <button id="tutorialClose" type="button" class="menuBtn">練習場へ戻る</button>
     </div>
   </section>
 
@@ -119,7 +121,7 @@
     <div id="help">左スティック：旋回　ジャンプ×3：最高速滑空　A：固有技　B長押し：ドリフト飛行</div>
   </div>
 
-  <div id="versionBadge"><b>TOUGE v3.46</b><small>アキナ・ウスイ・ミョウギ・ショウマル・アカギ・イロハザカ・アタミ</small></div>
+  <div id="versionBadge"><b>TOUGE v3.47</b><small>アキナ・ウスイ・ミョウギ・ショウマル・アカギ・イロハザカ・アタミ</small></div>
 </main>
 <script src="game.js"></script>
 </body></html>

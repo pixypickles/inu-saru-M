@@ -2,7 +2,7 @@
 
 
 // ===== v1.5 meta game / field map =====
-const VERSION='v3.46-OPENING-SKIP';
+const VERSION='v3.47-PRACTICE-TUTORIAL-FIX';
 const RACE_LAPS=1;
 
 const CHARACTER_DATA={
@@ -194,7 +194,7 @@ function showPlace(place){
  appState='place';currentPlace=place;hideAllScreens();document.querySelector('#fieldScreen')?.classList.remove('hidden');document.querySelector('#placePanel')?.classList.remove('hidden');
  const data={practice:['🎯 練習場','ジャンプ、バーニングウィング、ドリフト飛行を自由に練習できます。'],akina:['🍁 アキナ','黄色いカエルのケイスケさんが待つ一本道の峠。高速ドリフトと極限集中を使います。'],usui:['🌿 ウスイ','40000×40000ワールドの閉ループ峠。近接道路は別区間のまま保持します。'],myogi:['⛰️ ミョウギ','細長い折り返しと連続S字が続くポイント・トゥ・ポイント峠。ナカザトさんが待っています。'],shomaru:['🛣️ ショウマル','細かい切り返しと複合ヘアピンが続くポイント・トゥ・ポイント峠。タクミさんと同系色の犬・アキヤマさんが待っています。ドッカン・ターボとドリフトを使います。'],akagi:['🔴 アカギ','高密度180点トレースをそのまま折れ線で結ぶダウンヒル。アカギだけはスプラインで形を作り直さず、近接する折り返しも別道路のまま保持します。純白のカエル・リョウスケさんは「公道最速理論」と「ゼロ・ミス」を常時発動する最強ライバルです。'],irohazaka:['🌀 イロハザカ','連続ヘアピンが密集するポイント・トゥ・ポイント峠。第2・第3区間は折れ線をそのまま使い、近接道路を絶対に接続しません。コバルトブルーのカイさんは「ヘアピン・スレスレ」と「ジャンピングライン」、黒い犬のキョウイチさんは「コーナー出口加速」と「アンチラグ」を使います。'],atami:['🌊 アタミ','リョウスケさん撃破後に現れる海沿いショートコース。HYDRO TRAPと本物のJUMP STAGEを越え、赤い翼のカエル・カナタさんと勝負。カナタさんは「ライン・トレース」と「エア・リカバリー」を使います。']}[place]||['峠','準備中のコースです。'];
  document.querySelector('#placeTitle').textContent=data[0];document.querySelector('#placeDesc').textContent=data[1];const actions=document.querySelector('#placeActions');actions.innerHTML='';
- if(place==='practice'){const g=document.createElement('button');g.className='menuBtn';g.textContent='📖 操作説明を見る';g.onclick=()=>showTutorial('practice');actions.appendChild(g);for(const n of ['Inu','Saru']){const q=document.createElement('button');q.className='menuBtn';q.textContent=(n==='Saru'?'サルさん':(CHARACTER_DATA[n]?.jp||n))+'と練習';q.onclick=()=>{tournament=null;currentPlace='practice';startRaceRound(n,true)};actions.appendChild(q);}}
+ if(place==='practice'){const g=document.createElement('button');g.id='practiceTutorialBtn';g.type='button';g.className='menuBtn';g.textContent='📖 操作説明を見る';let opened=false;const openHelp=(e)=>{e?.preventDefault?.();if(opened)return;opened=true;showTutorial('practice');setTimeout(()=>{opened=false},250)};g.addEventListener('pointerup',openHelp);g.addEventListener('click',openHelp);actions.appendChild(g);for(const n of ['Inu','Saru']){const q=document.createElement('button');q.className='menuBtn';q.textContent=(n==='Saru'?'サルさん':(CHARACTER_DATA[n]?.jp||n))+'と練習';q.onclick=()=>{tournament=null;currentPlace='practice';startRaceRound(n,true)};actions.appendChild(q);}}
  else if(place==='akina'){const o='Keisuke';const q=document.createElement('button');q.className='menuBtn';q.textContent=(CHARACTER_DATA[o]?.jp||o)+'とアキナバトル'+defeatMark(o);q.onclick=()=>{tournament={place:'akina',round:0,courseIndex:0,opponents:[o]};startRaceRound(o,false)};actions.appendChild(q);}
  else if(place==='usui'){const n='Saru';const q=document.createElement('button');q.className='menuBtn';q.textContent=(CHARACTER_DATA[n]?.jp||n)+'とウスイバトル'+defeatMark(n);q.onclick=()=>{tournament={place:'usui',round:0,courseIndex:0,opponents:[n]};startRaceRound(n,false)};actions.appendChild(q);}
  else if(place==='myogi'){const n='Nakazato';const q=document.createElement('button');q.className='menuBtn';q.textContent=(CHARACTER_DATA[n]?.jp||n)+'とミョウギバトル'+defeatMark(n);q.onclick=()=>{tournament={place:'myogi',round:0,courseIndex:0,opponents:[n]};startRaceRound(n,false)};actions.appendChild(q);}
