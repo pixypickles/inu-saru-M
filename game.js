@@ -2,7 +2,7 @@
 
 
 // ===== v1.5 meta game / field map =====
-const VERSION='v3.35-AKIYAMA-TURBO-BALANCE';
+const VERSION='v3.36-DOKKAN-COPY-FIX';
 const RACE_LAPS=1;
 
 const CHARACTER_DATA={
@@ -929,6 +929,14 @@ r.takumiPassiveCd=Math.max(0,(r.takumiPassiveCd||0)-dt);r.dokkanTurbo=Math.max(0
  }
  if(r.hitSlow>0)r.speed*=Math.pow(.78,dt*4);
  if(r.burningWing>0)r.speed=approach(r.speed,maxSpeed+205,720*dt);
+ else if(r.dokkanTurbo>0){
+   // Dokkan Turbo must override the ordinary boost limiter. Previously Michael's generic
+   // boost cap immediately crushed the copied turbo back toward maxSpeed+45, so at high
+   // speed the HUD could show only a couple km/h of gain. Keep the surge alive for its
+   // full active window instead.
+   const dokkanTop=maxSpeed+(r.name==='Akiyama'?155:175);
+   r.speed=approach(r.speed,dokkanTop,(r.name==='Akiyama'?820:980)*dt);
+ }
  else if(r.highJump>0)r.speed=approach(r.speed,maxSpeed+70,300*dt);
  else if(r.boost>0)r.speed=Math.min(maxSpeed+(r.name==='Bunta'?145:r.name==='Takumi'?120:45),r.speed+(r.name==='Bunta'?345:r.name==='Takumi'?330:210)*dt);
  if(r.name==='Bunta'&&r.ai&&!r.bump){
@@ -1305,7 +1313,7 @@ function useMichaelSkill(r,id,slot){
  if(id==='extremeFocus'){r[cdKey]=4.2;r.extremeFocus=1.8;r.wallGrace=Math.max(r.wallGrace,1.8);r.speed=Math.max(r.speed,500);msg('コピー：極限集中！');return true;}
  if(id==='treeSwing'){r[cdKey]=2.8;r.wallGrace=Math.max(r.wallGrace,1.0);r.speed=Math.min(maxSpeed+110,r.speed+120);r.boost=.65;msg('コピー：インサイド・スイング！');return true;}
  if(id==='blackBoost'){r[cdKey]=2.6;r.speed=Math.min(maxSpeed+190,r.speed+205);r.boost=.9;msg('コピー：ブラック・ブースト！');return true;}
- if(id==='dokkanTurbo'){r[cdKey]=6.5;r.dokkanTurbo=1.40;r.speed=Math.min(maxSpeed+170,r.speed+205);r.boost=1.0;msg('コピー：ドッカン・ターボ！ 短時間の強烈加速！');return true;}
+ if(id==='dokkanTurbo'){r[cdKey]=6.5;r.dokkanTurbo=1.55;r.speed=Math.min(maxSpeed+175,Math.max(r.speed+135,maxSpeed+70));r.boost=1.0;msg('コピー：ドッカン・ターボ！ 一気にブースト圧MAX！');return true;}
  if(id==='wallSkim'){r[cdKey]=3.0;r.kaiWallSkim=1.8;r.wallGrace=Math.max(r.wallGrace,1.9);r.speed=Math.max(r.speed,510);msg('コピー：ヘアピン・スレスレ！');return true;}
  if(id==='cornerExitBoost'){r[cdKey]=2.5;r.speed=Math.min(maxSpeed+165,r.speed+175);r.boost=.8;msg('コピー：コーナー出口加速！');return true;}
  if(id==='fastTheory'){r[cdKey]=5.0;r.ryosukeTheory=2.5;r.wallGrace=Math.max(r.wallGrace,2.5);r.speed=Math.max(r.speed,535);msg('コピー：公道最速理論！');return true;}
