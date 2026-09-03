@@ -2,7 +2,7 @@
 
 
 // ===== v1.5 meta game / field map =====
-const VERSION='v3.42-PASSIVE-LABELS';
+const VERSION='v3.43-SKILL-DESCRIPTIONS';
 const RACE_LAPS=1;
 
 const CHARACTER_DATA={
@@ -128,7 +128,7 @@ function defeatMark(name){return (saveData.defeatedRivals||[]).includes(name)?' 
 function michaelPassiveSummary(){
  const got=(saveData.defeatedRivals||[]).filter(n=>RIVAL_PASSIVE_SKILLS[n]).map(n=>RIVAL_PASSIVE_SKILLS[n]);
  const bonus=michaelSpeedBonus({name:'Michael'});
- return got.length?'パッシブ（セット不要・自動発動）：'+got.map(x=>x+'（セット不要）').join(' / ')+'　基本速度 +'+bonus+'（自動）':'パッシブ（セット不要・自動発動）：まだなし';
+ return got.length?'習得済みパッシブ（自動発動）：'+got.join(' / ')+'　基本速度 +'+bonus:'習得済みパッシブ（自動発動）：まだなし';
 }
 
 const LEARNABLE_SKILLS={
@@ -145,6 +145,20 @@ function skillLabel(id){
  for(const [who,list] of Object.entries(LEARNABLE_SKILLS)){let x=list.find(v=>v[0]===id);if(x)return x[1]+'（'+CHARACTER_DATA[who].jp+'）';}
  return id;
 }
+const MICHAEL_ACTIVE_SKILL_DESC={
+ burningWing:'急加速＋最高速アップ（1レース3回）',
+ driftFlight:'ドリフトで溜めて、飛行しながら加速',
+ extremeFocus:'約1.8秒、壁ミスを軽減＋速度を底上げ',
+ treeSwing:'イン側を攻めながら加速＋壁への猶予',
+ blackBoost:'強力な瞬間加速',
+ dokkanTurbo:'約1.55秒の爆発加速・再使用は長め',
+ wallSkim:'約1.8秒、壁際を高速で抜けやすくする',
+ cornerExitBoost:'押した瞬間に強く再加速',
+ fastTheory:'約2.5秒、速度と壁への安定性を大幅強化',
+ kanataTrace:'約2.2秒、最短ライン追従＋高速安定'
+};
+function michaelActiveSkillOptionLabel(id,label){const d=MICHAEL_ACTIVE_SKILL_DESC[id];return d?label+' ｜ '+d:label;}
+function michaelActiveSkillHelp(id){return skillLabel(id)+'：'+(MICHAEL_ACTIVE_SKILL_DESC[id]||'ボタンを押して発動');}
 function rebuildSkillSelects(){
  const a=document.querySelector('#skillASelect'),b=document.querySelector('#skillBSelect');if(!a||!b)return;
  const isTakumi=saveData.selectedCharacter==='Takumi';a.disabled=true;b.disabled=true;
@@ -154,8 +168,8 @@ function rebuildSkillSelects(){
    for(const n of (saveData.defeatedRivals||[]))for(const sk of (RIVAL_COPY_SKILLS[n]||[]))if(!opts.some(x=>x[0]===sk[0]))opts.push(sk);
    if(!opts.some(x=>x[0]===saveData.michaelSkillA))saveData.michaelSkillA='burningWing';
    if(!opts.some(x=>x[0]===saveData.michaelSkillB))saveData.michaelSkillB='driftFlight';
-   a.disabled=false;b.disabled=false;a.innerHTML=opts.map(x=>'<option value="'+x[0]+'">'+x[1]+'</option>').join('');b.innerHTML=a.innerHTML;a.value=saveData.michaelSkillA;b.value=saveData.michaelSkillB;
-   document.querySelector('#skillSetupTitle').textContent=((saveData.defeatedRivals||[]).includes('Ryosuke')?'ミカエル・ベッケンバウアー':'ミカエル')+' コピー・スキル';document.querySelector('#skillSetupNote').textContent='A/Bに表示される技だけセットして使用します。\nパッシブ・基本速度アップはセット不要で、自動的に常時発動します。\n'+michaelPassiveSummary();
+   a.disabled=false;b.disabled=false;a.innerHTML=opts.map(x=>'<option value="'+x[0]+'">'+michaelActiveSkillOptionLabel(x[0],x[1])+'</option>').join('');b.innerHTML=a.innerHTML;a.value=saveData.michaelSkillA;b.value=saveData.michaelSkillB;
+   document.querySelector('#skillSetupTitle').textContent=((saveData.defeatedRivals||[]).includes('Ryosuke')?'ミカエル・ベッケンバウアー':'ミカエル')+' ボタン発動スキル';document.querySelector('#skillSetupNote').textContent='A：'+michaelActiveSkillHelp(saveData.michaelSkillA)+'\nB：'+michaelActiveSkillHelp(saveData.michaelSkillB)+'\n\n'+michaelPassiveSummary();
  }
 }
 function learnFromOpponent(name){
@@ -385,7 +399,7 @@ function startRaceRound(opponent,practice=false){
 }
 function showRaceResult(win){
  if(!tournament){msg(win?'練習終了！':'練習終了');setTimeout(()=>showPlace('practice'),550);return;}
- const back=tournament.place;msg(win?'勝利！':'敗北… もう一度挑戦できます。');if(win){saveData.wins=(saveData.wins||0)+1;saveData.tournamentWins=saveData.tournamentWins||{};saveData.tournamentWins[back]=(saveData.tournamentWins[back]||0)+1;let beaten=tournament.opponents?.[tournament.round]||tournament.opponents?.[0];saveData.defeatedRivals=saveData.defeatedRivals||[];if(beaten&&!saveData.defeatedRivals.includes(beaten)){saveData.defeatedRivals.push(beaten);let cp=RIVAL_COPY_SKILLS[beaten]?.[0];if(cp){let ps=RIVAL_PASSIVE_SKILLS[beaten];msg('勝利！ ミカエルさんが「'+cp[1]+'」をコピー！'+(ps?'\nパッシブ「'+ps+'（セット不要）」も習得！ 基本速度も自動で少し上昇。':''));}if(beaten==='Ryosuke')setTimeout(()=>msg('リョウスケさん撃破！\n新たな舞台「アタミ」が出現した！'),260);}saveGame();}tournament=null;setTimeout(()=>showPlace(back),700);
+ const back=tournament.place;msg(win?'勝利！':'敗北… もう一度挑戦できます。');if(win){saveData.wins=(saveData.wins||0)+1;saveData.tournamentWins=saveData.tournamentWins||{};saveData.tournamentWins[back]=(saveData.tournamentWins[back]||0)+1;let beaten=tournament.opponents?.[tournament.round]||tournament.opponents?.[0];saveData.defeatedRivals=saveData.defeatedRivals||[];if(beaten&&!saveData.defeatedRivals.includes(beaten)){saveData.defeatedRivals.push(beaten);let cp=RIVAL_COPY_SKILLS[beaten]?.[0];if(cp){let ps=RIVAL_PASSIVE_SKILLS[beaten];msg('勝利！ ミカエルさんが「'+cp[1]+'」をコピー！'+(ps?'\nパッシブ「'+ps+'」も習得！ 基本速度も少し上昇。':''));}if(beaten==='Ryosuke')setTimeout(()=>msg('リョウスケさん撃破！\n新たな舞台「アタミ」が出現した！'),260);}saveGame();}tournament=null;setTimeout(()=>showPlace(back),700);
 }
 function showTutorial(returnTo='field'){
  tutorialReturn=returnTo;appState='tutorial';hideAllScreens();
