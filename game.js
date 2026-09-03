@@ -2,7 +2,7 @@
 
 
 // ===== v1.5 meta game / field map =====
-const VERSION='v3.40-MYOGI-ROUTE-LOCK';
+const VERSION='v3.42-PASSIVE-LABELS';
 const RACE_LAPS=1;
 
 const CHARACTER_DATA={
@@ -128,7 +128,7 @@ function defeatMark(name){return (saveData.defeatedRivals||[]).includes(name)?' 
 function michaelPassiveSummary(){
  const got=(saveData.defeatedRivals||[]).filter(n=>RIVAL_PASSIVE_SKILLS[n]).map(n=>RIVAL_PASSIVE_SKILLS[n]);
  const bonus=michaelSpeedBonus({name:'Michael'});
- return got.length?'パッシブ：'+got.join(' / ')+'　基本速度 +'+bonus:'パッシブ：まだなし';
+ return got.length?'パッシブ（セット不要・自動発動）：'+got.map(x=>x+'（セット不要）').join(' / ')+'　基本速度 +'+bonus+'（自動）':'パッシブ（セット不要・自動発動）：まだなし';
 }
 
 const LEARNABLE_SKILLS={
@@ -155,7 +155,7 @@ function rebuildSkillSelects(){
    if(!opts.some(x=>x[0]===saveData.michaelSkillA))saveData.michaelSkillA='burningWing';
    if(!opts.some(x=>x[0]===saveData.michaelSkillB))saveData.michaelSkillB='driftFlight';
    a.disabled=false;b.disabled=false;a.innerHTML=opts.map(x=>'<option value="'+x[0]+'">'+x[1]+'</option>').join('');b.innerHTML=a.innerHTML;a.value=saveData.michaelSkillA;b.value=saveData.michaelSkillB;
-   document.querySelector('#skillSetupTitle').textContent=((saveData.defeatedRivals||[]).includes('Ryosuke')?'ミカエル・ベッケンバウアー':'ミカエル')+' コピー・スキル';document.querySelector('#skillSetupNote').textContent='倒したライバルの技をA/Bにセット。倒した相手のパッシブは自動で常時発動します。\n'+michaelPassiveSummary();
+   document.querySelector('#skillSetupTitle').textContent=((saveData.defeatedRivals||[]).includes('Ryosuke')?'ミカエル・ベッケンバウアー':'ミカエル')+' コピー・スキル';document.querySelector('#skillSetupNote').textContent='A/Bに表示される技だけセットして使用します。\nパッシブ・基本速度アップはセット不要で、自動的に常時発動します。\n'+michaelPassiveSummary();
  }
 }
 function learnFromOpponent(name){
@@ -385,7 +385,7 @@ function startRaceRound(opponent,practice=false){
 }
 function showRaceResult(win){
  if(!tournament){msg(win?'練習終了！':'練習終了');setTimeout(()=>showPlace('practice'),550);return;}
- const back=tournament.place;msg(win?'勝利！':'敗北… もう一度挑戦できます。');if(win){saveData.wins=(saveData.wins||0)+1;saveData.tournamentWins=saveData.tournamentWins||{};saveData.tournamentWins[back]=(saveData.tournamentWins[back]||0)+1;let beaten=tournament.opponents?.[tournament.round]||tournament.opponents?.[0];saveData.defeatedRivals=saveData.defeatedRivals||[];if(beaten&&!saveData.defeatedRivals.includes(beaten)){saveData.defeatedRivals.push(beaten);let cp=RIVAL_COPY_SKILLS[beaten]?.[0];if(cp){let ps=RIVAL_PASSIVE_SKILLS[beaten];msg('勝利！ ミカエルさんが「'+cp[1]+'」をコピー！'+(ps?'\nパッシブ「'+ps+'」も習得！ 基本速度も少し上昇。':''));}if(beaten==='Ryosuke')setTimeout(()=>msg('リョウスケさん撃破！\n新たな舞台「アタミ」が出現した！'),260);}saveGame();}tournament=null;setTimeout(()=>showPlace(back),700);
+ const back=tournament.place;msg(win?'勝利！':'敗北… もう一度挑戦できます。');if(win){saveData.wins=(saveData.wins||0)+1;saveData.tournamentWins=saveData.tournamentWins||{};saveData.tournamentWins[back]=(saveData.tournamentWins[back]||0)+1;let beaten=tournament.opponents?.[tournament.round]||tournament.opponents?.[0];saveData.defeatedRivals=saveData.defeatedRivals||[];if(beaten&&!saveData.defeatedRivals.includes(beaten)){saveData.defeatedRivals.push(beaten);let cp=RIVAL_COPY_SKILLS[beaten]?.[0];if(cp){let ps=RIVAL_PASSIVE_SKILLS[beaten];msg('勝利！ ミカエルさんが「'+cp[1]+'」をコピー！'+(ps?'\nパッシブ「'+ps+'（セット不要）」も習得！ 基本速度も自動で少し上昇。':''));}if(beaten==='Ryosuke')setTimeout(()=>msg('リョウスケさん撃破！\n新たな舞台「アタミ」が出現した！'),260);}saveGame();}tournament=null;setTimeout(()=>showPlace(back),700);
 }
 function showTutorial(returnTo='field'){
  tutorialReturn=returnTo;appState='tutorial';hideAllScreens();
