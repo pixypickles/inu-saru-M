@@ -2,7 +2,7 @@
 
 
 // ===== v1.5 meta game / field map =====
-const VERSION='v3.43-SKILL-DESCRIPTIONS';
+const VERSION='v3.44-BLACK-BOOST-INSTANT';
 const RACE_LAPS=1;
 
 const CHARACTER_DATA={
@@ -150,7 +150,7 @@ const MICHAEL_ACTIVE_SKILL_DESC={
  driftFlight:'ドリフトで溜めて、飛行しながら加速',
  extremeFocus:'約1.8秒、壁ミスを軽減＋速度を底上げ',
  treeSwing:'イン側を攻めながら加速＋壁への猶予',
- blackBoost:'強力な瞬間加速',
+ blackBoost:'押した瞬間に約+90km/h・コーナー出口や追い抜き向け',
  dokkanTurbo:'約1.55秒の爆発加速・再使用は長め',
  wallSkim:'約1.8秒、壁際を高速で抜けやすくする',
  cornerExitBoost:'押した瞬間に強く再加速',
@@ -1356,7 +1356,7 @@ function useMichaelSkill(r,id,slot){
  if(id==='poisonBoost'){r[cdKey]=2.5;r.speed=Math.min(maxSpeed+155,r.speed+150);r.boost=.72;effects.push({kind:'poisonMist',x:r.x-Math.cos(r.face)*35,y:r.y-Math.sin(r.face)*35,owner:r,t:4,max:4});msg('ポイズンブースト！');return true;}
  if(id==='extremeFocus'){r[cdKey]=4.2;r.extremeFocus=1.8;r.wallGrace=Math.max(r.wallGrace,1.8);r.speed=Math.max(r.speed,500);msg('コピー：極限集中！');return true;}
  if(id==='treeSwing'){r[cdKey]=2.8;r.wallGrace=Math.max(r.wallGrace,1.0);r.speed=Math.min(maxSpeed+110,r.speed+120);r.boost=.65;msg('コピー：インサイド・スイング！');return true;}
- if(id==='blackBoost'){r[cdKey]=2.6;r.speed=Math.min(maxSpeed+190,r.speed+205);r.boost=.9;msg('コピー：ブラック・ブースト！');return true;}
+ if(id==='blackBoost'){r[cdKey]=3.4;const before=r.speed;r.speed=Math.min(maxSpeed+210,r.speed+160);r.boost=.38;const gain=Math.max(0,Math.round((r.speed-before)*.56));msg('コピー：ブラック・ブースト！ 瞬間加速 +'+gain+'km/h！');return true;}
  if(id==='dokkanTurbo'){r[cdKey]=6.5;r.dokkanTurbo=1.55;r.speed=Math.min(maxSpeed+175,Math.max(r.speed+135,maxSpeed+70));r.boost=1.0;msg('コピー：ドッカン・ターボ！ 一気にブースト圧MAX！');return true;}
  if(id==='wallSkim'){r[cdKey]=3.0;r.kaiWallSkim=1.8;r.wallGrace=Math.max(r.wallGrace,1.9);r.speed=Math.max(r.speed,510);msg('コピー：ヘアピン・スレスレ！');return true;}
  if(id==='cornerExitBoost'){r[cdKey]=2.5;r.speed=Math.min(maxSpeed+165,r.speed+175);r.boost=.8;msg('コピー：コーナー出口加速！');return true;}
