@@ -2,7 +2,7 @@
 
 
 // ===== v1.5 meta game / field map =====
-const VERSION='v3.37-MYOGI-WALL-RECOVERY';
+const VERSION='v3.38-NAKAZATO-BALANCE';
 const RACE_LAPS=1;
 
 const CHARACTER_DATA={
@@ -992,11 +992,22 @@ r.takumiPassiveCd=Math.max(0,(r.takumiPassiveCd||0)-dt);r.dokkanTurbo=Math.max(0
      else if(bend>.62)r.speed=Math.min(r.speed,r.extremeFocus>0?590:555);
      else if(bend>.38)r.speed=Math.min(r.speed,625);
    }else if(r.name==='Nakazato'){
-     // Black Boost + Late Braking: accelerate hard on straights, hold speed deep into corners.
-     if(bend<.20)r.speed=approach(r.speed,maxSpeed+125,520*dt);
-     else if(bend>.98)r.speed=Math.min(r.speed,505);
-     else if(bend>.70)r.speed=Math.min(r.speed,555);
-     else if(bend>.46)r.speed=Math.min(r.speed,625);
+     // Black Boost + Late Braking: scary while chasing, but he should leave a recovery window
+     // when already ahead. Previously his late-race pace was so clean that one player mistake
+     // effectively decided the whole Myogi battle.
+     const player=racers[controlledIndex];
+     const myProg=(r.routeIndex||0)/Math.max(1,path.length-2);
+     const playerProg=player?((player.routeIndex||0)/Math.max(1,path.length-2)):myProg;
+     const ahead=myProg>playerProg+.012;
+     const late=myProg>.58;
+     const cruiseTop=ahead?(late?maxSpeed-72:maxSpeed-42):maxSpeed+82;
+     if(bend<.20)r.speed=approach(r.speed,cruiseTop,ahead?245*dt:430*dt);
+     else if(bend>.98)r.speed=Math.min(r.speed,ahead?470:495);
+     else if(bend>.70)r.speed=Math.min(r.speed,ahead?515:545);
+     else if(bend>.46)r.speed=Math.min(r.speed,ahead?575:610);
+     // If Nakazato has opened a real gap in the second half, briefly back him off instead of
+     // maintaining a flawless qualifying-lap pace all the way to the finish.
+     if(ahead&&late&&myProg-playerProg>.045)r.speed=Math.min(r.speed,maxSpeed-88);
    }else if(r.name==='Akiyama'){
      // Dokkan Turbo: explosive straight-line acceleration, offset by a mild weave.
      // He still has to shed speed for Shomaru's tight hairpins and uses drift to finish the turn.
