@@ -2,7 +2,7 @@
 
 
 // ===== v1.5 meta game / field map =====
-const VERSION='v3.48-PRACTICE-TUTORIAL-OPEN-FIX';
+const VERSION='v3.49-TUTORIAL-PROGRESSION-GUIDE';
 const RACE_LAPS=1;
 
 const CHARACTER_DATA={
